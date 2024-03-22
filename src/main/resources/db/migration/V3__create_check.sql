@@ -1,4 +1,4 @@
-CREATE TABLE check(
+CREATE TABLE customer_check(
     check_number SERIAL PRIMARY KEY,
     id_employee INT NOT NULL,
     card_number INT,
