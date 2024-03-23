@@ -8,5 +8,5 @@ import java.sql.Connection;
 @Repository
 @RequiredArgsConstructor
 public abstract class BaseRepository<T, I> implements IRepository<T, I> {
-    private Connection connection;
+    private final Connection connection;
 }
