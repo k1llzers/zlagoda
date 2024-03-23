@@ -1,5 +1,7 @@
 CREATE TABLE employee(
     id_employee SERIAL PRIMARY KEY,
+    login VARCHAR(20) NOT NULL,
+    password VARCHAR(100) NOT NULL,
     empl_surname VARCHAR(50) NOT NULL,
     empl_name VARCHAR(50) NOT NULL,
     empl_patronymic VARCHAR(50),
