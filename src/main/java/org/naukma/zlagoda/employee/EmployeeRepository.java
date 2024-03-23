@@ -4,6 +4,7 @@ import org.naukma.zlagoda.abstraction.repository.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.Optional;
 
 @Repository
 public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> {
@@ -20,17 +21,7 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
     @Override
     public Integer save(EmployeeEntity entity) {
         try(PreparedStatement createStatement = connection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {
-            createStatement.setString(1, entity.getSurname());
-            createStatement.setString(2, entity.getName());
-            createStatement.setString(3, entity.getPatronymic());
-            createStatement.setString(4, entity.getRole().name());
-            createStatement.setBigDecimal(5, entity.getSalary());
-            createStatement.setDate(6, Date.valueOf(entity.getDateOfBirth()));
-            createStatement.setDate(7, Date.valueOf(entity.getDateOfStart()));
-            createStatement.setString(8, entity.getPhoneNumber());
-            createStatement.setString(9, entity.getCity());
-            createStatement.setString(10, entity.getStreet());
-            createStatement.setString(11, entity.getZipCode());
+            setMainFields(createStatement, entity);
             createStatement.executeUpdate();
             ResultSet generatedKeys = createStatement.getGeneratedKeys();
             if(generatedKeys.next()){
@@ -46,17 +37,7 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
     @Override
     public Boolean update(EmployeeEntity entity) {
         try(PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
-            updateStatement.setString(1, entity.getSurname());
-            updateStatement.setString(2, entity.getName());
-            updateStatement.setString(3, entity.getPatronymic());
-            updateStatement.setString(4, entity.getRole().name());
-            updateStatement.setBigDecimal(5, entity.getSalary());
-            updateStatement.setDate(6, Date.valueOf(entity.getDateOfBirth()));
-            updateStatement.setDate(7, Date.valueOf(entity.getDateOfStart()));
-            updateStatement.setString(8, entity.getPhoneNumber());
-            updateStatement.setString(9, entity.getCity());
-            updateStatement.setString(10, entity.getStreet());
-            updateStatement.setString(11, entity.getZipCode());
+            setMainFields(updateStatement, entity);
             updateStatement.setInt(12, entity.getId());
             return updateStatement.executeUpdate() > 0;
         }
@@ -77,18 +58,38 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
     }
 
     @Override
-    public EmployeeEntity findById(Integer id) {
+    public Optional<EmployeeEntity> findById(Integer id) {
         try(PreparedStatement findByIdStatement = connection.prepareStatement(findByIdQuery)) {
             findByIdStatement.setInt(1, id);
             ResultSet resultSet = findByIdStatement.executeQuery();
-            return parseEmployee(resultSet);
+            EmployeeEntity result = null;
+            if(resultSet.next()){
+                result = parseSetToEntity(resultSet);
+            }
+            return Optional.ofNullable(result);
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private EmployeeEntity parseEmployee(ResultSet set) throws SQLException {
+    @Override
+    public void setMainFields(PreparedStatement statement, EmployeeEntity entity) throws SQLException {
+        statement.setString(1, entity.getSurname());
+        statement.setString(2, entity.getName());
+        statement.setString(3, entity.getPatronymic());
+        statement.setString(4, entity.getRole().name());
+        statement.setBigDecimal(5, entity.getSalary());
+        statement.setDate(6, Date.valueOf(entity.getDateOfBirth()));
+        statement.setDate(7, Date.valueOf(entity.getDateOfStart()));
+        statement.setString(8, entity.getPhoneNumber());
+        statement.setString(9, entity.getCity());
+        statement.setString(10, entity.getStreet());
+        statement.setString(11, entity.getZipCode());
+    }
+
+    @Override
+    public EmployeeEntity parseSetToEntity(ResultSet set) throws SQLException {
         return EmployeeEntity.builder()
                 .id(set.getInt("id_employee"))
                 .surname(set.getString("empl_surname"))
