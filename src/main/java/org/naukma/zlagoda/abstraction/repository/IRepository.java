@@ -1,6 +1,7 @@
 package org.naukma.zlagoda.abstraction.repository;
 
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Optional;
 
 public interface IRepository<E, I> {
@@ -12,7 +13,7 @@ public interface IRepository<E, I> {
 
     Optional<E> findById(I id);
 
-    void setMainFields(E entity);
+    void setMainFields(Statement statement);
 
     E parseSetToEntity(ResultSet set);
 }
