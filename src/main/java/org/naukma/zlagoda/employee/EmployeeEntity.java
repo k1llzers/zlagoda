@@ -3,6 +3,7 @@ package org.naukma.zlagoda.employee;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.naukma.zlagoda.abstraction.repository.GettableById;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class EmployeeEntity {
+public class EmployeeEntity implements GettableById<Integer> {
     private Integer id;
     private String surname;
     private String name;

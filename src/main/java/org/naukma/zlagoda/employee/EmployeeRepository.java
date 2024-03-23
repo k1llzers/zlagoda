@@ -4,77 +4,22 @@ import org.naukma.zlagoda.abstraction.repository.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.util.Optional;
 
 @Repository
 public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> {
-
-    private String createQuery = "INSERT INTO `employee` (empl_surname, empl_name, empl_patronymic, " +
-            "empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private String updateQuery = "UPDATE `employee` SET empl_surname=?, empl_name=?, empl_patronymic=?, " +
-            "empl_role=?, salary=?, date_of_birth=?, date_of_start=?, phone_number=?, city=?, street=?, zip_code=?" +
-            "WHERE id_employee=?";
-    private String deleteQuery = "DELETE FROM `employee` WHERE id_employee=?";
-    private String findByIdQuery = "SELECT * FROM `employee` WHERE id_employee=?";
-
-    @Override
-    public Integer save(EmployeeEntity entity) {
-        try(PreparedStatement createStatement = connection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {
-            setMainFields(createStatement, entity);
-            createStatement.executeUpdate();
-            ResultSet generatedKeys = createStatement.getGeneratedKeys();
-            if(generatedKeys.next()){
-                entity.setId(generatedKeys.getInt(1));
-            }
-            return entity.getId();
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public EmployeeRepository() {
+        super("INSERT INTO `employee` (empl_surname, empl_name, empl_patronymic, " +
+                "empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "UPDATE `employee` SET empl_surname=?, empl_name=?, empl_patronymic=?, " +
+                        "empl_role=?, salary=?, date_of_birth=?, date_of_start=?, phone_number=?, city=?, street=?, zip_code=?" +
+                        "WHERE id_employee=?",
+                "DELETE FROM `employee` WHERE id_employee=?",
+                "SELECT * FROM `employee` WHERE id_employee=?");
     }
 
     @Override
-    public Boolean update(EmployeeEntity entity) {
-        try(PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
-            setMainFields(updateStatement, entity);
-            updateStatement.setInt(12, entity.getId());
-            return updateStatement.executeUpdate() > 0;
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Boolean delete(Integer id) {
-        try(PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)) {
-            deleteStatement.setInt(1, id);
-            return deleteStatement.executeUpdate() > 0;
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Optional<EmployeeEntity> findById(Integer id) {
-        try(PreparedStatement findByIdStatement = connection.prepareStatement(findByIdQuery)) {
-            findByIdStatement.setInt(1, id);
-            ResultSet resultSet = findByIdStatement.executeQuery();
-            EmployeeEntity result = null;
-            if(resultSet.next()){
-                result = parseSetToEntity(resultSet);
-            }
-            return Optional.ofNullable(result);
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void setMainFields(PreparedStatement statement, EmployeeEntity entity) throws SQLException {
+    protected void setMainFields(PreparedStatement statement, EmployeeEntity entity) throws SQLException {
         statement.setString(1, entity.getSurname());
         statement.setString(2, entity.getName());
         statement.setString(3, entity.getPatronymic());
@@ -89,7 +34,7 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
     }
 
     @Override
-    public EmployeeEntity parseSetToEntity(ResultSet set) throws SQLException {
+    protected EmployeeEntity parseSetToEntity(ResultSet set) throws SQLException {
         return EmployeeEntity.builder()
                 .id(set.getInt("id_employee"))
                 .surname(set.getString("empl_surname"))
@@ -104,5 +49,20 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
                 .street(set.getString("street"))
                 .zipCode(set.getString("zip_code"))
                 .build();
+    }
+
+    @Override
+    protected void setIdToEntity(EmployeeEntity entity, ResultSet set) throws SQLException {
+        entity.setId(set.getInt(1));
+    }
+
+    @Override
+    protected void setIdToFindDeleteStatement(PreparedStatement statement, Integer id) throws SQLException {
+        statement.setInt(1, id);
+    }
+
+    @Override
+    protected void setIdToUpdateStatement(PreparedStatement statement, Integer id) throws SQLException {
+        statement.setInt(12, id);
     }
 }
