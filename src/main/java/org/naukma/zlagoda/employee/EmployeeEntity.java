@@ -1,7 +1,9 @@
 package org.naukma.zlagoda.employee;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.naukma.zlagoda.abstraction.repository.GettableById;
 
@@ -11,6 +13,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EmployeeEntity implements GettableById<Integer> {
     private Integer id;
     private String login;
