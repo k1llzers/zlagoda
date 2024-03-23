@@ -10,10 +10,10 @@ import java.util.Optional;
 public abstract class BaseRepository<E extends GettableById<I>, I> implements IRepository<E, I> {
     @Autowired
     protected Connection connection;
-    private final String createQuery;
-    private final String updateQuery;
-    private final String deleteQuery;
-    private final String findByIdQuery;
+    protected final String createQuery;
+    protected final String updateQuery;
+    protected final String deleteQuery;
+    protected final String findByIdQuery;
 
     public I save(E entity) {
         try(PreparedStatement createStatement = connection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {

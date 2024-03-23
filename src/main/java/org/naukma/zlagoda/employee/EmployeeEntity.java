@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Builder
 public class EmployeeEntity implements GettableById<Integer> {
     private Integer id;
+    private String login;
+    private String password;
     private String surname;
     private String name;
     private String patronymic;

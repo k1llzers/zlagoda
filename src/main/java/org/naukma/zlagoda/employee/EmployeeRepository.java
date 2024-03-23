@@ -9,11 +9,11 @@ import java.sql.*;
 public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> {
     public EmployeeRepository() {
         super("INSERT INTO `employee` (empl_surname, empl_name, empl_patronymic, " +
-                "empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code, login, password) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 "UPDATE `employee` SET empl_surname=?, empl_name=?, empl_patronymic=?, " +
-                        "empl_role=?, salary=?, date_of_birth=?, date_of_start=?, phone_number=?, city=?, street=?, zip_code=?" +
-                        "WHERE id_employee=?",
+                 "empl_role=?, salary=?, date_of_birth=?, date_of_start=?, phone_number=?, city=?, street=?, zip_code=?, " +
+                 "login=? WHERE id_employee=?",
                 "DELETE FROM `employee` WHERE id_employee=?",
                 "SELECT * FROM `employee` WHERE id_employee=?");
     }
@@ -31,6 +31,24 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
         statement.setString(9, entity.getCity());
         statement.setString(10, entity.getStreet());
         statement.setString(11, entity.getZipCode());
+        statement.setString(12, entity.getLogin());
+    }
+
+    @Override
+    public Integer save(EmployeeEntity entity) {
+        try(PreparedStatement createStatement = connection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {
+            setMainFields(createStatement, entity);
+            createStatement.setString(13, entity.getPassword());
+            createStatement.executeUpdate();
+            ResultSet generatedKeys = createStatement.getGeneratedKeys();
+            if(generatedKeys.next()){
+                setIdToEntity(entity, generatedKeys);
+            }
+            return entity.getId();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -48,6 +66,7 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
                 .city(set.getString("city"))
                 .street(set.getString("street"))
                 .zipCode(set.getString("zip_code"))
+                .login(set.getString("login"))
                 .build();
     }
 
@@ -63,6 +82,6 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
 
     @Override
     protected void setIdToUpdateStatement(PreparedStatement statement, Integer id) throws SQLException {
-        statement.setInt(12, id);
+        statement.setInt(13, id);
     }
 }
