@@ -1,11 +1,18 @@
 package org.naukma.zlagoda.abstraction.repository;
 
-public interface IRepository<T, I> {
-    I save(T entity);
+import java.sql.ResultSet;
+import java.util.Optional;
 
-    Boolean update(T entity);
+public interface IRepository<E, I> {
+    I save(E entity);
+
+    Boolean update(E entity);
 
     Boolean delete(I id);
 
-    T findById(I id);
+    Optional<E> findById(I id);
+
+    void setMainFields(E entity);
+
+    E parseSetToEntity(ResultSet set);
 }
