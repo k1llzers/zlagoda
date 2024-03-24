@@ -3,7 +3,6 @@ package org.naukma.zlagoda.abstraction.service;
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.abstraction.repository.GettableById;
 import org.naukma.zlagoda.abstraction.repository.IRepository;
-import org.naukma.zlagoda.employee.EmployeeEntity;
 import org.naukma.zlagoda.exception.NoSuchEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -2,12 +2,30 @@ package org.naukma.zlagoda.employee;
 
 import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.employee.dto.CreateUpdateEmployeeDto;
+import org.naukma.zlagoda.employee.dto.EmployeeResponseDto;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, EmployeeEntity, Integer> {
     public EmployeeService() {
         super(EmployeeEntity::new, EmployeeEntity.class);
+    }
+
+    public EmployeeResponseDto getEmployeeResponseDto(Integer id) {
+        EmployeeEntity entity = getById(id);
+        return EmployeeResponseDto.builder()
+                .id(entity.getId())
+                .login(entity.getLogin())
+                .surname(entity.getSurname())
+                .name(entity.getName())
+                .patronymic(entity.getPatronymic())
+                .dateOfBirth(entity.getDateOfBirth())
+                .dateOfStart(entity.getDateOfStart())
+                .phoneNumber(entity.getPhoneNumber())
+                .city(entity.getCity())
+                .street(entity.getStreet())
+                .zipCode(entity.getZipCode())
+                .build();
     }
 
     @Override

@@ -8,14 +8,14 @@ import java.sql.*;
 @Repository
 public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> {
     public EmployeeRepository() {
-        super("INSERT INTO `employee` (empl_surname, empl_name, empl_patronymic, " +
+        super("INSERT INTO employee (empl_surname, empl_name, empl_patronymic, " +
                 "empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code, login, password) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                "UPDATE `employee` SET empl_surname=?, empl_name=?, empl_patronymic=?, " +
+                "UPDATE employee SET empl_surname=?, empl_name=?, empl_patronymic=?, " +
                  "empl_role=?, salary=?, date_of_birth=?, date_of_start=?, phone_number=?, city=?, street=?, zip_code=?, " +
                  "login=? WHERE id_employee=?",
-                "DELETE FROM `employee` WHERE id_employee=?",
-                "SELECT * FROM `employee` WHERE id_employee=?");
+                "DELETE FROM employee WHERE id_employee=?",
+                "SELECT * FROM employee WHERE id_employee=?");
     }
 
     @Override
