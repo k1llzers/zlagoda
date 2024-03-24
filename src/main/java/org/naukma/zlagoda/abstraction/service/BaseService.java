@@ -14,7 +14,7 @@ public abstract class BaseService<D, E extends GettableById<I>, I> implements IS
     @Autowired
     protected IRepository<E, I> repository;
     protected final Supplier<E> entitySupplier;
-    protected final Class<?> clazz;
+    protected final Class<E> clazz;
 
     @Override
     public I save(D dto) {
