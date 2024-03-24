@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
-public abstract class BaseService<D, E extends GettableById<I>, I> implements IService<D, E, I> {
+public abstract class BaseService<D extends GettableById<I>, E extends GettableById<I>, I> implements IService<D, E, I> {
     @Autowired
     protected IRepository<E, I> repository;
     protected final Supplier<E> entitySupplier;
@@ -25,7 +25,7 @@ public abstract class BaseService<D, E extends GettableById<I>, I> implements IS
 
     @Override
     public Boolean update(D dto) {
-        E entity = entitySupplier.get();
+        E entity = getById(dto.getId());
         mergeEntity(entity, dto);
         return repository.update(entity);
     }
