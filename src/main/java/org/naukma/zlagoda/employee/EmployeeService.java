@@ -7,25 +7,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, EmployeeEntity, Integer> {
-    public EmployeeService() {
+    private final EmployeeMapper mapper;
+    public EmployeeService(EmployeeMapper mapper) {
         super(EmployeeEntity::new, EmployeeEntity.class);
+        this.mapper = mapper;
     }
 
     public EmployeeResponseDto getEmployeeResponseDto(Integer id) {
-        EmployeeEntity entity = getById(id);
-        return EmployeeResponseDto.builder()
-                .id(entity.getId())
-                .login(entity.getLogin())
-                .surname(entity.getSurname())
-                .name(entity.getName())
-                .patronymic(entity.getPatronymic())
-                .dateOfBirth(entity.getDateOfBirth())
-                .dateOfStart(entity.getDateOfStart())
-                .phoneNumber(entity.getPhoneNumber())
-                .city(entity.getCity())
-                .street(entity.getStreet())
-                .zipCode(entity.getZipCode())
-                .build();
+        return mapper.toResponseDto(getById(id));
     }
 
     @Override
