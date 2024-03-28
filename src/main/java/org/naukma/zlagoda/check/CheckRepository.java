@@ -15,12 +15,12 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
     private final CustomerCardRepository customerCardRepository;
 
     public CheckRepository(EmployeeRepository employeeRepository, CustomerCardRepository customerCardRepository) {
-        super("INSERT INTO check (id_employee, card_number, print_date, sum_total, vat " +
+        super("INSERT INTO customer_check (id_employee, card_number, print_date, sum_total, vat) " +
                         "VALUES (?, ?, ?, ?, ?)",
-                "UPDATE check SET id_employee=?, card_number=?, print_date=?, sum_total=?, vat=?" +
+                "UPDATE customer_check SET id_employee=?, card_number=?, print_date=?, sum_total=?, vat=? " +
                         "WHERE check_number=?",
-                "DELETE FROM check WHERE check_number=?",
-                "SELECT * FROM check WHERE check_number=?");
+                "DELETE FROM customer_check WHERE check_number=?",
+                "SELECT * FROM customer_check WHERE check_number=?");
         this.employeeRepository = employeeRepository;
         this.customerCardRepository = customerCardRepository;
     }

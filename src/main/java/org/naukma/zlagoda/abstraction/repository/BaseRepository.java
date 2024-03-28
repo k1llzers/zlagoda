@@ -15,6 +15,7 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
     protected final String deleteQuery;
     protected final String findByIdQuery;
 
+    @Override
     public I save(E entity) {
         try(PreparedStatement createStatement = connection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {
             setMainFields(createStatement, entity);
@@ -30,6 +31,7 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
         }
     }
 
+    @Override
     public Boolean update(E entity) {
         try(PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
             setMainFields(updateStatement, entity);
@@ -41,6 +43,7 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
         }
     }
 
+    @Override
     public Boolean delete(I id) {
         try(PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)) {
             setIdToFindDeleteStatement(deleteStatement, id);
@@ -51,6 +54,7 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
         }
     }
 
+    @Override
     public Optional<E> findById(I id) {
         try(PreparedStatement findByIdStatement = connection.prepareStatement(findByIdQuery)) {
             setIdToFindDeleteStatement(findByIdStatement, id);

@@ -2,7 +2,7 @@ package org.naukma.zlagoda.abstraction.repository;
 
 import java.util.Optional;
 
-public interface IRepository<E, I> {
+public interface IRepository<E extends GettableById<I>, I> {
     I save(E entity);
 
     Boolean update(E entity);
