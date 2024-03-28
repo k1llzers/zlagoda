@@ -5,27 +5,28 @@ import org.naukma.zlagoda.exception.NoSuchEntityException;
 import org.naukma.zlagoda.product.ProductRepository;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Repository
 public class StoreProductRepository extends BaseRepository<StoreProductEntity, Integer> {
     private final ProductRepository productRepository;
 
     public StoreProductRepository(ProductRepository productRepository) {
-        super("INSERT INTO store_products (upc_prom, id_product, selling_price, products_number, " +
-                        "promotional_product VALUES (?, ?, ?, ?, ?)",
-                "UPDATE store_products SET upc_prom=?, id_product=?, selling_price=?, products_number=?, " +
+        super("INSERT INTO store_product (upc_prom, id_product, selling_price, products_number, " +
+                        "promotional_product) VALUES (?, ?, ?, ?, ?)",
+                "UPDATE store_product SET upc_prom=?, id_product=?, selling_price=?, products_number=?, " +
                         "promotional_product=? WHERE upc=?",
-                "DELETE FROM store_products WHERE upc=?",
-                "SELECT * FROM store_products WHERE upc=?");
+                "DELETE FROM store_product WHERE upc=?",
+                "SELECT * FROM store_product WHERE upc=?");
         this.productRepository = productRepository;
     }
 
     @Override
     protected void setMainFields(PreparedStatement statement, StoreProductEntity entity) throws SQLException {
-        statement.setInt(1, entity.getPromotion().getId());
+        if(entity.getPromotion() != null)
+            statement.setInt(1, entity.getPromotion().getId());
+        else
+            statement.setNull(1, Types.INTEGER);
         statement.setInt(2, entity.getProduct().getId());
         statement.setBigDecimal(3, entity.getSellingPrice());
         statement.setInt(4, entity.getProductsNumber());
@@ -36,13 +37,8 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
     protected StoreProductEntity parseSetToEntity(ResultSet set) throws SQLException {
         Integer productId = set.getInt("id_product");
         Integer promotionalId = set.getInt("upc_prom");
-        return StoreProductEntity.builder()
+        StoreProductEntity.StoreProductEntityBuilder builder = StoreProductEntity.builder()
                 .id(set.getInt("upc"))
-                .promotion(findById(promotionalId)
-                        .orElseThrow(
-                                () -> new NoSuchEntityException("Can`t find store product by id: " + promotionalId)
-                        )
-                )
                 .product(productRepository.findById(productId)
                         .orElseThrow(
                                 () -> new NoSuchEntityException("Can`t find product by id: " + productId)
@@ -50,8 +46,14 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
                 )
                 .sellingPrice(set.getBigDecimal("selling_price"))
                 .productsNumber(set.getInt("products_number"))
-                .promotional(set.getBoolean("promotional_product"))
-                .build();
+                .promotional(set.getBoolean("promotional_product"));
+        if (promotionalId != 0)
+            builder.promotion(findById(promotionalId)
+                            .orElseThrow(
+                                    () -> new NoSuchEntityException("Can`t find store product by id: " + promotionalId)
+                            )
+                    );
+        return builder.build();
     }
 
     @Override
