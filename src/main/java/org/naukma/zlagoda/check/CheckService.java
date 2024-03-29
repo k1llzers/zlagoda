@@ -7,7 +7,8 @@ import org.naukma.zlagoda.customercard.CustomerCardService;
 import org.naukma.zlagoda.employee.EmployeeService;
 import org.springframework.stereotype.Service;
 
-import java.util.function.Supplier;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity, Integer> {
@@ -35,11 +36,9 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
             entity.setEmployee(employeeService.getById(dto.getEmployeeId()));
         if(dto.getCustomerCardId() != null)
             entity.setCustomerCard(customerCardService.getById(dto.getCustomerCardId()));
-        if(dto.getPrintDate() != null)
-            entity.setPrintDate(dto.getPrintDate());
         if(dto.getSumTotal() != null)
             entity.setSumTotal(dto.getSumTotal());
-        if(dto.getVat() != null)
-            entity.setVat(dto.getVat());
+        entity.setPrintDate(LocalDateTime.now());
+        entity.setVat(entity.getSumTotal().multiply(BigDecimal.valueOf(0.2)));
     }
 }
