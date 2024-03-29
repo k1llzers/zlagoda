@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.naukma.zlagoda.abstraction.repository.GettableById;
 
-import java.math.BigDecimal;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -19,5 +19,5 @@ public class CreateUpdateCheckDto implements GettableById<Integer> {
     private Integer customerCardId;
     @NotNull(message = "Sum total can't be null.")
     @DecimalMin(value="0", message = "Sum total can't be less than zero.")
-    private BigDecimal sumTotal;
+    Map<Integer, Integer> productIdToCountMap;
 }
