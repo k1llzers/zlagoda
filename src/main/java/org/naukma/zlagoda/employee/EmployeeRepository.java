@@ -15,7 +15,8 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
                  "empl_role=?, salary=?, date_of_birth=?, date_of_start=?, phone_number=?, city=?, street=?, zip_code=?, " +
                  "login=? WHERE id_employee=?",
                 "DELETE FROM employee WHERE id_employee=?",
-                "SELECT * FROM employee WHERE id_employee=?");
+                "SELECT * FROM employee WHERE id_employee=?",
+                "SELECT * FROM employee");
     }
 
     @Override

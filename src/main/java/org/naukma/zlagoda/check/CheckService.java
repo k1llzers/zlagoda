@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,10 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
 
     public CheckResponseDto getCheckResponseDto(Integer id) {
         return mapper.toResponseDto(getById(id));
+    }
+
+    public List<CheckResponseDto> getAll() {
+        return mapper.toResponseDtoList(repository.findAll());
     }
 
     @Override

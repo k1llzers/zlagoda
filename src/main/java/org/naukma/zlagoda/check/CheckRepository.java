@@ -20,7 +20,8 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
                 "UPDATE customer_check SET id_employee=?, card_number=?, print_date=?, sum_total=?, vat=? " +
                         "WHERE check_number=?",
                 "DELETE FROM customer_check WHERE check_number=?",
-                "SELECT * FROM customer_check WHERE check_number=?");
+                "SELECT * FROM customer_check WHERE check_number=?",
+                "SELECT * FROM customer_check");
         this.employeeRepository = employeeRepository;
         this.customerCardRepository = customerCardRepository;
     }

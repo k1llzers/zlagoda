@@ -7,7 +7,7 @@ import org.naukma.zlagoda.check.dto.CreateUpdateCheckDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.ResultSet;
+import java.util.List;
 
 @RestController
 @RequestMapping("/check")
@@ -18,6 +18,10 @@ public class CheckController {
     @GetMapping("/{id}")
     public ResponseEntity<CheckResponseDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getCheckResponseDto(id));
+    }
+    @GetMapping
+    public ResponseEntity<List<CheckResponseDto>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @DeleteMapping("/{id}")

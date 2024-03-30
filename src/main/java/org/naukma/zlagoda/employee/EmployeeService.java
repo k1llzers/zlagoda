@@ -5,6 +5,8 @@ import org.naukma.zlagoda.employee.dto.CreateUpdateEmployeeDto;
 import org.naukma.zlagoda.employee.dto.EmployeeResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, EmployeeEntity, Integer> {
     private final EmployeeMapper mapper;
@@ -15,6 +17,10 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
 
     public EmployeeResponseDto getEmployeeResponseDto(Integer id) {
         return mapper.toResponseDto(getById(id));
+    }
+
+    public List<EmployeeResponseDto> getAll() {
+        return mapper.toResponseDtoList(repository.findAll());
     }
 
     @Override
