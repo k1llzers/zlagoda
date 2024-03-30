@@ -13,11 +13,14 @@ import java.util.Optional;
 public abstract class BaseRepository<E extends GettableById<I>, I> implements IRepository<E, I> {
     @Autowired
     protected Connection connection;
+    protected final String tableName;
     protected final String createQuery;
     protected final String updateQuery;
     protected final String deleteQuery;
     protected final String findByIdQuery;
-    protected final String findAllQuery;
+    protected final String defaultOrderByColumn;
+    protected String findAllQuery = "SELECT * FROM %a";
+    protected String findAllQueryOrderBy = "SELECT * FROM %a ORDER BY %d";
 
     @Override
     public I save(@Valid E entity) {
@@ -77,7 +80,22 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
     @Override
     public List<E> findAll() {
         List<E> entities = new ArrayList<>();
-        try(PreparedStatement findAllStatement = connection.prepareStatement(findAllQuery)) {
+        try(PreparedStatement findAllStatement = connection.prepareStatement(String.format(findAllQuery, tableName))) {
+            ResultSet resultSet = findAllStatement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<E> findAllOrderBy() {
+        List<E> entities = new ArrayList<>();
+        try(PreparedStatement findAllStatement = connection.prepareStatement(String.format(findAllQueryOrderBy, tableName, defaultOrderByColumn))) {
             ResultSet resultSet = findAllStatement.executeQuery();
             while (resultSet.next()){
                 entities.add(parseSetToEntity(resultSet));
