@@ -21,6 +21,10 @@ public class CategoryService extends BaseService<CreateUpdateCategoryDto, Catego
         return mapper.toResponseDtoList(repository.findAll());
     }
 
+    public List<CategoryResponseDto> getAllOrderByName() {
+        return mapper.toResponseDtoList(repository.findAllOrderBy());
+    }
+
     public CategoryResponseDto getCategoryResponseDto(Integer id){
         return mapper.toResponseDto(getById(id));
     }

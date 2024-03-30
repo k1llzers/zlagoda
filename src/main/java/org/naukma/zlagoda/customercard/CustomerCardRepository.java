@@ -10,14 +10,15 @@ import java.sql.SQLException;
 @Repository
 public class CustomerCardRepository extends BaseRepository<CustomerCardEntity, Integer> {
     public CustomerCardRepository() {
-        super("INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, " +
+        super("customer_card",
+                "INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, " +
                 "phone_number, city, street, zip_code, percent) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 "UPDATE customer_card SET cust_surname=?, cust_name=?, cust_patronymic=?, " +
                         "phone_number=?, city=?, street=?, zip_code=?, percent=? WHERE card_number=?",
                 "DELETE FROM customer_card WHERE card_number=?",
                 "SELECT * FROM customer_card WHERE card_number=?",
-                "SELECT * FROM customer_card");
+                "cust_surname");
     }
 
     @Override

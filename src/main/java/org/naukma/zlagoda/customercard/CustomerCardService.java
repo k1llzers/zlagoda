@@ -23,6 +23,10 @@ public class CustomerCardService extends BaseService<CreateUpdateCustomerCardDto
         return mapper.toResponseDtoList(repository.findAll());
     }
 
+    public List<CustomerCardResponseDto> getAllOrderBySurname() {
+        return mapper.toResponseDtoList(repository.findAllOrderBy());
+    }
+
     @Override
     protected void mergeEntity(CustomerCardEntity entity, CreateUpdateCustomerCardDto dto) {
         if (dto.getId() != null)

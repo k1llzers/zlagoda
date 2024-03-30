@@ -12,13 +12,14 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
     private final ProductRepository productRepository;
 
     public StoreProductRepository(ProductRepository productRepository) {
-        super("INSERT INTO store_product (upc_prom, id_product, selling_price, products_number, " +
+        super("store_product",
+                "INSERT INTO store_product (upc_prom, id_product, selling_price, products_number, " +
                         "promotional_product) VALUES (?, ?, ?, ?, ?)",
                 "UPDATE store_product SET upc_prom=?, id_product=?, selling_price=?, products_number=?, " +
                         "promotional_product=? WHERE upc=?",
                 "DELETE FROM store_product WHERE upc=?",
                 "SELECT * FROM store_product WHERE upc=?",
-                "SELECT * FROM store_product");
+                "products_number");
         this.productRepository = productRepository;
     }
 

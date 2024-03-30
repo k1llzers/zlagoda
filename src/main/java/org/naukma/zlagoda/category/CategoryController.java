@@ -25,6 +25,11 @@ public class CategoryController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping("/order-by/name")
+    public ResponseEntity<List<CategoryResponseDto>> getAllOrderByName() {
+        return ResponseEntity.ok(service.getAllOrderByName());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));

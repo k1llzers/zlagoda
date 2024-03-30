@@ -25,6 +25,10 @@ public class StoreProductController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping("/order-by/count")
+    public ResponseEntity<List<StoreProductResponseDto>> getAllOrderByCount() {
+        return ResponseEntity.ok(service.getAllOrderByCount());
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {

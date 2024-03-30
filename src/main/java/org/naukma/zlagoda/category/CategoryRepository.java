@@ -11,11 +11,12 @@ import java.sql.SQLException;
 public class CategoryRepository extends BaseRepository<CategoryEntity, Integer> {
 
     public CategoryRepository() {
-        super("INSERT INTO category (category_name) VALUES (?)",
+        super("category",
+                "INSERT INTO category (category_name) VALUES (?)",
                 "UPDATE category SET category_name=? WHERE category_number=?",
                 "DELETE FROM category WHERE category_number=?",
                 "SELECT * FROM category WHERE category_number=?",
-                "SELECT * FROM category");
+                "category_name");
     }
     @Override
     protected void setMainFields(PreparedStatement statement, CategoryEntity entity) throws SQLException {

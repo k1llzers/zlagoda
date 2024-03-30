@@ -27,6 +27,10 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
         return mapper.toResponseDtoList(repository.findAll());
     }
 
+    public List<StoreProductResponseDto> getAllOrderByCount() {
+        return mapper.toResponseDtoList(repository.findAllOrderBy());
+    }
+
     @Override
     protected void mergeEntity(StoreProductEntity entity, CreateUpdateStoreProductDto dto) {
         if (dto.getId() != null)

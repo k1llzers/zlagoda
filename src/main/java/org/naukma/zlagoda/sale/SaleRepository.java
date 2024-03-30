@@ -16,13 +16,14 @@ public class SaleRepository extends BaseRepository<SaleEntity, SaleId> {
     private final StoreProductRepository storeProductRepository;
 
     public SaleRepository(CheckRepository checkRepository, StoreProductRepository storeProductRepository) {
-        super("INSERT INTO sale (upc, check_number, product_number, selling_price)" +
+        super("sale",
+                "INSERT INTO sale (upc, check_number, product_number, selling_price)" +
                 "VALUES (?,?,?,?)",
                 "UPDATE sale SET product_number=?, selling_price=?" +
                         "WHERE upc=? AND check_number=?",
                 "DELETE FROM sale WHERE upc=? AND check_number=?",
                 "SELECT * FROM sale WHERE upc=? AND check_number=?",
-                "SELECT * FROM sale");
+                null);
         this.checkRepository = checkRepository;
         this.storeProductRepository = storeProductRepository;
     }
