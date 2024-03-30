@@ -19,8 +19,8 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
     protected final String deleteQuery;
     protected final String findByIdQuery;
     protected final String defaultOrderByColumn;
-    protected String findAllQuery = "SELECT * FROM %a";
-    protected String findAllQueryOrderBy = "SELECT * FROM %a ORDER BY %d";
+    protected String findAllQuery = "SELECT * FROM %s";
+    protected String findAllQueryOrderBy = "SELECT * FROM %s ORDER BY %s";
 
     @Override
     public I save(@Valid E entity) {
@@ -79,23 +79,39 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
 
     @Override
     public List<E> findAll() {
-        List<E> entities = new ArrayList<>();
-        try(PreparedStatement findAllStatement = connection.prepareStatement(String.format(findAllQuery, tableName))) {
-            ResultSet resultSet = findAllStatement.executeQuery();
-            while (resultSet.next()){
-                entities.add(parseSetToEntity(resultSet));
-            }
-            return entities;
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//        List<E> entities = new ArrayList<>();
+//        try(PreparedStatement findAllStatement = connection.prepareStatement(String.format(findAllQuery, tableName))) {
+//            ResultSet resultSet = findAllStatement.executeQuery();
+//            while (resultSet.next()){
+//                entities.add(parseSetToEntity(resultSet));
+//            }
+//            return entities;
+//        }
+//        catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+        return findAllByCustomQuery(String.format(findAllQuery, tableName));
     }
 
     @Override
     public List<E> findAllOrderByDefault() {
+//        List<E> entities = new ArrayList<>();
+//        try(PreparedStatement findAllStatement = connection.prepareStatement(String.format(findAllQueryOrderBy, tableName, defaultOrderByColumn))) {
+//            ResultSet resultSet = findAllStatement.executeQuery();
+//            while (resultSet.next()){
+//                entities.add(parseSetToEntity(resultSet));
+//            }
+//            return entities;
+//        }
+//        catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+        return findAllByCustomQuery(String.format(findAllQueryOrderBy, tableName, defaultOrderByColumn));
+    }
+
+    protected List<E> findAllByCustomQuery(String customQuery) {
         List<E> entities = new ArrayList<>();
-        try(PreparedStatement findAllStatement = connection.prepareStatement(String.format(findAllQueryOrderBy, tableName, defaultOrderByColumn))) {
+        try(PreparedStatement findAllStatement = connection.prepareStatement(customQuery)) {
             ResultSet resultSet = findAllStatement.executeQuery();
             while (resultSet.next()){
                 entities.add(parseSetToEntity(resultSet));
