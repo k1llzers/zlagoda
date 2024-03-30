@@ -1,5 +1,6 @@
 package org.naukma.zlagoda.check;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.check.dto.CheckResponseDto;
 import org.naukma.zlagoda.check.dto.CreateUpdateCheckDto;
@@ -25,12 +26,12 @@ public class CheckController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> create(@RequestBody CreateUpdateCheckDto body) {
+    public ResponseEntity<Integer> create(@RequestBody @Valid CreateUpdateCheckDto body) {
         return ResponseEntity.ok(service.save(body));
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody CreateUpdateCheckDto body) {
+    public ResponseEntity<Boolean> update(@RequestBody @Valid CreateUpdateCheckDto body) {
         return ResponseEntity.ok(service.update(body));
     }
 }

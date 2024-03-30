@@ -1,5 +1,6 @@
 package org.naukma.zlagoda.category;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.category.dto.CategoryResponseDto;
 import org.naukma.zlagoda.category.dto.CreateUpdateCategoryDto;
@@ -23,12 +24,12 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> create(@RequestBody CreateUpdateCategoryDto body) {
+    public ResponseEntity<Integer> create(@RequestBody @Valid CreateUpdateCategoryDto body) {
         return ResponseEntity.ok(service.save(body));
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody CreateUpdateCategoryDto body) {
+    public ResponseEntity<Boolean> update(@RequestBody @Valid CreateUpdateCategoryDto body) {
         return ResponseEntity.ok(service.update(body));
     }
 

@@ -1,5 +1,6 @@
 package org.naukma.zlagoda.storeproduct;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
@@ -23,12 +24,12 @@ public class StoreProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> create(@RequestBody CreateUpdateStoreProductDto body) {
+    public ResponseEntity<Integer> create(@RequestBody @Valid CreateUpdateStoreProductDto body) {
         return ResponseEntity.ok(service.save(body));
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody CreateUpdateStoreProductDto body) {
+    public ResponseEntity<Boolean> update(@RequestBody @Valid CreateUpdateStoreProductDto body) {
         return ResponseEntity.ok(service.update(body));
     }
 }

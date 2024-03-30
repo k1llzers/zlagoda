@@ -1,5 +1,6 @@
 package org.naukma.zlagoda.employee;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.employee.dto.CreateUpdateEmployeeDto;
 import org.naukma.zlagoda.employee.dto.EmployeeResponseDto;
@@ -30,12 +31,12 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> create(@RequestBody CreateUpdateEmployeeDto body) {
+    public ResponseEntity<Integer> create(@RequestBody @Valid CreateUpdateEmployeeDto body) {
         return ResponseEntity.ok(service.save(body));
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody CreateUpdateEmployeeDto body) {
+    public ResponseEntity<Boolean> update(@RequestBody @Valid CreateUpdateEmployeeDto body) {
         return ResponseEntity.ok(service.update(body));
     }
 }

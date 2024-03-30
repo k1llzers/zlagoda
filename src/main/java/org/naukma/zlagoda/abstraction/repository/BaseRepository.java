@@ -1,9 +1,12 @@
 package org.naukma.zlagoda.abstraction.repository;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -14,9 +17,10 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
     protected final String updateQuery;
     protected final String deleteQuery;
     protected final String findByIdQuery;
+    protected final String findAllQuery;
 
     @Override
-    public I save(E entity) {
+    public I save(@Valid E entity) {
         try(PreparedStatement createStatement = connection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {
             setMainFields(createStatement, entity);
             createStatement.executeUpdate();
@@ -32,7 +36,7 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
     }
 
     @Override
-    public Boolean update(E entity) {
+    public Boolean update(@Valid E entity) {
         try(PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
             setMainFields(updateStatement, entity);
             setIdToUpdateStatement(updateStatement, entity.getId());
@@ -64,6 +68,21 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
                 result = parseSetToEntity(resultSet);
             }
             return Optional.ofNullable(result);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<E> getAll() {
+        List<E> entities = new ArrayList<>();
+        try(PreparedStatement findAllStatement = connection.prepareStatement(findAllQuery)) {
+            ResultSet resultSet = findAllStatement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
         }
         catch (SQLException e) {
             throw new RuntimeException(e);

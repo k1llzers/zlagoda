@@ -1,6 +1,5 @@
 package org.naukma.zlagoda.check.dto;
 
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.naukma.zlagoda.abstraction.repository.GettableById;

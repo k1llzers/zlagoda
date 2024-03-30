@@ -1,5 +1,6 @@
 package org.naukma.zlagoda.customercard;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.customercard.dto.CreateUpdateCustomerCardDto;
 import org.naukma.zlagoda.customercard.dto.CustomerCardResponseDto;
@@ -30,12 +31,12 @@ public class CustomerCardController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> create(@RequestBody CreateUpdateCustomerCardDto dto) {
+    public ResponseEntity<Integer> create(@RequestBody @Valid CreateUpdateCustomerCardDto dto) {
         return ResponseEntity.ok(service.save(dto));
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody CreateUpdateCustomerCardDto dto) {
+    public ResponseEntity<Boolean> update(@RequestBody @Valid CreateUpdateCustomerCardDto dto) {
         return ResponseEntity.ok(service.update(dto));
     }
 }
