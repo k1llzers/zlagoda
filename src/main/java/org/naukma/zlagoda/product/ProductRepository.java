@@ -14,13 +14,14 @@ public class ProductRepository extends BaseRepository<ProductEntity, Integer> {
     private final CategoryRepository categoryRepository;
 
     public ProductRepository(CategoryRepository categoryRepository) {
-        super("INSERT INTO product (category_number, product_name, characteristics) " +
+        super("product",
+                "INSERT INTO product (category_number, product_name, characteristics) " +
                         "VALUES (?, ?, ?)",
                 "UPDATE product SET category_number=?, product_name=?, characteristics=? " +
                         "WHERE id_product=?",
                 "DELETE FROM product WHERE id_product=?",
                 "SELECT * FROM product WHERE id_product=?",
-                "SELECT * FROM product");
+                "product_name");
         this.categoryRepository = categoryRepository;
     }
 

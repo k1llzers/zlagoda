@@ -31,6 +31,11 @@ public class EmployeeController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping("/order-by/surname")
+    public ResponseEntity<List<EmployeeResponseDto>> getAllOrderBySurname() {
+        return ResponseEntity.ok(service.getAllOrderBySurname());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));

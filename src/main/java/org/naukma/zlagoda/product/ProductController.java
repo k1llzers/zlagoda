@@ -25,6 +25,11 @@ public class ProductController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping("/order_by/name")
+    public ResponseEntity<List<ProductResponseDto>> getAllOrderByName() {
+        return ResponseEntity.ok(service.getAllOrderByName());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));

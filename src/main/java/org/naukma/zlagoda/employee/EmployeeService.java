@@ -23,6 +23,10 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
         return mapper.toResponseDtoList(repository.findAll());
     }
 
+    public List<EmployeeResponseDto> getAllOrderBySurname() {
+        return mapper.toResponseDtoList(repository.findAllOrderBy());
+    }
+
     @Override
     protected void mergeEntity(EmployeeEntity entity, CreateUpdateEmployeeDto dto) {
         if(dto.getId() != null)
