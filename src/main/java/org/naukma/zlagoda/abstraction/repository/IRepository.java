@@ -12,5 +12,5 @@ public interface IRepository<E extends GettableById<I>, I> {
 
     Optional<E> findById(I id);
 
-    List<E> getAll();
+    List<E> findAll();
 }

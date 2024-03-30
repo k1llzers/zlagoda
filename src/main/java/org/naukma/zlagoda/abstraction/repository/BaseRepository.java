@@ -75,7 +75,7 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
     }
 
     @Override
-    public List<E> getAll() {
+    public List<E> findAll() {
         List<E> entities = new ArrayList<>();
         try(PreparedStatement findAllStatement = connection.prepareStatement(findAllQuery)) {
             ResultSet resultSet = findAllStatement.executeQuery();
