@@ -24,7 +24,7 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
     }
 
     public List<EmployeeResponseDto> getAllOrderBySurname() {
-        return mapper.toResponseDtoList(repository.findAllOrderBy());
+        return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
 
     @Override

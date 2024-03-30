@@ -24,7 +24,7 @@ public class CustomerCardService extends BaseService<CreateUpdateCustomerCardDto
     }
 
     public List<CustomerCardResponseDto> getAllOrderBySurname() {
-        return mapper.toResponseDtoList(repository.findAllOrderBy());
+        return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
 
     @Override

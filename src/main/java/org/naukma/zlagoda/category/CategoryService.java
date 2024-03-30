@@ -22,7 +22,7 @@ public class CategoryService extends BaseService<CreateUpdateCategoryDto, Catego
     }
 
     public List<CategoryResponseDto> getAllOrderByName() {
-        return mapper.toResponseDtoList(repository.findAllOrderBy());
+        return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
 
     public CategoryResponseDto getCategoryResponseDto(Integer id){

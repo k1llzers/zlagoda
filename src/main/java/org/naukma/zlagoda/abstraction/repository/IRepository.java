@@ -14,5 +14,5 @@ public interface IRepository<E extends GettableById<I>, I> {
 
     List<E> findAll();
 
-    List<E> findAllOrderBy();
+    List<E> findAllOrderByDefault();
 }

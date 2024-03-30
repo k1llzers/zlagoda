@@ -27,7 +27,7 @@ public class ProductService extends BaseService<CreateUpdateProductDto, ProductE
     }
 
     public List<ProductResponseDto> getAllOrderByName() {
-        return mapper.toResponseDtoList(repository.findAllOrderBy());
+        return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
 
     @Override

@@ -28,7 +28,7 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
     }
 
     public List<StoreProductResponseDto> getAllOrderByCount() {
-        return mapper.toResponseDtoList(repository.findAllOrderBy());
+        return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
 
     @Override

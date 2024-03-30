@@ -93,7 +93,7 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
     }
 
     @Override
-    public List<E> findAllOrderBy() {
+    public List<E> findAllOrderByDefault() {
         List<E> entities = new ArrayList<>();
         try(PreparedStatement findAllStatement = connection.prepareStatement(String.format(findAllQueryOrderBy, tableName, defaultOrderByColumn))) {
             ResultSet resultSet = findAllStatement.executeQuery();
