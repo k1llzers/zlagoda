@@ -6,6 +6,8 @@ import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StoreProductService extends BaseService<CreateUpdateStoreProductDto, StoreProductEntity, Integer> {
     private final StoreProductMapper mapper;
@@ -19,6 +21,10 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
 
     public StoreProductResponseDto getResponseDto(Integer id) {
         return mapper.toResponseDto(getById(id));
+    }
+
+    public List<StoreProductResponseDto> getAll() {
+        return mapper.toResponseDtoList(repository.findAll());
     }
 
     @Override

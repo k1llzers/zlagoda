@@ -5,6 +5,8 @@ import org.naukma.zlagoda.customercard.dto.CreateUpdateCustomerCardDto;
 import org.naukma.zlagoda.customercard.dto.CustomerCardResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerCardService extends BaseService<CreateUpdateCustomerCardDto, CustomerCardEntity, Integer> {
     private final CustomerCardMapper mapper;
@@ -15,6 +17,10 @@ public class CustomerCardService extends BaseService<CreateUpdateCustomerCardDto
 
     public CustomerCardResponseDto getResponseDto(Integer id) {
         return mapper.toResponseDto(getById(id));
+    }
+
+    public List<CustomerCardResponseDto> getAll() {
+        return mapper.toResponseDtoList(repository.findAll());
     }
 
     @Override

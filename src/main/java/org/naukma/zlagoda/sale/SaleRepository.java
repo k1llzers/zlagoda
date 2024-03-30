@@ -21,7 +21,8 @@ public class SaleRepository extends BaseRepository<SaleEntity, SaleId> {
                 "UPDATE sale SET product_number=?, selling_price=?" +
                         "WHERE upc=? AND check_number=?",
                 "DELETE FROM sale WHERE upc=? AND check_number=?",
-                "SELECT * FROM sale WHERE upc=? AND check_number=?");
+                "SELECT * FROM sale WHERE upc=? AND check_number=?",
+                "SELECT * FROM sale");
         this.checkRepository = checkRepository;
         this.storeProductRepository = storeProductRepository;
     }

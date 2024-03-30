@@ -7,6 +7,8 @@ import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/store-product")
 @RequiredArgsConstructor
@@ -17,6 +19,12 @@ public class StoreProductController {
     public ResponseEntity<StoreProductResponseDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getResponseDto(id));
     }
+
+    @GetMapping
+    public ResponseEntity<List<StoreProductResponseDto>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {

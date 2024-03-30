@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/customer-card")
 @RequiredArgsConstructor
@@ -23,6 +25,11 @@ public class CustomerCardController {
     @GetMapping("/{id}")
     public ResponseEntity<CustomerCardResponseDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getResponseDto(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CustomerCardResponseDto>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @DeleteMapping("/{id}")

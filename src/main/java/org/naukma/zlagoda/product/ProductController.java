@@ -7,6 +7,8 @@ import org.naukma.zlagoda.product.dto.ProductResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/product")
 @RequiredArgsConstructor
@@ -16,6 +18,11 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getProductResponseDto(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponseDto>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @DeleteMapping("/{id}")

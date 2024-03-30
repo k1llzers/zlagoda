@@ -17,7 +17,8 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
                 "UPDATE store_product SET upc_prom=?, id_product=?, selling_price=?, products_number=?, " +
                         "promotional_product=? WHERE upc=?",
                 "DELETE FROM store_product WHERE upc=?",
-                "SELECT * FROM store_product WHERE upc=?");
+                "SELECT * FROM store_product WHERE upc=?",
+                "SELECT * FROM store_product");
         this.productRepository = productRepository;
     }
 

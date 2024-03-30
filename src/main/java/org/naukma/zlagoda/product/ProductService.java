@@ -6,6 +6,8 @@ import org.naukma.zlagoda.product.dto.CreateUpdateProductDto;
 import org.naukma.zlagoda.product.dto.ProductResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService extends BaseService<CreateUpdateProductDto, ProductEntity, Integer> {
     private final ProductMapper mapper;
@@ -18,6 +20,10 @@ public class ProductService extends BaseService<CreateUpdateProductDto, ProductE
 
     public ProductResponseDto getProductResponseDto(Integer id) {
         return mapper.toResponseDto(getById(id));
+    }
+
+    public List<ProductResponseDto> getAll() {
+        return mapper.toResponseDtoList(repository.findAll());
     }
 
     @Override

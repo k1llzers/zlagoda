@@ -14,7 +14,8 @@ public class CategoryRepository extends BaseRepository<CategoryEntity, Integer> 
         super("INSERT INTO category (category_name) VALUES (?)",
                 "UPDATE category SET category_name=? WHERE category_number=?",
                 "DELETE FROM category WHERE category_number=?",
-                "SELECT * FROM category WHERE category_number=?");
+                "SELECT * FROM category WHERE category_number=?",
+                "SELECT * FROM category");
     }
     @Override
     protected void setMainFields(PreparedStatement statement, CategoryEntity entity) throws SQLException {

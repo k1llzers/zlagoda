@@ -19,7 +19,8 @@ public class ProductRepository extends BaseRepository<ProductEntity, Integer> {
                 "UPDATE product SET category_number=?, product_name=?, characteristics=? " +
                         "WHERE id_product=?",
                 "DELETE FROM product WHERE id_product=?",
-                "SELECT * FROM product WHERE id_product=?");
+                "SELECT * FROM product WHERE id_product=?",
+                "SELECT * FROM product");
         this.categoryRepository = categoryRepository;
     }
 

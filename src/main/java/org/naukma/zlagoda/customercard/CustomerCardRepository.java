@@ -16,7 +16,8 @@ public class CustomerCardRepository extends BaseRepository<CustomerCardEntity, I
                 "UPDATE customer_card SET cust_surname=?, cust_name=?, cust_patronymic=?, " +
                         "phone_number=?, city=?, street=?, zip_code=?, percent=? WHERE card_number=?",
                 "DELETE FROM customer_card WHERE card_number=?",
-                "SELECT * FROM customer_card WHERE card_number=?");
+                "SELECT * FROM customer_card WHERE card_number=?",
+                "SELECT * FROM customer_card");
     }
 
     @Override

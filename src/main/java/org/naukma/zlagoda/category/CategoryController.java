@@ -7,6 +7,8 @@ import org.naukma.zlagoda.category.dto.CreateUpdateCategoryDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/category")
 @RequiredArgsConstructor
@@ -16,6 +18,11 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponseDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getCategoryResponseDto(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CategoryResponseDto>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @DeleteMapping("/{id}")

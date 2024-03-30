@@ -5,6 +5,8 @@ import org.naukma.zlagoda.category.dto.CategoryResponseDto;
 import org.naukma.zlagoda.category.dto.CreateUpdateCategoryDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryService extends BaseService<CreateUpdateCategoryDto, CategoryEntity, Integer> {
 
@@ -15,9 +17,14 @@ public class CategoryService extends BaseService<CreateUpdateCategoryDto, Catego
         this.mapper = mapper;
     }
 
+    public List<CategoryResponseDto> getAll() {
+        return mapper.toResponseDtoList(repository.findAll());
+    }
+
     public CategoryResponseDto getCategoryResponseDto(Integer id){
         return mapper.toResponseDto(getById(id));
     }
+
     @Override
     protected void mergeEntity(CategoryEntity entity, CreateUpdateCategoryDto dto) {
         if(dto.getId() != null)
