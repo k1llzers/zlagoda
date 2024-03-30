@@ -4,6 +4,7 @@ import org.naukma.zlagoda.abstraction.repository.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.List;
 
 @Repository
 public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> {
@@ -17,7 +18,12 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
                  "login=? WHERE id_employee=?",
                 "DELETE FROM employee WHERE id_employee=?",
                 "SELECT * FROM employee WHERE id_employee=?",
-                "surname");
+                "empl_surname");
+    }
+
+    public List<EmployeeEntity> findAllCashiersOrderedBySurname() {
+        String query = "SELECT * FROM employee WHERE empl_role='CASHIER' ORDER BY empl_surname";
+        return findAllByCustomQuery(query);
     }
 
     @Override
