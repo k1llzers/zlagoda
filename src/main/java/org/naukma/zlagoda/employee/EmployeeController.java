@@ -3,6 +3,7 @@ package org.naukma.zlagoda.employee;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.employee.dto.CreateUpdateEmployeeDto;
+import org.naukma.zlagoda.employee.dto.EmployeePhoneNumberAddressDto;
 import org.naukma.zlagoda.employee.dto.EmployeeResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -39,6 +41,11 @@ public class EmployeeController {
     @GetMapping("/cashier/order-by/surname")
     public ResponseEntity<List<EmployeeResponseDto>> getAllCashiersOrderBySurname() {
         return ResponseEntity.ok(service.getAllCashiersOrderBySurname());
+    }
+
+    @GetMapping("/address/phone")
+    public ResponseEntity<List<EmployeePhoneNumberAddressDto>> getAllAddressAndPhoneBySurname(@RequestPart String surname) {
+        return ResponseEntity.ok(service.getPhoneNumberAndAddressBySurname(surname));
     }
 
     @DeleteMapping("/{id}")

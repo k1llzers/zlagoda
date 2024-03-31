@@ -4,6 +4,7 @@ import org.naukma.zlagoda.abstraction.repository.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -24,6 +25,22 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
     public List<EmployeeEntity> findAllCashiersOrderedBySurname() {
         String query = "SELECT * FROM employee WHERE empl_role='CASHIER' ORDER BY empl_surname";
         return findAllByCustomQuery(query);
+    }
+
+    public List<EmployeeEntity> findPhoneNumberAndAddressBySurname(String surname) {
+        String query = "SELECT id_employee, empl_surname, empl_name, empl_patronymic, phone_number, city, street, zip_code FROM employee WHERE empl_surname=?";
+        List<EmployeeEntity> entities = new ArrayList<>();
+        try(PreparedStatement findAllStatement = connection.prepareStatement(query)) {
+            findAllStatement.setString(1, surname);
+            ResultSet resultSet = findAllStatement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetWithAddressPhoneNumberAndNamToEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -75,6 +92,19 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
                 .street(set.getString("street"))
                 .zipCode(set.getString("zip_code"))
                 .login(set.getString("login"))
+                .build();
+    }
+
+    private EmployeeEntity parseSetWithAddressPhoneNumberAndNamToEntity(ResultSet set) throws SQLException {
+        return EmployeeEntity.builder()
+                .id(set.getInt("id_employee"))
+                .surname(set.getString("empl_surname"))
+                .name(set.getString("empl_name"))
+                .patronymic(set.getString("empl_patronymic"))
+                .phoneNumber(set.getString("phone_number"))
+                .city(set.getString("city"))
+                .street(set.getString("street"))
+                .zipCode(set.getString("zip_code"))
                 .build();
     }
 

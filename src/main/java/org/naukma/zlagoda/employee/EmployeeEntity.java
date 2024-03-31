@@ -63,5 +63,4 @@ public class EmployeeEntity implements GettableById<Integer> {
     @NotBlank(message = "Zip code can't be blank.")
     @Size(max=9, message = "Zip code size can't be more than 9.")
     private String zipCode;
-
 }

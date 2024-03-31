@@ -2,6 +2,7 @@ package org.naukma.zlagoda.employee;
 
 import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.employee.dto.CreateUpdateEmployeeDto;
+import org.naukma.zlagoda.employee.dto.EmployeePhoneNumberAddressDto;
 import org.naukma.zlagoda.employee.dto.EmployeeResponseDto;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,10 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
 
     public List<EmployeeResponseDto> getAllOrderBySurname() {
         return mapper.toResponseDtoList(repository.findAllOrderByDefault());
+    }
+
+    public List<EmployeePhoneNumberAddressDto> getPhoneNumberAndAddressBySurname(String surname) {
+        return mapper.toPhoneNumberAddressDtoList(((EmployeeRepository) repository).findPhoneNumberAndAddressBySurname(surname));
     }
 
     public List<EmployeeResponseDto> getAllCashiersOrderBySurname() {
