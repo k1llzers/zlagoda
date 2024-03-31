@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
+import org.naukma.zlagoda.storeproduct.dto.StoreProductWithPriceCountNameAndCharacteristicDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductShortResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class StoreProductController {
     private final StoreProductService service;
 
     @GetMapping("/{id}")
-    public ResponseEntity<StoreProductResponseDto> getById(@PathVariable Integer id) {
+    public ResponseEntity<StoreProductWithPriceCountNameAndCharacteristicDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getResponseDto(id));
     }
 

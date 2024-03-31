@@ -4,6 +4,7 @@ import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.product.ProductService;
 import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
+import org.naukma.zlagoda.storeproduct.dto.StoreProductWithPriceCountNameAndCharacteristicDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductShortResponseDto;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
         this.productService = productService;
     }
 
-    public StoreProductResponseDto getResponseDto(Integer id) {
+    public StoreProductWithPriceCountNameAndCharacteristicDto getResponseDto(Integer id) {
         return mapper.toResponseDto(getById(id));
     }
 
