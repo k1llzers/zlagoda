@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.naukma.zlagoda.category.CategoryMapper;
 import org.naukma.zlagoda.config.MapperConfig;
 import org.naukma.zlagoda.product.dto.ProductResponseDto;
+import org.naukma.zlagoda.product.dto.ProductWithoutCategoryDto;
 
 import java.util.List;
 
@@ -11,5 +12,7 @@ import java.util.List;
 public interface ProductMapper {
     ProductResponseDto toResponseDto(ProductEntity entity);
 
-    List<ProductResponseDto> toResponseDtoList(List<ProductEntity> entity);
+    List<ProductResponseDto> toResponseDtoList(List<ProductEntity> entities);
+
+    ProductWithoutCategoryDto toProductWithoutCategoryDto(ProductEntity entity);
 }
