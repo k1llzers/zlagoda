@@ -35,7 +35,7 @@ public class CheckController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody @Valid CreateUpdateCheckDto body) {
+    public ResponseEntity<Boolean> update(@RequestBody CreateUpdateCheckDto body) {
         return ResponseEntity.ok(service.update(body));
     }
 }

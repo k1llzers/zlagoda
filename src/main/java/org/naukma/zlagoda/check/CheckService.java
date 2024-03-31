@@ -66,7 +66,7 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
             entity.setCustomerCard(customerCardService.getById(dto.getCustomerCardId()));
         if (dto.getProductIdToCountMap() != null) {
             Map<StoreProductEntity, Integer> productToCount = getProductEntityToCountMap(dto.getProductIdToCountMap());
-            entity.setSumTotal(countSumTotal(productToCount));
+            entity.setSumTotal(countSumTotal(productToCount).multiply(BigDecimal.valueOf((100.0 - entity.getCustomerCard().getPercent()) / 100)));
         }
         entity.setPrintDate(LocalDateTime.now());
         entity.setVat(entity.getSumTotal().multiply(BigDecimal.valueOf(0.2)));
