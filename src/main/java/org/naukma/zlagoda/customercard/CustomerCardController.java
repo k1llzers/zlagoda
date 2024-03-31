@@ -37,6 +37,11 @@ public class CustomerCardController {
         return ResponseEntity.ok(service.getAllOrderBySurname());
     }
 
+    @GetMapping("/order-by/surname/{percent}")
+    public ResponseEntity<List<CustomerCardResponseDto>> getAllCustomerWithPercentOrderBySurname(@PathVariable Integer percent) {
+        return ResponseEntity.ok(service.getAllCustomerWithPercentOrderBySurname(percent));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));

@@ -25,9 +25,14 @@ public class ProductController {
         return ResponseEntity.ok(service.getAll());
     }
 
-    @GetMapping("/order_by/name")
+    @GetMapping("/order-by/name")
     public ResponseEntity<List<ProductResponseDto>> getAllOrderByName() {
         return ResponseEntity.ok(service.getAllOrderByName());
+    }
+
+    @GetMapping("/order-by/name/{categoryId}")
+    public ResponseEntity<List<ProductResponseDto>> getAllProductsFromCategoryOrderByName(@PathVariable Integer categoryId) {
+        return ResponseEntity.ok(service.getAllProductsFromCategoryOrderByName(categoryId));
     }
 
     @DeleteMapping("/{id}")

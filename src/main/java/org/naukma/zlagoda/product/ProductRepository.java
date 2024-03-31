@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class ProductRepository extends BaseRepository<ProductEntity, Integer> {
@@ -23,6 +24,11 @@ public class ProductRepository extends BaseRepository<ProductEntity, Integer> {
                 "SELECT * FROM product WHERE id_product=?",
                 "product_name");
         this.categoryRepository = categoryRepository;
+    }
+
+    public List<ProductEntity> findAllProductsFromCategoryOrderByName(Integer id) {
+        String query = String.format("SELECT * FROM product WHERE category_number=%i ORDER BY product_name");
+        return findAllByCustomQuery(query);
     }
 
     @Override

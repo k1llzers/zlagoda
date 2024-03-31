@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class CustomerCardRepository extends BaseRepository<CustomerCardEntity, Integer> {
@@ -19,6 +20,11 @@ public class CustomerCardRepository extends BaseRepository<CustomerCardEntity, I
                 "DELETE FROM customer_card WHERE card_number=?",
                 "SELECT * FROM customer_card WHERE card_number=?",
                 "cust_surname");
+    }
+
+    public List<CustomerCardEntity> findAllCustomerWithPercentOrderBySurname(Integer percent) {
+        String query = String.format("SELECT * FROM customer_card WHERE percent=%i ORDER BY cust_surname", percent);
+        return findAllByCustomQuery(query);
     }
 
     @Override

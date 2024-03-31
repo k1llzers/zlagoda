@@ -27,6 +27,10 @@ public class CustomerCardService extends BaseService<CreateUpdateCustomerCardDto
         return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
 
+    public List<CustomerCardResponseDto> getAllCustomerWithPercentOrderBySurname(Integer percent) {
+        return mapper.toResponseDtoList(((CustomerCardRepository)repository).findAllCustomerWithPercentOrderBySurname(percent));
+    }
+
     @Override
     protected void mergeEntity(CustomerCardEntity entity, CreateUpdateCustomerCardDto dto) {
         if (dto.getId() != null)
