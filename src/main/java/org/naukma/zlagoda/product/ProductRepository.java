@@ -27,7 +27,7 @@ public class ProductRepository extends BaseRepository<ProductEntity, Integer> {
     }
 
     public List<ProductEntity> findAllProductsFromCategoryOrderByName(Integer id) {
-        String query = String.format("SELECT * FROM product WHERE category_number=%i ORDER BY product_name");
+        String query = String.format("SELECT * FROM product WHERE category_number=%s ORDER BY product_name", id);
         return findAllByCustomQuery(query);
     }
 

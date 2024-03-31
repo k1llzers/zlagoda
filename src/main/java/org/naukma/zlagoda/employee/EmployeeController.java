@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/address/phone")
-    public ResponseEntity<List<EmployeePhoneNumberAddressDto>> getAllAddressAndPhoneBySurname(@RequestPart String surname) {
+    public ResponseEntity<List<EmployeePhoneNumberAddressDto>> getAllAddressAndPhoneBySurname(@RequestParam String surname) {
         return ResponseEntity.ok(service.getPhoneNumberAndAddressBySurname(surname));
     }
 
@@ -59,7 +59,7 @@ public class EmployeeController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody @Valid CreateUpdateEmployeeDto body) {
+    public ResponseEntity<Boolean> update(@RequestBody CreateUpdateEmployeeDto body) {
         return ResponseEntity.ok(service.update(body));
     }
 }

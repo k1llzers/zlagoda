@@ -23,7 +23,7 @@ public class CustomerCardRepository extends BaseRepository<CustomerCardEntity, I
     }
 
     public List<CustomerCardEntity> findAllCustomerWithPercentOrderBySurname(Integer percent) {
-        String query = String.format("SELECT * FROM customer_card WHERE percent=%i ORDER BY cust_surname", percent);
+        String query = String.format("SELECT * FROM customer_card WHERE percent=%s ORDER BY cust_surname", percent);
         return findAllByCustomQuery(query);
     }
 

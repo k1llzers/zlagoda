@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody @Valid CreateUpdateProductDto body) {
+    public ResponseEntity<Boolean> update(@RequestBody CreateUpdateProductDto body) {
         return ResponseEntity.ok(service.update(body));
     }
 }

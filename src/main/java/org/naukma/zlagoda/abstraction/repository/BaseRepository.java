@@ -1,6 +1,9 @@
 package org.naukma.zlagoda.abstraction.repository;
 
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -8,11 +11,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RequiredArgsConstructor
 public abstract class BaseRepository<E extends GettableById<I>, I> implements IRepository<E, I> {
     @Autowired
     protected Connection connection;
+    @Autowired
+    private Validator validator;
     protected final String tableName;
     protected final String createQuery;
     protected final String updateQuery;
@@ -23,7 +29,10 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
     protected String findAllQueryOrderBy = "SELECT * FROM %s ORDER BY %s";
 
     @Override
-    public I save(@Valid E entity) {
+    public I save(E entity) {
+        Set<ConstraintViolation<E>> validate = validator.validate(entity);
+        if (!validate.isEmpty())
+            throw new ValidationException(validate.stream().findAny().get().getMessage());
         try(PreparedStatement createStatement = connection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {
             setMainFields(createStatement, entity);
             createStatement.executeUpdate();
@@ -39,7 +48,10 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
     }
 
     @Override
-    public Boolean update(@Valid E entity) {
+    public Boolean update(E entity) {
+        Set<ConstraintViolation<E>> validate = validator.validate(entity);
+        if (!validate.isEmpty())
+            throw new ValidationException(validate.stream().findAny().get().getMessage());
         try(PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
             setMainFields(updateStatement, entity);
             setIdToUpdateStatement(updateStatement, entity.getId());

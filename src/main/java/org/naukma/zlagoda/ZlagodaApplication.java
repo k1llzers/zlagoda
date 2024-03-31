@@ -1,6 +1,7 @@
 package org.naukma.zlagoda;
 
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @SpringBootApplication
+@Slf4j
 public class ZlagodaApplication {
 
 	public static void main(String[] args) {
@@ -31,6 +33,7 @@ public class ZlagodaApplication {
 		Connection connection;
 		try {
 			connection = DriverManager.getConnection(url, user, password);
+			log.info("Open connection " + connection.getMetaData().getURL());
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

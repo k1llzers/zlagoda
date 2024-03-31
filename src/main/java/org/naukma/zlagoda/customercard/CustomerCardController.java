@@ -53,7 +53,7 @@ public class CustomerCardController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody @Valid CreateUpdateCustomerCardDto dto) {
+    public ResponseEntity<Boolean> update(@RequestBody CreateUpdateCustomerCardDto dto) {
         return ResponseEntity.ok(service.update(dto));
     }
 }
