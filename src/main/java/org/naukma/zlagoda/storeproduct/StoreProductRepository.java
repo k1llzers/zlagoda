@@ -6,6 +6,7 @@ import org.naukma.zlagoda.product.ProductRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.List;
 
 @Repository
 public class StoreProductRepository extends BaseRepository<StoreProductEntity, Integer> {
@@ -21,6 +22,13 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
                 "SELECT * FROM store_product WHERE upc=?",
                 "products_number");
         this.productRepository = productRepository;
+    }
+
+    public List<StoreProductEntity> findAllPromotionalOrderByNumberName(boolean promotional) {
+        String query = String.format("SELECT * FROM store_product " +
+                "INNER JOIN product ON store_product.id_product=product.id_product" +
+                "WHERE promotional_product=%s ORDER BY products_number, product_name", promotional ? "TRUE" : "FALSE");
+        return findAllByCustomQuery(query);
     }
 
     @Override

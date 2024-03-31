@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
+import org.naukma.zlagoda.storeproduct.dto.StoreProductShortResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,11 @@ public class StoreProductController {
     @GetMapping("/order-by/count")
     public ResponseEntity<List<StoreProductResponseDto>> getAllOrderByCount() {
         return ResponseEntity.ok(service.getAllOrderByCount());
+    }
+
+    @GetMapping("/order-by/count/name")
+    public ResponseEntity<List<StoreProductShortResponseDto>> getAllPromotionalOrderByNumberName(@RequestParam boolean promotional) {
+        return ResponseEntity.ok(service.getAllPromotionalOrderByNumberName(promotional));
     }
 
     @DeleteMapping("/{id}")

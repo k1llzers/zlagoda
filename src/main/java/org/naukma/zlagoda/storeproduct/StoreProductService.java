@@ -4,6 +4,7 @@ import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.product.ProductService;
 import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
+import org.naukma.zlagoda.storeproduct.dto.StoreProductShortResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,10 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
 
     public List<StoreProductResponseDto> getAllOrderByCount() {
         return mapper.toResponseDtoList(repository.findAllOrderByDefault());
+    }
+
+    public List<StoreProductShortResponseDto> getAllPromotionalOrderByNumberName(boolean promotional) {
+        return mapper.toShortResponseDtoList(((StoreProductRepository)repository).findAllPromotionalOrderByNumberName(promotional));
     }
 
     @Override
