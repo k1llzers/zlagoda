@@ -32,6 +32,5 @@ public class CheckEntity implements GettableById<Integer> {
     @NotNull(message = "Vat can't be null.")
     @DecimalMin(value="0", message = "Vat can't be less than zero.")
     private BigDecimal vat;
-    @NotNull(message = "List of product can`t be null")
     private List<SaleEntity> sales;
 }
