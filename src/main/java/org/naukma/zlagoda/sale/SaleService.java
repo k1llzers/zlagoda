@@ -6,7 +6,6 @@ import org.naukma.zlagoda.storeproduct.StoreProductEntity;
 import org.naukma.zlagoda.storeproduct.StoreProductRepository;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -19,7 +18,7 @@ public class SaleService {
         SaleEntity entity = new SaleEntity();
         entity.setId(new SaleId(storeProductEntity, checkEntity));
         entity.setProductNumber(productNumber);
-        entity.setSellingPrice(storeProductEntity.getSellingPrice().multiply(BigDecimal.valueOf(productNumber)));
+        entity.setSellingPrice(storeProductEntity.getSellingPrice());
         SaleId toReturn = saleRepository.save(entity);
         storeProductEntity.setProductsNumber(storeProductEntity.getProductsNumber() - productNumber);
         storeProductRepository.update(storeProductEntity);

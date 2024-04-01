@@ -7,11 +7,11 @@ import lombok.*;
 import org.naukma.zlagoda.abstraction.repository.GettableById;
 import org.naukma.zlagoda.customercard.CustomerCardEntity;
 import org.naukma.zlagoda.employee.EmployeeEntity;
-import org.naukma.zlagoda.storeproduct.StoreProductEntity;
+import org.naukma.zlagoda.sale.SaleEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,5 +33,5 @@ public class CheckEntity implements GettableById<Integer> {
     @DecimalMin(value="0", message = "Vat can't be less than zero.")
     private BigDecimal vat;
     @NotNull(message = "List of product can`t be null")
-    private Map<StoreProductEntity, Integer> productToCount;
+    private List<SaleEntity> sales;
 }

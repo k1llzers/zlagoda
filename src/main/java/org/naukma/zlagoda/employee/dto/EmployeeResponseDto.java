@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class EmployeeResponseDto {
     private Integer id;
-    private String login;
     private String surname;
     private String name;
     private String patronymic;

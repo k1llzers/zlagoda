@@ -7,6 +7,7 @@ import org.naukma.zlagoda.check.dto.CreateUpdateCheckDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,13 @@ public class CheckController {
     @GetMapping
     public ResponseEntity<List<CheckResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping("/by-employee")
+    public ResponseEntity<List<CheckResponseDto>> getAllByCashierAndPrintDateBetween(@RequestParam(name = "empl") Integer employeeId,
+                                                                                     @RequestParam(name = "from")LocalDateTime from,
+                                                                                     @RequestParam(name = "from")LocalDateTime to) {
+        return ResponseEntity.ok(service.getAllByCashierAndPrintDateBetween(employeeId, from, to));
     }
 
     @DeleteMapping("/{id}")

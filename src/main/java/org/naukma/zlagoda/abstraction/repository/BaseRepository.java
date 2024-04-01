@@ -90,33 +90,11 @@ public abstract class BaseRepository<E extends GettableById<I>, I> implements IR
 
     @Override
     public List<E> findAll() {
-//        List<E> entities = new ArrayList<>();
-//        try(PreparedStatement findAllStatement = connection.prepareStatement(String.format(findAllQuery, tableName))) {
-//            ResultSet resultSet = findAllStatement.executeQuery();
-//            while (resultSet.next()){
-//                entities.add(parseSetToEntity(resultSet));
-//            }
-//            return entities;
-//        }
-//        catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
         return findAllByCustomQuery(String.format(findAllQuery, tableName));
     }
 
     @Override
     public List<E> findAllOrderByDefault() {
-//        List<E> entities = new ArrayList<>();
-//        try(PreparedStatement findAllStatement = connection.prepareStatement(String.format(findAllQueryOrderBy, tableName, defaultOrderByColumn))) {
-//            ResultSet resultSet = findAllStatement.executeQuery();
-//            while (resultSet.next()){
-//                entities.add(parseSetToEntity(resultSet));
-//            }
-//            return entities;
-//        }
-//        catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
         return findAllByCustomQuery(String.format(findAllQueryOrderBy, tableName, defaultOrderByColumn));
     }
 
