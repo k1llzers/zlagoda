@@ -7,6 +7,9 @@ import org.naukma.zlagoda.exception.NoSuchEntityException;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
@@ -25,6 +28,24 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
                 null);
         this.employeeRepository = employeeRepository;
         this.customerCardRepository = customerCardRepository;
+    }
+
+    public List<CheckEntity> findAllByCashierAndPrintDateBetween(Integer id, LocalDateTime from, LocalDateTime to) {
+        List<CheckEntity> entities = new ArrayList<>();
+        try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM customer_check WHERE id_employee=?" +
+                "AND print_date BETWEEN ? AND ?")) {
+            statement.setInt(1, id);
+            statement.setTimestamp(2,Timestamp.valueOf(from));
+            statement.setTimestamp(3, Timestamp.valueOf(to));
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
