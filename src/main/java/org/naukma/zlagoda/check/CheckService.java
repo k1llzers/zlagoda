@@ -37,14 +37,14 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
     @Override
     public Integer save(CreateUpdateCheckDto dto) {
         Integer save = super.save(dto);
-        createSales(dto.getProductIdToCountMap(), save);
+        createSales(getById(save));
         return save;
     }
 
     @Override
     public Boolean update(CreateUpdateCheckDto dto) {
         Boolean update = super.update(dto);
-        createSales(dto.getProductIdToCountMap(), dto.getId());
+        createSales(getById(dto.getId()));
         return update;
     }
 
@@ -65,8 +65,8 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
         if(dto.getCustomerCardId() != null)
             entity.setCustomerCard(customerCardService.getById(dto.getCustomerCardId()));
         if (dto.getProductIdToCountMap() != null) {
-            Map<StoreProductEntity, Integer> productToCount = getProductEntityToCountMap(dto.getProductIdToCountMap());
-            entity.setSumTotal(countSumTotal(productToCount).multiply(BigDecimal.valueOf((100.0 - entity.getCustomerCard().getPercent()) / 100)));
+            entity.setProductToCount(getProductEntityToCountMap(dto.getProductIdToCountMap()));
+            entity.setSumTotal(countSumTotal(entity).multiply(BigDecimal.valueOf((100.0 - entity.getCustomerCard().getPercent()) / 100)));
         }
         entity.setPrintDate(LocalDateTime.now());
         entity.setVat(entity.getSumTotal().multiply(BigDecimal.valueOf(0.2)));
@@ -77,8 +77,8 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
                 .collect(Collectors.toMap(entry -> storeProductService.getById(entry.getKey()), Map.Entry::getValue));
     }
 
-    private BigDecimal countSumTotal(Map<StoreProductEntity, Integer> productEntityToCount) {
-        return productEntityToCount.entrySet().stream()
+    private BigDecimal countSumTotal(CheckEntity entity) {
+        return entity.getProductToCount().entrySet().stream()
                 .map(entry -> {
                     StoreProductEntity storeProduct = entry.getKey();
                     if (entry.getKey().getPromotion() != null)
@@ -87,9 +87,8 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
                 }).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private void createSales(Map<Integer, Integer> productIdToCount, Integer checkId) {
-        if (productIdToCount == null) return;
-        CheckEntity entity = getById(checkId);
-        getProductEntityToCountMap(productIdToCount).forEach((key, value) -> saleService.save(key, entity, value));
+    private void createSales(CheckEntity entity) {
+        if (entity.getProductToCount() == null) return;
+        entity.getProductToCount().forEach((key, value) -> saleService.save(key, entity, value));
     }
 }

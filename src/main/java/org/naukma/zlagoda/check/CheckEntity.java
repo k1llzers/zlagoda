@@ -1,16 +1,17 @@
 package org.naukma.zlagoda.check;
 
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 import org.naukma.zlagoda.abstraction.repository.GettableById;
 import org.naukma.zlagoda.customercard.CustomerCardEntity;
 import org.naukma.zlagoda.employee.EmployeeEntity;
+import org.naukma.zlagoda.storeproduct.StoreProductEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -31,4 +32,6 @@ public class CheckEntity implements GettableById<Integer> {
     @NotNull(message = "Vat can't be null.")
     @DecimalMin(value="0", message = "Vat can't be less than zero.")
     private BigDecimal vat;
+    @NotNull(message = "List of product can`t be null")
+    private Map<StoreProductEntity, Integer> productToCount;
 }
