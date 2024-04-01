@@ -7,6 +7,7 @@ import org.naukma.zlagoda.storeproduct.StoreProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,5 +24,9 @@ public class SaleService {
         storeProductEntity.setProductsNumber(storeProductEntity.getProductsNumber() - productNumber);
         storeProductRepository.update(storeProductEntity);
         return toReturn;
+    }
+
+    public List<SaleEntity> findAllByCheckNumber(Integer checkNumber) {
+        return saleRepository.findAllByCheckNumber(checkNumber);
     }
 }

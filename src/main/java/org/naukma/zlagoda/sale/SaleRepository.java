@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class SaleRepository extends BaseRepository<SaleEntity, SaleId> {
@@ -26,6 +28,21 @@ public class SaleRepository extends BaseRepository<SaleEntity, SaleId> {
                 null);
         this.checkRepository = checkRepository;
         this.storeProductRepository = storeProductRepository;
+    }
+
+    public List<SaleEntity> findAllByCheckNumber(Integer checkNumber) {
+        List<SaleEntity> result = new ArrayList<>();
+        String query = "SELECT * FROM sale WHERE check_number=?";
+        try(PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, checkNumber);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next())
+                result.add(parseSetToEntity(resultSet));
+            return result;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

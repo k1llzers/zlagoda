@@ -1,7 +1,6 @@
 package org.naukma.zlagoda.abstraction.repository;
 
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
