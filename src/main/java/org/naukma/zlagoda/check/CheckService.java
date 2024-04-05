@@ -49,7 +49,9 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
     }
 
     public CheckResponseDto getCheckResponseDto(Integer id) {
-        return mapper.toResponseDto(getById(id));
+        CheckEntity result = getById(id);
+        result.setSales(saleService.findAllByCheckNumber(result.getId()));
+        return mapper.toResponseDto(result);
     }
 
     public List<CheckResponseDto> getAll() {
