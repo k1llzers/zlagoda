@@ -6,6 +6,7 @@ import org.naukma.zlagoda.employee.EmployeeRepository;
 import org.naukma.zlagoda.exception.NoSuchEntityException;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -49,6 +50,24 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
             throw new RuntimeException(e);
         }
     }
+
+    public BigDecimal findNumberOfProductsByCashierAndPrintDateBetween(Integer id, LocalDateTime from, LocalDateTime to) {
+        String queryWithEmpl = "SELECT SUM(sum_total) FROM customer_check WHERE print_date BETWEEN ? AND ? AND id_employee=?";
+        String queryWithoutEmpl = "SELECT SUM(sum_total) FROM customer_check WHERE print_date BETWEEN ? AND ?";
+        try(PreparedStatement statement = connection.prepareStatement(id == null ? queryWithoutEmpl : queryWithEmpl)) {
+            statement.setTimestamp(1, Timestamp.valueOf(from));
+            statement.setTimestamp(2, Timestamp.valueOf(to));
+            if (id != null)
+                statement.setInt(3, id);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.getBigDecimal(1);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     @Override
     protected void setMainFields(PreparedStatement statement, CheckEntity entity) throws SQLException {

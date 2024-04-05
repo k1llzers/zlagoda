@@ -63,6 +63,10 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
         return mapper.toResponseDtoList(result);
     }
 
+    public BigDecimal getNumberOfProductsByCashierAndPrintDateBetween(Integer id, LocalDateTime from, LocalDateTime to) {
+        return ((CheckRepository)repository).findNumberOfProductsByCashierAndPrintDateBetween(id, from, to);
+    }
+
     @Override
     protected void mergeEntity(CheckEntity entity, CreateUpdateCheckDto dto) {
         if(dto.getId() != null)

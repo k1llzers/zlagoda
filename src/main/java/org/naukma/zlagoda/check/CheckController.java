@@ -7,6 +7,7 @@ import org.naukma.zlagoda.check.dto.CreateUpdateCheckDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,9 +28,16 @@ public class CheckController {
 
     @GetMapping("/by-employee")
     public ResponseEntity<List<CheckResponseDto>> getAllByCashierAndPrintDateBetween(@RequestParam(name = "empl", required = false) Integer employeeId,
-                                                                                     @RequestParam(name = "from")LocalDateTime from,
-                                                                                     @RequestParam(name = "to")LocalDateTime to) {
+                                                                                     @RequestParam(name = "from") LocalDateTime from,
+                                                                                     @RequestParam(name = "to") LocalDateTime to) {
         return ResponseEntity.ok(service.getAllByCashierAndPrintDateBetween(employeeId, from, to));
+    }
+
+    @GetMapping("/by-employee/products-sum")
+    public ResponseEntity<BigDecimal> getNumberOfProductsByCashierAndPrintDateBetween(@RequestParam(name = "empl", required = false) Integer employeeId,
+                                                                                      @RequestParam(name = "from") LocalDateTime from,
+                                                                                      @RequestParam(name = "to") LocalDateTime to) {
+        return ResponseEntity.ok(service.getNumberOfProductsByCashierAndPrintDateBetween(employeeId, from, to));
     }
 
     @DeleteMapping("/{id}")
