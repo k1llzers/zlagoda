@@ -67,6 +67,19 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
         }
     }
 
+    public Long countByProductAndPrintDateBetween(Integer productId, LocalDateTime from, LocalDateTime to) {
+        try(PreparedStatement statement = connection.prepareStatement("SELECT SUM(product_number) FROM customer_check " +
+                "INNER JOIN sale ON customer_check.check_number = sale.check_number " +
+                "INNER JOIN store_product ON sale.upc = store_product.uoc WHERE id_product=?")) {
+            statement.setInt(1, productId);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.getLong(1);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     protected void setMainFields(PreparedStatement statement, CheckEntity entity) throws SQLException {
         statement.setInt(1, entity.getEmployee().getId());

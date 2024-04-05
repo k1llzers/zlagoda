@@ -67,6 +67,10 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
         return ((CheckRepository)repository).findNumberOfProductsByCashierAndPrintDateBetween(id, from, to);
     }
 
+    public Long countByProductAndPrintDateBetween(Integer productId, LocalDateTime from, LocalDateTime to) {
+        return ((CheckRepository) repository).countByProductAndPrintDateBetween(productId, from, to);
+    }
+
     @Override
     protected void mergeEntity(CheckEntity entity, CreateUpdateCheckDto dto) {
         if(dto.getId() != null)

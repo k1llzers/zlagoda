@@ -40,6 +40,13 @@ public class CheckController {
         return ResponseEntity.ok(service.getNumberOfProductsByCashierAndPrintDateBetween(employeeId, from, to));
     }
 
+    @GetMapping("/count/product/{productId}")
+    public ResponseEntity<Long> countByProductAndPrintDateBetween(@PathVariable Integer productId,
+                                                                                     @RequestParam(name = "from")LocalDateTime from,
+                                                                                     @RequestParam(name = "to")LocalDateTime to) {
+        return ResponseEntity.ok(service.countByProductAndPrintDateBetween(productId, from, to));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));
