@@ -60,6 +60,7 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
             if (id != null)
                 statement.setInt(3, id);
             ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
             return resultSet.getBigDecimal(1);
         }
         catch (SQLException e) {
@@ -70,9 +71,12 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
     public Long countByProductAndPrintDateBetween(Integer productId, LocalDateTime from, LocalDateTime to) {
         try(PreparedStatement statement = connection.prepareStatement("SELECT SUM(product_number) FROM customer_check " +
                 "INNER JOIN sale ON customer_check.check_number = sale.check_number " +
-                "INNER JOIN store_product ON sale.upc = store_product.uoc WHERE id_product=?")) {
+                "INNER JOIN store_product ON sale.upc = store_product.upc WHERE id_product=? AND print_date BETWEEN ? AND ?")) {
             statement.setInt(1, productId);
+            statement.setTimestamp(2, Timestamp.valueOf(from));
+            statement.setTimestamp(3, Timestamp.valueOf(to));
             ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
             return resultSet.getLong(1);
         }
         catch (SQLException e) {

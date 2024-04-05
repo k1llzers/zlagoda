@@ -41,6 +41,11 @@ public class StoreProductController {
         return ResponseEntity.ok(service.getAllOrderByName());
     }
 
+    @GetMapping("/by-product")
+    public ResponseEntity<List<StoreProductResponseDto>> getAllByProductName(@RequestParam String productName) {
+        return ResponseEntity.ok(service.getAllByProductNameLike(productName));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));

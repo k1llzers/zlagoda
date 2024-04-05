@@ -40,6 +40,10 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
         return mapper.toShortResponseDtoList(((StoreProductRepository)repository).findAllOrderByName());
     }
 
+    public List<StoreProductResponseDto> getAllByProductNameLike(String productName) {
+        return mapper.toResponseDtoList(((StoreProductRepository)repository).findAllByProductNameLike(productName));
+    }
+
     @Override
     protected void mergeEntity(StoreProductEntity entity, CreateUpdateStoreProductDto dto) {
         if (dto.getId() != null)
