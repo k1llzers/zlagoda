@@ -6,6 +6,7 @@ import org.naukma.zlagoda.product.ProductRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -32,17 +33,26 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
     }
 
     public List<StoreProductEntity> findAllOrderByName() {
-        String query = String.format("SELECT * FROM store_product " +
+        return findAllByCustomQuery("SELECT * FROM store_product " +
                 "INNER JOIN product ON store_product.id_product=product.id_product " +
-                "WHERE promotional_product=%s ORDER BY product_name");
-        return findAllByCustomQuery(query);
+                "ORDER BY product_name");
     }
 
     public List<StoreProductEntity> findAllByProductNameLike(String productName) {
-        String query = String.format("SELECT * FROM store_product " +
+        List<StoreProductEntity> entities = new ArrayList<>();
+        try(PreparedStatement findAllStatement = connection.prepareStatement("SELECT * FROM store_product " +
                 "INNER JOIN product ON store_product.id_product=product.id_product " +
-                "WHERE LOWER(product_name) LIKE %" + productName + "%");
-        return findAllByCustomQuery(query);
+                "WHERE LOWER(product_name) LIKE ?")) {
+            findAllStatement.setString(1, "%" + productName.toLowerCase() + "%");
+            ResultSet resultSet = findAllStatement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
