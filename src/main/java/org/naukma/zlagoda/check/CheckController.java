@@ -26,7 +26,7 @@ public class CheckController {
     }
 
     @GetMapping("/by-employee")
-    public ResponseEntity<List<CheckResponseDto>> getAllByCashierAndPrintDateBetween(@RequestParam(name = "empl") Integer employeeId,
+    public ResponseEntity<List<CheckResponseDto>> getAllByCashierAndPrintDateBetween(@RequestParam(name = "empl", required = false) Integer employeeId,
                                                                                      @RequestParam(name = "from")LocalDateTime from,
                                                                                      @RequestParam(name = "to")LocalDateTime to) {
         return ResponseEntity.ok(service.getAllByCashierAndPrintDateBetween(employeeId, from, to));

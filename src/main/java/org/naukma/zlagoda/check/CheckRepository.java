@@ -32,11 +32,13 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
 
     public List<CheckEntity> findAllByCashierAndPrintDateBetween(Integer id, LocalDateTime from, LocalDateTime to) {
         List<CheckEntity> entities = new ArrayList<>();
-        try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM customer_check WHERE id_employee=? " +
-                "AND print_date BETWEEN ? AND ?")) {
-            statement.setInt(1, id);
-            statement.setTimestamp(2,Timestamp.valueOf(from));
-            statement.setTimestamp(3, Timestamp.valueOf(to));
+        String queryWithEmpl = "SELECT * FROM customer_check WHERE print_date BETWEEN ? AND ? AND id_employee=?";
+        String queryWithoutEmpl = "SELECT * FROM customer_check WHERE print_date BETWEEN ? AND ?";
+        try(PreparedStatement statement = connection.prepareStatement(id == null ? queryWithoutEmpl : queryWithEmpl)) {
+            statement.setTimestamp(1,Timestamp.valueOf(from));
+            statement.setTimestamp(2, Timestamp.valueOf(to));
+            if (id != null)
+                statement.setInt(3, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
                 entities.add(parseSetToEntity(resultSet));
