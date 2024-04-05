@@ -67,8 +67,6 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
         }
     }
 
-
-
     @Override
     protected void setMainFields(PreparedStatement statement, CheckEntity entity) throws SQLException {
         statement.setInt(1, entity.getEmployee().getId());

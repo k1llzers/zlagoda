@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
-import org.naukma.zlagoda.storeproduct.dto.StoreProductWithPriceCountNameAndCharacteristicDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductShortResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ public class StoreProductController {
     private final StoreProductService service;
 
     @GetMapping("/{id}")
-    public ResponseEntity<StoreProductWithPriceCountNameAndCharacteristicDto> getById(@PathVariable Integer id) {
+    public ResponseEntity<StoreProductShortResponseDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getResponseDto(id));
     }
 
@@ -35,6 +34,11 @@ public class StoreProductController {
     @GetMapping("/order-by/count/name")
     public ResponseEntity<List<StoreProductShortResponseDto>> getAllPromotionalOrderByNumberName(@RequestParam boolean promotional) {
         return ResponseEntity.ok(service.getAllPromotionalOrderByNumberName(promotional));
+    }
+
+    @GetMapping("/order-by/name")
+    public ResponseEntity<List<StoreProductShortResponseDto>> getAllOrderByName() {
+        return ResponseEntity.ok(service.getAllOrderByName());
     }
 
     @DeleteMapping("/{id}")
