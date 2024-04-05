@@ -5,14 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.customercard.dto.CreateUpdateCustomerCardDto;
 import org.naukma.zlagoda.customercard.dto.CustomerCardResponseDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +33,11 @@ public class CustomerCardController {
     @GetMapping("/order-by/surname/{percent}")
     public ResponseEntity<List<CustomerCardResponseDto>> getAllCustomerWithPercentOrderBySurname(@PathVariable Integer percent) {
         return ResponseEntity.ok(service.getAllCustomerWithPercentOrderBySurname(percent));
+    }
+
+    @GetMapping("/by-surname")
+    public ResponseEntity<List<CustomerCardResponseDto>> getAllBySurname(@RequestParam String surname) {
+        return ResponseEntity.ok(service.getAllBySurname(surname));
     }
 
     @DeleteMapping("/{id}")

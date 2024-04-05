@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -25,6 +26,22 @@ public class CustomerCardRepository extends BaseRepository<CustomerCardEntity, I
     public List<CustomerCardEntity> findAllCustomerWithPercentOrderBySurname(Integer percent) {
         String query = String.format("SELECT * FROM customer_card WHERE percent=%s ORDER BY cust_surname", percent);
         return findAllByCustomQuery(query);
+    }
+
+    public List<CustomerCardEntity> findAllBySurname(String surname) {
+        List<CustomerCardEntity> entities = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM customer_card " +
+                "WHERE LOWER(cust_surname) LIKE ?")) {
+            statement.setString(1, "%" + surname.toLowerCase() + "%");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
