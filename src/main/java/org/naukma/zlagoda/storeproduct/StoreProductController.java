@@ -6,6 +6,7 @@ import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductShortResponseDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,16 +48,19 @@ public class StoreProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Integer> create(@RequestBody @Valid CreateUpdateStoreProductDto body) {
         return ResponseEntity.ok(service.save(body));
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> update(@RequestBody CreateUpdateStoreProductDto body) {
         return ResponseEntity.ok(service.update(body));
     }

@@ -50,6 +50,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));
     }
@@ -61,6 +62,7 @@ public class EmployeeController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> update(@RequestBody CreateUpdateEmployeeDto body) {
         return ResponseEntity.ok(service.update(body));
     }
