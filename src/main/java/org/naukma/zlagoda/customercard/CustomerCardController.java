@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.customercard.dto.CreateUpdateCustomerCardDto;
 import org.naukma.zlagoda.customercard.dto.CustomerCardResponseDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class CustomerCardController {
     private final CustomerCardService service;
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<CustomerCardResponseDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getResponseDto(id));
     }

@@ -21,6 +21,7 @@ public class CheckController {
     public ResponseEntity<CheckResponseDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getCheckResponseDto(id));
     }
+
     @GetMapping
     public ResponseEntity<List<CheckResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
