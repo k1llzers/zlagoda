@@ -1,15 +1,19 @@
 package org.naukma.zlagoda.employee;
 
 import org.naukma.zlagoda.abstraction.repository.BaseRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> {
-    public EmployeeRepository() {
+    private final PasswordEncoder encoder;
+
+    public EmployeeRepository(PasswordEncoder encoder) {
         super("employee",
                 "INSERT INTO employee (empl_surname, empl_name, empl_patronymic, " +
                 "empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code, login, password) " +
@@ -20,6 +24,7 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
                 "DELETE FROM employee WHERE id_employee=?",
                 "SELECT * FROM employee WHERE id_employee=?",
                 "empl_surname");
+        this.encoder = encoder;
     }
 
     public List<EmployeeEntity> findAllCashiersOrderedBySurname() {
@@ -34,9 +39,25 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
             findAllStatement.setString(1, surname);
             ResultSet resultSet = findAllStatement.executeQuery();
             while (resultSet.next()){
-                entities.add(parseSetWithAddressPhoneNumberAndNamToEntity(resultSet));
+                entities.add(parseSetWithAddressPhoneNumberAndNameToEntity(resultSet));
             }
             return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Optional<EmployeeEntity> findByLogin(String login) {
+        try(PreparedStatement findByIdStatement = connection.prepareStatement("SELECT * FROM employee WHERE login=?")) {
+            findByIdStatement.setString(1, login);
+            ResultSet resultSet = findByIdStatement.executeQuery();
+            EmployeeEntity result = null;
+            if(resultSet.next()){
+                result = parseSetToEntity(resultSet);
+                result.setPassword(resultSet.getString("password"));
+            }
+            return Optional.ofNullable(result);
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
@@ -63,7 +84,7 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
     public Integer save(EmployeeEntity entity) {
         try(PreparedStatement createStatement = connection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {
             setMainFields(createStatement, entity);
-            createStatement.setString(13, entity.getPassword());
+            createStatement.setString(13, encoder.encode(entity.getPassword()));
             createStatement.executeUpdate();
             ResultSet generatedKeys = createStatement.getGeneratedKeys();
             if(generatedKeys.next()){
@@ -95,7 +116,7 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
                 .build();
     }
 
-    private EmployeeEntity parseSetWithAddressPhoneNumberAndNamToEntity(ResultSet set) throws SQLException {
+    private EmployeeEntity parseSetWithAddressPhoneNumberAndNameToEntity(ResultSet set) throws SQLException {
         return EmployeeEntity.builder()
                 .id(set.getInt("id_employee"))
                 .surname(set.getString("empl_surname"))

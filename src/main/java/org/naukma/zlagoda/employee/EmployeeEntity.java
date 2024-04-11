@@ -7,16 +7,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.naukma.zlagoda.abstraction.repository.GettableById;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeEntity implements GettableById<Integer> {
+public class EmployeeEntity implements GettableById<Integer>, UserDetails {
     private Integer id;
     @NotNull(message = "Login can't be null.")
     @NotBlank(message = "Login can't be blank.")
@@ -63,4 +68,34 @@ public class EmployeeEntity implements GettableById<Integer> {
     @NotBlank(message = "Zip code can't be blank.")
     @Size(max=9, message = "Zip code size can't be more than 9.")
     private String zipCode;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
