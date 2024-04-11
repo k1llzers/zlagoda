@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/check")
+@RequestMapping("/api/check")
 @RequiredArgsConstructor
 public class CheckController {
     private final CheckService service;
