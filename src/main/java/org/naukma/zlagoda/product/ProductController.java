@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.product.dto.CreateUpdateProductDto;
 import org.naukma.zlagoda.product.dto.ProductResponseDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,16 +37,19 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Integer> create(@RequestBody @Valid CreateUpdateProductDto body) {
         return ResponseEntity.ok(service.save(body));
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> update(@RequestBody CreateUpdateProductDto body) {
         return ResponseEntity.ok(service.update(body));
     }

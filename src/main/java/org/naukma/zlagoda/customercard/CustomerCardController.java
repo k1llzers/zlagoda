@@ -17,7 +17,7 @@ public class CustomerCardController {
     private final CustomerCardService service;
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('MANAGER')")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<CustomerCardResponseDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getResponseDto(id));
     }
@@ -42,16 +42,19 @@ public class CustomerCardController {
         return ResponseEntity.ok(service.getAllBySurname(surname));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @PostMapping
     public ResponseEntity<Integer> create(@RequestBody @Valid CreateUpdateCustomerCardDto dto) {
         return ResponseEntity.ok(service.save(dto));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @PutMapping
     public ResponseEntity<Boolean> update(@RequestBody CreateUpdateCustomerCardDto dto) {
         return ResponseEntity.ok(service.update(dto));
