@@ -22,16 +22,19 @@ public class ProductController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<ProductResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/order-by/name")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<ProductResponseDto>> getAllOrderByName() {
         return ResponseEntity.ok(service.getAllOrderByName());
     }
 
     @GetMapping("/order-by/name/{categoryId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<ProductResponseDto>> getAllProductsFromCategoryOrderByName(@PathVariable Integer categoryId) {
         return ResponseEntity.ok(service.getAllProductsFromCategoryOrderByName(categoryId));
     }
