@@ -23,21 +23,25 @@ public class CustomerCardController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<CustomerCardResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/order-by/surname")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CustomerCardResponseDto>> getAllOrderBySurname() {
         return ResponseEntity.ok(service.getAllOrderBySurname());
     }
 
     @GetMapping("/order-by/surname/{percent}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<CustomerCardResponseDto>> getAllCustomerWithPercentOrderBySurname(@PathVariable Integer percent) {
         return ResponseEntity.ok(service.getAllCustomerWithPercentOrderBySurname(percent));
     }
 
     @GetMapping("/by-surname")
+    @PreAuthorize("hasAuthority('ROLE_CASHIER')")
     public ResponseEntity<List<CustomerCardResponseDto>> getAllBySurname(@RequestParam String surname) {
         return ResponseEntity.ok(service.getAllBySurname(surname));
     }
