@@ -30,23 +30,33 @@ public class EmployeeController {
         return ResponseEntity.ok(service.getEmployeeResponseDto(id));
     }
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<EmployeeResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/order-by/surname")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<EmployeeResponseDto>> getAllOrderBySurname() {
         return ResponseEntity.ok(service.getAllOrderBySurname());
     }
 
     @GetMapping("/cashier/order-by/surname")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<EmployeeResponseDto>> getAllCashiersOrderBySurname() {
         return ResponseEntity.ok(service.getAllCashiersOrderBySurname());
     }
 
     @GetMapping("/address/phone")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<EmployeePhoneNumberAddressDto>> getAllAddressAndPhoneBySurname(@RequestParam String surname) {
         return ResponseEntity.ok(service.getPhoneNumberAndAddressBySurname(surname));
+    }
+
+    @GetMapping("/myself")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<EmployeeResponseDto> getMyselfInfo() {
+        return ResponseEntity.ok(service.getMyselfInfo());
     }
 
     @DeleteMapping("/{id}")

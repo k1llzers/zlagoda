@@ -4,6 +4,7 @@ import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.employee.dto.CreateUpdateEmployeeDto;
 import org.naukma.zlagoda.employee.dto.EmployeePhoneNumberAddressDto;
 import org.naukma.zlagoda.employee.dto.EmployeeResponseDto;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +35,10 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
 
     public List<EmployeeResponseDto> getAllCashiersOrderBySurname() {
         return mapper.toResponseDtoList(((EmployeeRepository)repository).findAllCashiersOrderedBySurname());
+    }
+
+    public EmployeeResponseDto getMyselfInfo() {
+        return mapper.toResponseDto((EmployeeEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
     @Override

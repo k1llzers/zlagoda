@@ -22,11 +22,13 @@ public class CategoryController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<CategoryResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/order-by/name")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<CategoryResponseDto>> getAllOrderByName() {
         return ResponseEntity.ok(service.getAllOrderByName());
     }
