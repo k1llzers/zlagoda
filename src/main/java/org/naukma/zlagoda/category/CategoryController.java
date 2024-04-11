@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.category.dto.CategoryResponseDto;
 import org.naukma.zlagoda.category.dto.CreateUpdateCategoryDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,16 +32,19 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
         return ResponseEntity.ok(service.delete(id));
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Integer> create(@RequestBody @Valid CreateUpdateCategoryDto body) {
         return ResponseEntity.ok(service.save(body));
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> update(@RequestBody @Valid CreateUpdateCategoryDto body) {
         return ResponseEntity.ok(service.update(body));
     }
