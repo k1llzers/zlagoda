@@ -7,6 +7,7 @@ import org.naukma.zlagoda.employee.dto.EmployeePhoneNumberAddressDto;
 import org.naukma.zlagoda.employee.dto.EmployeeResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/employee")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class EmployeeController {
     private final EmployeeService service;
 
@@ -30,7 +32,7 @@ public class EmployeeController {
         return ResponseEntity.ok(service.getEmployeeResponseDto(id));
     }
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+//    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<EmployeeResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
