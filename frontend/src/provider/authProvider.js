@@ -11,27 +11,36 @@ const AuthContext = createContext();
 
 const AuthProvider =  ({children}) => {
     const [token, setToken_] = useState(localStorage.getItem("token"))
+    const [role, setRole_] = useState(localStorage.getItem("role"))
 
     const setToken = (newToken) => {
         setToken_(newToken)
+    }
+
+    const setRole = (role) => {
+        setRole_(role)
     }
 
     useEffect(() => {
         if(token) {
             axios.defaults.headers.common["Authorization"] = "Bearer " + token
             localStorage.setItem("token", token)
+            localStorage.setItem("role", role)
         } else {
             delete axios.defaults.headers.common["Authorization"];
             localStorage.removeItem("token")
+            localStorage.removeItem("role")
         }
     }, [token])
 
     const contextValue = useMemo(
         () => ({
             token,
+            role,
             setToken,
+            setRole,
         }),
-        [token]
+        [token, role]
     )
 
     return (
