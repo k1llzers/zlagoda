@@ -13,7 +13,7 @@ public class ProductService extends BaseService<CreateUpdateProductDto, ProductE
     private final ProductMapper mapper;
     private final CategoryService categoryService;
     public ProductService(ProductMapper mapper, CategoryService categoryService) {
-        super(ProductEntity::new, ProductEntity.class);
+        super(ProductEntity::new, "product");
         this.mapper = mapper;
         this.categoryService = categoryService;
     }

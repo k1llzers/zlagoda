@@ -13,7 +13,7 @@ public abstract class BaseService<D extends GettableById<I>, E extends GettableB
     @Autowired
     protected IRepository<E, I> repository;
     protected final Supplier<E> entitySupplier;
-    protected final Class<E> clazz;
+    protected final String entityName;
 
     @Override
     public I save(D dto) {
@@ -37,7 +37,7 @@ public abstract class BaseService<D extends GettableById<I>, E extends GettableB
     @Override
     public E getById(I id) {
         return repository.findById(id).orElseThrow(
-                () -> new NoSuchEntityException("Can`t find " + clazz.getName() + " by id: " + id)
+                () -> new NoSuchEntityException("Can`t find " + entityName + " by id: " + id)
         );
     }
 

@@ -8,6 +8,7 @@ import org.naukma.zlagoda.security.dto.TokenResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,14 +28,9 @@ public class AuthenticationController {
     public ResponseEntity<TokenResponse> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        if (authentication.isAuthenticated()) {
-            EmployeeEntity principal = (EmployeeEntity) authentication.getPrincipal();
-            jwtService.generateToken(authRequest.getUsername());
-            return ResponseEntity.ok(
-                    new TokenResponse(jwtService.generateToken(authRequest.getUsername()), principal.getRole()));
-        } else {
-            throw new BadCredentials("Uncorrect username or password");
-        }
+        EmployeeEntity principal = (EmployeeEntity) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new TokenResponse(jwtService.generateToken(authRequest.getUsername()), principal.getRole()));
     }
 
 

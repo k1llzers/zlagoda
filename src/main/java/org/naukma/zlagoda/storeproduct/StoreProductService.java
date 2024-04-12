@@ -15,7 +15,7 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
     private final ProductService productService;
 
     public StoreProductService(StoreProductMapper mapper, ProductService productService) {
-        super(StoreProductEntity::new, StoreProductEntity.class);
+        super(StoreProductEntity::new, "store product");
         this.mapper = mapper;
         this.productService = productService;
     }

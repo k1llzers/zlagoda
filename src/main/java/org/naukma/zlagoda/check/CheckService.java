@@ -26,7 +26,7 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
     private final SaleService saleService;
 
     public CheckService(CheckMapper mapper, EmployeeService employeeService, CustomerCardService customerCardService, StoreProductService storeProductService, SaleService saleService) {
-        super(CheckEntity::new, CheckEntity.class);
+        super(CheckEntity::new, "check");
         this.mapper = mapper;
         this.employeeService = employeeService;
         this.customerCardService = customerCardService;

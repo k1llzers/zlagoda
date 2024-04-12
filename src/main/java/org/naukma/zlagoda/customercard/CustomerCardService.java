@@ -11,7 +11,7 @@ import java.util.List;
 public class CustomerCardService extends BaseService<CreateUpdateCustomerCardDto, CustomerCardEntity, Integer> {
     private final CustomerCardMapper mapper;
     public CustomerCardService(CustomerCardMapper mapper) {
-        super(CustomerCardEntity::new, CustomerCardEntity.class);
+        super(CustomerCardEntity::new, "customer card");
         this.mapper = mapper;
     }
 

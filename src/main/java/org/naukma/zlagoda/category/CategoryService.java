@@ -13,7 +13,7 @@ public class CategoryService extends BaseService<CreateUpdateCategoryDto, Catego
     private final CategoryMapper mapper;
 
     public CategoryService(CategoryMapper mapper){
-        super(CategoryEntity::new, CategoryEntity.class);
+        super(CategoryEntity::new, "category");
         this.mapper = mapper;
     }
 

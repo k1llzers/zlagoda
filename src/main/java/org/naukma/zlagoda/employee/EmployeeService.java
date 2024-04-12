@@ -13,7 +13,7 @@ import java.util.List;
 public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, EmployeeEntity, Integer> {
     private final EmployeeMapper mapper;
     public EmployeeService(EmployeeMapper mapper) {
-        super(EmployeeEntity::new, EmployeeEntity.class);
+        super(EmployeeEntity::new, "employee");
         this.mapper = mapper;
     }
 
