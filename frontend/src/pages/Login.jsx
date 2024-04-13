@@ -14,7 +14,8 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        e.preventDefault()
         try {
             const response = await axios.post("http://localhost:8080/api/auth/login", {
                 username: login,
