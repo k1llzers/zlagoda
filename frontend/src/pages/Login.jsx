@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import axios from "axios";
+import login_picture from "../login_picture.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
@@ -29,7 +30,7 @@ const Login = () => {
         <div className="container">
             <div className="row">
                 <div className="col-md-6">
-                    <img src="../login_picture.png" alt="Image" className="img-fluid"/>
+                    <img src={login_picture} alt="Image" className="img-fluid"/>
                 </div>
                 <div className="col-md-6 contents">
                     <div className="row justify-content-center">
