@@ -18,11 +18,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException e) {
         log.info(e.getMessage());
-        return new ResponseEntity<>(new ErrorResponse("Uncorrect username or password"), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(new ErrorResponse("Incorrect username or password", HttpStatus.UNAUTHORIZED.value()));
     }
 
     @ExceptionHandler(NoSuchEntityException.class)
     public ResponseEntity<ErrorResponse> handleNoSuchEntityException(NoSuchEntityException e) {
-        return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(new ErrorResponse(e.getMessage(), HttpStatus.CONFLICT.value()));
     }
 }

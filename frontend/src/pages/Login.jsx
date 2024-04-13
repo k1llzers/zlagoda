@@ -16,22 +16,16 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault()
-        try {
-            const response = await axios.post("http://localhost:8080/api/auth/login", {
-                username: login,
-                password: password
-            });
-            if(response.data.error) {
-                setErrorMessage(response.data.error);
-                return;
-            } else {
-                setToken(response.data.token);
-                setRole(response.data.role);
-                navigate("/", { replace: true });
-            }
-        } catch (error) {
-            console.error("Login failed:", error);
-
+        const response = await axios.post("http://localhost:8080/api/auth/login", {
+            username: login,
+            password: password
+        });
+        if (response.data.error) {
+            setErrorMessage(response.data.error)
+        } else {
+            setToken(response.data.token);
+            setRole(response.data.role);
+            navigate("/", { replace: true });
         }
     };
 
