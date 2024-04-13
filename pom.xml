@@ -11,7 +11,7 @@
 
 	<groupId>org.naukma</groupId>
 	<artifactId>zlagoda</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>zlagoda</name>
 	<description>zlagoda</description>
 
@@ -21,7 +21,6 @@
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 		<frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
 		<node.version>v20.8.0</node.version>
-		<yarn.version>v1.12.1</yarn.version>
 	</properties>
 
 	<dependencies>
@@ -98,6 +97,12 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>react</artifactId>
+			<version>18.2.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -168,47 +173,36 @@
 				<artifactId>frontend-maven-plugin</artifactId>
 				<version>${frontend-maven-plugin.version}</version>
 				<configuration>
+					<nodeVersion>v20.12.2</nodeVersion>
 					<workingDirectory>frontend</workingDirectory>
+					<skip>false</skip>
 				</configuration>
 				<executions>
 					<execution>
-						<id>install node</id>
+						<id>install-node-and-npm</id>
 						<goals>
-							<goal>install-node-and-yarn</goal>
-						</goals>
-						<configuration>
-							<nodeVersion>${node.version}</nodeVersion>
-							<yarnVersion>${yarn.version}</yarnVersion>
-						</configuration>
-					</execution>
-					<execution>
-						<id>yarn install</id>
-						<goals>
-							<goal>yarn</goal>
+							<goal>install-node-and-npm</goal>
 						</goals>
 						<phase>generate-resources</phase>
 					</execution>
 					<execution>
-						<id>yarn test</id>
+						<id>npm-install-dependencies</id>
 						<goals>
-							<goal>yarn</goal>
+							<goal>npm</goal>
 						</goals>
-						<phase>test</phase>
+						<phase>generate-resources</phase>
 						<configuration>
-							<arguments>test</arguments>
-							<environmentVariables>
-								<CI>true</CI>
-							</environmentVariables>
+							<arguments>install</arguments>
 						</configuration>
 					</execution>
 					<execution>
-						<id>yarn build</id>
+						<id>npm-run-start</id>
 						<goals>
-							<goal>yarn</goal>
+							<goal>npm</goal>
 						</goals>
-						<phase>compile</phase>
+						<phase>generate-resources</phase>
 						<configuration>
-							<arguments>build</arguments>
+							<arguments>run build</arguments>
 						</configuration>
 					</execution>
 				</executions>

@@ -5,7 +5,6 @@ import axios from "axios";
 import login_picture from "../images/login_picture.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/Login.css'
-import {Alert} from "reactstrap";
 
 const Login = () => {
     const { setToken, setRole } = useAuth();

@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, Outlet, createBrowserRouter } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import { ProtectedRoute } from "./ProtectedRoute";
 import Login from "../pages/Login";
@@ -11,7 +11,14 @@ const Routes = () => {
             path: "/",
             element: <ProtectedRoute/>,
             children : [
-
+                {
+                    path: "/",
+                    element: <div>User Home Page</div>,
+                },
+                {
+                    path: "/profile",
+                    element: <div>User Profile</div>,
+                },
             ]
         }
 
