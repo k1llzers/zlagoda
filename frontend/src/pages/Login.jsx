@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import axios from "axios";
-import login_picture from "../login_picture.png"
+import login_picture from "../images/login_picture.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
