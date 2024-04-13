@@ -1,0 +1,42 @@
+.wrapper {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+}
+
+.login-title {
+    text-align: center;
+}
+
+.login-button {
+    width: 100%;
+    background-color: #385a64;
+    border: none;
+    color: white;
+    font-size: 17px;
+}
+
+.login-button:hover {
+    background-color: #2d434b;
+    color: white;
+}
+
+.form-control {
+    margin-bottom: 10px;
+}
+
+.form-data {
+    align-self: center;
+}
+
+.alert {
+    position: absolute;
+    top: 0;
+}
+
+.error-message {
+    color: #ea5a5e;
+    font-size: 10px;
+}
+
+
