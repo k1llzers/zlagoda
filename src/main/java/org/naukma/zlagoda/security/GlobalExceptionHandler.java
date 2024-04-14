@@ -25,4 +25,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNoSuchEntityException(NoSuchEntityException e) {
         return ResponseEntity.ok(new ErrorResponse(e.getMessage(), HttpStatus.CONFLICT.value()));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleUnexpectedException(Exception e) {
+        return ResponseEntity.ok(new ErrorResponse(e.getMessage(), HttpStatus.CONFLICT.value()));
+    }
 }
