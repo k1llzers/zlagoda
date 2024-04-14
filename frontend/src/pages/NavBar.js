@@ -15,7 +15,7 @@ const NavBar = () => {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="/login">Products</Nav.Link>
+                        <Nav.Link href="/products">Products</Nav.Link>
                         {role === "MANAGER" && <Nav.Link href="/categories">Categories</Nav.Link>}
                         <Nav.Link href="#storeproducts">Store Products</Nav.Link>
                         <Nav.Link href="#customercards">Customer Cards</Nav.Link>

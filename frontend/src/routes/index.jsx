@@ -4,6 +4,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import Login from "../pages/Login";
 import Logout from "../pages/Logout";
 import NotFound from "../pages/NotFound";
+import Products from "../pages/Products"
 
 const Routes = () => {
     const {token} = useAuth()
@@ -18,13 +19,17 @@ const Routes = () => {
                     element: <div>Home Page</div>,
                 },
                 {
+                    path: "/products",
+                    element: <Products/>,
+                },
+                {
                     path: "/categories",
                     element: <div>Categories</div>,
                 },
                 {
                     path: "/logout",
                     element: <Logout/>,
-                },
+                }
             ]
         }
 
