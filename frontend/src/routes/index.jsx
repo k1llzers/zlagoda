@@ -2,6 +2,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import { ProtectedRoute } from "./ProtectedRoute";
 import Login from "../pages/Login";
+import Logout from "../pages/Logout";
+import NotFound from "../pages/NotFound";
 
 const Routes = () => {
     const {token} = useAuth()
@@ -16,8 +18,12 @@ const Routes = () => {
                     element: <div>Home Page</div>,
                 },
                 {
-                    path: "/profile",
-                    element: <div>User Profile</div>,
+                    path: "/categories",
+                    element: <div>Categories</div>,
+                },
+                {
+                    path: "/logout",
+                    element: <Logout/>,
                 },
             ]
         }
@@ -31,11 +37,19 @@ const Routes = () => {
         }
     ]
 
+    const routes404 = [
+        {
+            path: "*",
+            element: <NotFound/>
+        }
+    ]
+
     // нада потім врахувати що через пошукову стрічку касир може зайти на сторінку тільки для менеджера
 
     const router = createBrowserRouter([
         ...(!token ? routesForNotAuthenticatedOnly : []),
-        ...routesForAuthenticatedOnly
+        ...routesForAuthenticatedOnly,
+        ...routes404
     ])
 
     return <RouterProvider router={router} />

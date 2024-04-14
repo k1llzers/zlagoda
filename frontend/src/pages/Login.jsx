@@ -5,6 +5,7 @@ import axios from "axios";
 import login_picture from "../images/login_picture.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/Login.css'
+import Alert from '@mui/material/Alert';
 
 const Login = () => {
     const { setToken, setRole } = useAuth();
@@ -21,11 +22,16 @@ const Login = () => {
         });
         if (response.data.error) {
             setErrorMessage(response.data.error)
+            setTimeout(() => clear(), 3000)
         } else {
             setToken(response.data.token);
             setRole(response.data.role);
             navigate("/", { replace: true });
         }
+    };
+
+    const clear = e => {
+        setErrorMessage("")
     };
 
     return (
@@ -50,7 +56,7 @@ const Login = () => {
                                         <input type="password" className="form-control" id="password" placeholder="Password"
                                                value={password} onChange={(e) => setPassword(e.target.value)}/>
                                     </div>
-                                    {errorMessage && <span className="error-message">{errorMessage}</span>}
+                                    {errorMessage && <Alert severity="error" onClose={clear}>{errorMessage}</Alert>}
                                     <input type="submit" value="Log In" className="btn login-button" />
                                 </form>
                             </div>
