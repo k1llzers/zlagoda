@@ -13,7 +13,7 @@ const Routes = () => {
             children : [
                 {
                     path: "/",
-                    element: <div>User Home Page</div>,
+                    element: <div>Home Page</div>,
                 },
                 {
                     path: "/profile",
@@ -30,6 +30,8 @@ const Routes = () => {
             element: <Login/>
         }
     ]
+
+    // нада потім врахувати що через пошукову стрічку касир може зайти на сторінку тільки для менеджера
 
     const router = createBrowserRouter([
         ...(!token ? routesForNotAuthenticatedOnly : []),

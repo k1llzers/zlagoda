@@ -6,6 +6,7 @@ import {
     useMemo,
     useState,
 } from "react";
+import NavBar from "../pages/NavBar";
 
 const AuthContext = createContext();
 
@@ -44,7 +45,9 @@ const AuthProvider =  ({children}) => {
     )
 
     return (
-        <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={contextValue}>
+            {children}
+        </AuthContext.Provider>
     )
 }
 
