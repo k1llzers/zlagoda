@@ -1,0 +1,12 @@
+.go-home-link {
+    text-decoration: none;
+    color: #385a64;
+}
+
+.go-home-link:hover {
+    color: #1a2e35;
+}
+
+.link-wrapper {
+    margin-top: 50px;
+}

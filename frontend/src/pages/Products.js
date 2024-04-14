@@ -52,7 +52,8 @@ const Products = () => {
             color: theme.palette.common.white,
         },
         [`&.${tableCellClasses.body}`]: {
-            fontSize: 14,
+            fontSize: 16,
+            fontFamily: 'Segoe UI'
         },
     }));
 
@@ -88,7 +89,7 @@ const Products = () => {
                     <StyledTableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={3}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{margin: 1}}>
-                                <Typography variant="h6" gutterBottom component="div">
+                                <Typography variant="span" gutterBottom component="div" style={{fontSize: 18}}>
                                     Characteristics
                                 </Typography>
                                 {row.characteristics}
@@ -107,7 +108,7 @@ const Products = () => {
                     <StyledTableRow>
                         <StyledTableCell/>
                         {columns.map((column) => (
-                            <StyledTableCell key={column.field}>
+                            <StyledTableCell key={column.field} sx={{fontSize: 18, fontFamily: 'Segoe UI', fontWeight: 'normal'}}>
                                 {column.headerName}
                             </StyledTableCell>
                         ))}
