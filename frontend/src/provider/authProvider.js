@@ -23,15 +23,20 @@ const AuthProvider =  ({children}) => {
 
     useEffect(() => {
         if(token) {
-            axios.defaults.headers.common["Authorization"] = "Bearer " + token
             localStorage.setItem("token", token)
             localStorage.setItem("role", role)
         } else {
-            delete axios.defaults.headers.common["Authorization"];
             localStorage.removeItem("token")
             localStorage.removeItem("role")
         }
     }, [token])
+
+    axios.interceptors.request.use(function (config) {
+        const token = localStorage.getItem("token")
+        if (token && !config.skipAuth)
+            config.headers.Authorization = 'Bearer ' + token;
+        return config;
+    });
 
     const contextValue = useMemo(
         () => ({
