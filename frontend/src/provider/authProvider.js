@@ -6,6 +6,7 @@ import {
     useMemo,
     useState,
 } from "react";
+import {redirect} from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -36,6 +37,14 @@ const AuthProvider =  ({children}) => {
         if (token && !config.skipAuth)
             config.headers.Authorization = 'Bearer ' + token;
         return config;
+    });
+
+    axios.interceptors.response.use(function (response) {
+        if (response.data.error) {
+            if (response.data.code == 401)
+                redirect("/logout")
+        }
+        return response;
     });
 
     const contextValue = useMemo(
