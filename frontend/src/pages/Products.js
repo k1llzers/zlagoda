@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Card from '@mui/material/Card';
-import {Box, Button, IconButton, styled, tableCellClasses, Typography} from "@mui/material";
+import {alpha, Box, Button, IconButton, InputBase, Stack, styled, tableCellClasses, Typography} from "@mui/material";
 import Collapse from '@mui/material/Collapse';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -16,6 +16,9 @@ import axios from "axios";
 import {useAuth} from "../provider/authProvider";
 import {Container} from "react-bootstrap";
 import Alert from "@mui/material/Alert";
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 const Products = () => {
     const [products, setProducts] = useState([])
@@ -42,6 +45,10 @@ const Products = () => {
         }
     }
 
+    function handleUpdate(id) {
+
+    }
+
     const clear = e => {
         setErrorMessage("")
     };
@@ -66,10 +73,13 @@ const Products = () => {
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: '#748c8d',
             color: theme.palette.common.white,
+            fontFamily: 'Segoe UI',
+            fontSize: 18,
+            fontWeight: 'normal',
         },
         [`&.${tableCellClasses.body}`]: {
-            fontSize: 16,
-            fontFamily: 'Segoe UI'
+            fontFamily: 'Segoe UI',
+            fontSize: 16
         },
     }));
 
@@ -79,6 +89,56 @@ const Products = () => {
         },
         '&:last-child td, &:last-child th': {
             border: 0,
+        },
+    }));
+
+    const StyledButton = styled(Button)({
+        borderColor: "#748c8d",
+        color: "#748c8d",
+        '&:hover': {
+            borderColor: "#2d434b",
+            color: "#2d434b",
+        }
+    })
+
+    const SearchIconWrapper = styled('div')(({ theme }) => ({
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }));
+
+    const StyledInputBase = styled(InputBase)(({ theme }) => ({
+        color: 'inherit',
+        width: '100%',
+        '& .MuiInputBase-input': {
+            padding: theme.spacing(1, 1, 1, 0),
+            paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+            transition: theme.transitions.create('width'),
+            [theme.breakpoints.up('sm')]: {
+                width: '12ch',
+                '&:focus': {
+                    width: '20ch',
+                },
+            },
+        },
+    }));
+
+    const SearchContainer = styled('div')(({ theme }) => ({
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: alpha(theme.palette.common.black, 0.15),
+        '&:hover': {
+            backgroundColor: alpha(theme.palette.common.black, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(1),
+            width: 'auto',
         },
     }));
 
@@ -100,13 +160,16 @@ const Products = () => {
                     <StyledTableCell component="th" scope="row " align="left">{row.name}</StyledTableCell>
                     <StyledTableCell align="left">{row.category}</StyledTableCell>
                     {role === "MANAGER" && <StyledTableCell align="right">
+                        <Button onClick={() => handleUpdate(row.id)}>
+                            <ModeEditIcon color='action'/>
+                        </Button>
                         <Button onClick={() => handleDelete(row.id)}>
                             <DeleteOutlineOutlinedIcon color="error"/>
                         </Button>
                     </StyledTableCell>}
                 </TableRow>
                 <TableRow>
-                    <StyledTableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={3}>
+                    <StyledTableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={4}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{margin: 1}}>
                                 <Typography variant="span" gutterBottom component="div" style={{fontSize: 18}}>
@@ -121,29 +184,54 @@ const Products = () => {
         );
     }
 
-    return (
-        <Container>
-            {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
-            <TableContainer component={Card} sx={{ maxWidth: 700, margin: '30px auto' }}>
-                <Table aria-label="collapsible table">
-                    <TableHead>
-                        <StyledTableRow>
-                            <StyledTableCell/>
-                            {columns.map((column) => (
-                                <StyledTableCell key={column.field} sx={{fontSize: 18, fontFamily: 'Segoe UI', fontWeight: 'normal'}}>
-                                    {column.headerName}
-                                </StyledTableCell>
+    function ProductsTable() {
+        return (
+            <React.Fragment>
+                <TableContainer component={Card} sx={{ maxWidth: 600, margin: '30px auto' }}>
+                    <Table aria-label="collapsible table">
+                        <TableHead>
+                            <StyledTableRow>
+                                <StyledTableCell/>
+                                {columns.map((column) => (
+                                    <StyledTableCell key={column.field}>
+                                        {column.headerName}
+                                    </StyledTableCell>
+                                ))}
+                                {role === "MANAGER" && <StyledTableCell/>}
+                            </StyledTableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows.map((row) => (
+                                <Row key={row.name} row={row} />
                             ))}
-                            {role === "MANAGER" && <StyledTableCell/>}
-                        </StyledTableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.map((row) => (
-                            <Row key={row.name} row={row} />
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </React.Fragment>
+        )
+    }
+
+    return (
+        <Container style={{ marginTop: '50px'}}>
+            <Box sx={{maxWidth: 600, margin: '0 auto'}}>
+                <Stack direction='row' justifyContent='space-between'>
+                    {role === 'MANAGER' &&
+                        <StyledButton variant="outlined" startIcon={<AddIcon />}>
+                            Add
+                        </StyledButton>}
+                    <SearchContainer>
+                        <SearchIconWrapper>
+                            <SearchIcon />
+                        </SearchIconWrapper>
+                        <StyledInputBase
+                            placeholder="Search…"
+                            inputProps={{ 'aria-label': 'search' }}
+                        />
+                    </SearchContainer>
+                </Stack>
+                {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
+                <ProductsTable/>
+            </Box>
         </Container>
     );
 }
