@@ -38,6 +38,7 @@ const Products = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [orderBy, setOrderBy] = React.useState(2);
     const [openForm, setOpenForm] = useState(false);
+    const [updateRow, setUpdateRow] = useState(undefined);
 
     const fetchProductsData = async (orderBy) => {
             const response = await axios.get("http://localhost:8080/api/product" + (orderBy === 2 ? "/order-by/name" : ""))
@@ -65,8 +66,9 @@ const Products = () => {
         }
     }
 
-    function handleUpdate(id) {
-
+    function handleUpdate(row) {
+        setUpdateRow(row)
+        handleOpenForm()
     }
 
     const handleOrderBy = async (e) => {
@@ -76,11 +78,12 @@ const Products = () => {
 
     function handleOpenForm() {
         setOpenForm(true)
-        fetchCategoryData();
+        fetchCategoryData()
     }
 
     function handleClose(){
-        setOpenForm(false);
+        setOpenForm(false)
+        setUpdateRow(undefined)
     }
 
     const clear = e => {
@@ -92,6 +95,7 @@ const Products = () => {
             id: product.id,
             name: product.name,
             category: product.category.name,
+            categoryId: product.category.id,
             characteristics: product.characteristics
         }
     }
@@ -177,28 +181,7 @@ const Products = () => {
     }));
 
     const StyledTextField = styled(TextField)({
-        // '& label.Mui-focused': {
-        //     color: '#A0AAB4',
-        // },
-        // '& .MuiInput-underline:after': {
-        //     borderBottomColor: '#B2BAC2',
-        // },
-        // '& .MuiOutlinedInput-root': {
-        //     '& fieldset': {
-        //         borderColor: '#E0E3E7',
-        //     },
-        //     '&:hover fieldset': {
-        //         borderColor: '#B2BAC2',
-        //     },
-        //     '&.Mui-focused fieldset': {
-        //         borderColor: '#6F7E8C',
-        //     },
-        // },
-        margin: '10px'
-    });
-
-    const StyledSelect = styled(Select)({
-        '.MuiSelect-select': {
+        '& label.Mui-focused': {
             color: '#A0AAB4',
         },
         '& .MuiInput-underline:after': {
@@ -218,9 +201,9 @@ const Products = () => {
         margin: '10px'
     });
 
-    const StyledLabel = styled(InputLabel)({
+    const StyledSelect = styled(Select)(({ theme }) => ({
         '& .MuiSelect-select': {
-            color: '#A0AAB4',
+            color: '#34383b',
             '&:focus': {
                 backgroundColor: 'transparent',
             },
@@ -236,31 +219,60 @@ const Products = () => {
                 borderColor: '#6F7E8C',
             },
         },
-        '& .MuiInput-underline:after': {
-            borderBottomColor: '#B2BAC2',
+
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#6F7E8C',
+        },
+        margin: '10px',
+    }));
+
+    const StyledLabel = styled(InputLabel)({
+        '&.Mui-focused': {
+            color: '#A0AAB4',
         },
         margin: '10px'
     });
 
     function ProductForm(props) {
-        const {onClose, open, set} = props;
-        const [name, setName] = useState("")
-        const [characteristics, setCharacteristics] = useState("")
-        const [category, setCategory] = useState("")
+        const {onClose, open, row} = props;
+        const [name, setName] = useState(row ? row.name : "")
+        const [characteristics, setCharacteristics] = useState(row ? row.characteristics : "")
+        const [category, setCategory] = useState(row ? row.categoryId : "")
+        const [disableAdd, setDisableAdd] = useState(true)
+
+        useEffect(() => {
+            if(name.trim() && characteristics.trim() && category && name.length<=50 && characteristics.length<=100) {
+                setDisableAdd(false)
+            }else {
+                setDisableAdd(true)
+            }
+
+        }, [name, characteristics, category]);
 
         const handleAdd = async () => {
             handleClose()
-            const response = await axios.post("http://localhost:8080/api/product", {
-                categoryId: +category,
-                name: name,
-                characteristics: characteristics
-            })
+            let response;
+            if(!row) {
+                response = await axios.post("http://localhost:8080/api/product", {
+                    categoryId: +category,
+                    name: name,
+                    characteristics: characteristics
+                })
+            } else {
+                response = await axios.put("http://localhost:8080/api/product", {
+                    id: row.id,
+                    categoryId: +category,
+                    name: name,
+                    characteristics: characteristics
+                })
+            }
             if (response.data.error) {
                 setErrorMessage("Incorrect data")
                 setTimeout(() => setErrorMessage(""), 3500)
             } else {
                 fetchProductsData()
             }
+
         }
 
         return (
@@ -290,6 +302,7 @@ const Products = () => {
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 label="Category"
+                                value={category}
                                 onChange={(event) => {setCategory(event.target.value)}}
                             >
                                 {categories.map((category) => (
@@ -300,7 +313,12 @@ const Products = () => {
                                     ))}
                             </StyledSelect>
                         </FormControl>
-                        <StyledButton variant="text" sx={{width: '50%', alignSelf: 'center'}} onClick={handleAdd}>Add</StyledButton>
+                        <StyledButton
+                            variant="text"
+                            sx={{width: '50%', alignSelf: 'center'}}
+                            onClick={handleAdd}
+                            disabled={disableAdd}
+                        >{row ? "Update" : "Add"}</StyledButton>
                     </FormControl>
                 </DialogContent>
             </Dialog>
@@ -326,7 +344,7 @@ const Products = () => {
                     <StyledTableCell component="th" scope="row " align="left">{row.name}</StyledTableCell>
                     <StyledTableCell align="left">{row.category}</StyledTableCell>
                     {role === "MANAGER" && <StyledTableCell align="right">
-                        <Button onClick={() => handleUpdate(row.id)}>
+                        <Button onClick={() => handleUpdate(row)}>
                             <ModeEditIcon color='action'/>
                         </Button>
                         <Button onClick={() => handleDelete(row.id)}>
@@ -365,8 +383,8 @@ const Products = () => {
                                 ))}
                                 <StyledTableCell align="right">
                                     <FormControl sx={{maxWidth: 120}}>
-                                        <InputLabel id="demo-simple-select-label">Order by</InputLabel>
-                                        <Select
+                                        <StyledLabel id="demo-simple-select-label">Order by</StyledLabel>
+                                        <StyledSelect
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
                                             value={orderBy}
@@ -375,7 +393,7 @@ const Products = () => {
                                         >
                                             {role === "MANAGER" && <MenuItem value={1}>None</MenuItem>}
                                             <MenuItem value={2}>Name</MenuItem>
-                                        </Select>
+                                        </StyledSelect>
                                     </FormControl>
                                 </StyledTableCell>
                             </StyledTableRow>
@@ -396,6 +414,7 @@ const Products = () => {
             <ProductForm
                 open={openForm}
                 onClose={handleClose}
+                row={updateRow}
             />
             <Box sx={{maxWidth: 600, margin: '0 auto'}}>
                 <Stack direction='row' justifyContent='space-between'>
