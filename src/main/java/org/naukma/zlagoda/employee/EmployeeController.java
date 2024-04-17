@@ -32,7 +32,7 @@ public class EmployeeController {
         return ResponseEntity.ok(service.getEmployeeResponseDto(id));
     }
     @GetMapping
-//    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<EmployeeResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }

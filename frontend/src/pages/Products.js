@@ -47,10 +47,10 @@ const Products = () => {
     const [search, setSearch] = useState("")
     const [category, setCategory] = useState(0)
 
-    const fetchProductsData = async (orderBy) => {
+    const fetchProductsData = async () => {
         let response
         if (category === 0)
-            response = await axios.get("http://localhost:8080/api/product" + (orderBy === 2 ? "/order-by/name" : ""))
+            response = await axios.get("http://localhost:8080/api/product")
         else
             response = await axios.get("http://localhost:8080/api/product/order-by/name/" + category)
             setProducts(response.data);
@@ -87,18 +87,13 @@ const Products = () => {
         setProducts(response.data);
     };
 
-    const handleOrderBy = async (e) => {
-        setOrderBy(e.target.value)
-        await fetchProductsData(e.target.value)
-    };
-
     const handleSearchChange = async (e) => {
         setSearch(e.target.value)
         setCategory(0)
-        if (e.target.value)
+        if (e.target.value.trim().length > 0)
             await fetchSearchingProductsData(e.target.value)
         else
-            fetchProductsData(orderBy)
+            await fetchProductsData()
     };
 
     function handleOpenForm() {
@@ -168,8 +163,6 @@ const Products = () => {
             if (response.data.error) {
                 setErrorMessage(response.data.error)
                 setTimeout(() => setErrorMessage(""), 3500)
-            } else {
-                fetchProductsData(orderBy)
             }
         }
 
@@ -262,26 +255,11 @@ const Products = () => {
                             <StyledTableRow>
                                 <StyledTableCell/>
                                 {columns.map((column) => (
-                                    <StyledTableCell key={column.field}>
+                                    <StyledTableCell key={column.field} sx={{width:"35%"}}>
                                         {column.headerName}
                                     </StyledTableCell>
                                 ))}
-                                <StyledTableCell align="right">
-                                    <FormControl size='small' sx={{maxHeight:'40px', minWidth:'100px', marginBottom:'10px'}}>
-                                        <StyledLabel id="demo-simple-select-label">Order by</StyledLabel>
-                                        <StyledSelect
-                                            sx={{maxHeight:'40px', minWidth:'100px'}}
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={orderBy}
-                                            label="Order by"
-                                            onChange={handleOrderBy}
-                                        >
-                                            {role === "MANAGER" && <MenuItem value={1}>None</MenuItem>}
-                                            <MenuItem value={2}>Name</MenuItem>
-                                        </StyledSelect>
-                                    </FormControl>
-                                </StyledTableCell>
+                                <StyledTableCell sx={{width:"35%"}} />
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
