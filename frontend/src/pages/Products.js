@@ -47,7 +47,7 @@ const Products = () => {
     const fetchProductsData = async () => {
         let response
         if (category === 0)
-            response = await axios.get("http://localhost:8080/api/product/order-by/name/")
+            response = await axios.get("http://localhost:8080/api/product/order-by/name")
         else
             response = await axios.get("http://localhost:8080/api/product/order-by/name/" + category)
             setProducts(response.data);
