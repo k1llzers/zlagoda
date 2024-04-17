@@ -40,9 +40,9 @@ const Products = () => {
     const [categories, setCategories] = useState([]);
     const {role} = useAuth()
     const [errorMessage, setErrorMessage] = useState("");
-    const [orderBy, setOrderBy] = React.useState(2);
-    const [openForm, setOpenForm] = useState(false);
-    const [updateRow, setUpdateRow] = useState(undefined);
+    const [orderBy, setOrderBy] = useState(2);
+    const [openForm, setOpenForm] = useState(false)
+    const [updateRow, setUpdateRow] = useState(undefined)
     const [search, setSearch] = useState("")
 
     const fetchProductsData = async (orderBy) => {
@@ -118,8 +118,8 @@ const Products = () => {
     }
 
     const columns = [
-        {field: 'name', headerName: 'Product name', width: 10},
-        {field: 'category', headerName: 'Category', width: 10}
+        {field: 'name', headerName: 'Product'},
+        {field: 'category', headerName: 'Category'}
     ];
 
     const rows = products.map((product) => processProducts(product));
@@ -171,7 +171,6 @@ const Products = () => {
                     <FormControl fullWidth>
                         <StyledTextField id="outlined-basic" label="Name" variant="outlined" value={name}
                                          required
-                                         multiline
                                          error={name.length > 50}
                                          helperText={name.length > 50 ? "Too long" : ""}
                                          onChange={(event) => {setName(event.target.value)}}/>
@@ -180,7 +179,7 @@ const Products = () => {
                             label="Characteristics"
                             required
                             error={characteristics.length > 100}
-                            helperText={characteristics.length > 50 ? "Too long" : ""}
+                            helperText={characteristics.length > 100 ? "Too long" : ""}
                             multiline
                             value={characteristics}
                             onChange={(event) => {setCharacteristics(event.target.value)}}

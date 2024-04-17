@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Logout from "../pages/Logout";
 import NotFound from "../pages/NotFound";
 import Products from "../pages/Products"
+import Categories from "../pages/Categories"
 
 const Routes = () => {
     const {token} = useAuth()
@@ -24,7 +25,7 @@ const Routes = () => {
                 },
                 {
                     path: "/categories",
-                    element: <div>Categories</div>,
+                    element: <Categories/>,
                 },
                 {
                     path: "/logout",
