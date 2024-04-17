@@ -53,13 +53,13 @@ public class CustomerCardController {
         return ResponseEntity.ok(service.delete(id));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<Integer> create(@RequestBody @Valid CreateUpdateCustomerCardDto dto) {
         return ResponseEntity.ok(service.save(dto));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    @PreAuthorize("isAuthenticated()")
     @PutMapping
     public ResponseEntity<Boolean> update(@RequestBody CreateUpdateCustomerCardDto dto) {
         return ResponseEntity.ok(service.update(dto));
