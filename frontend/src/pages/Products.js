@@ -6,7 +6,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Card from '@mui/material/Card';
-import {alpha, Box, Button, IconButton, InputBase, Stack, styled, tableCellClasses, Typography} from "@mui/material";
+import {
+    alpha,
+    Box,
+    Button,
+    Dialog, DialogContent, FormControl,
+    IconButton,
+    InputBase, InputLabel, MenuItem, Select,
+    Stack,
+    styled,
+    tableCellClasses, TextField,
+    Typography
+} from "@mui/material";
 import Collapse from '@mui/material/Collapse';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -22,8 +33,10 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 const Products = () => {
     const [products, setProducts] = useState([])
+    const [categories, setCategories] = useState([]);
     const {role} = useAuth()
     const [errorMessage, setErrorMessage] = useState("");
+    const [openForm, setOpenForm] = useState(false);
 
     const fetchProductsData = async () => {
         const response = await axios.get("http://localhost:8080/api/product")
@@ -33,6 +46,11 @@ const Products = () => {
     useEffect(() => {
         fetchProductsData();
     }, []);
+
+    const fetchCategoryData = async () => {
+        const response = await axios.get("http://localhost:8080/api/category")
+        setCategories(response.data);
+    }
 
     const handleDelete = async (productId) => {
         const response = await axios.delete("http://localhost:8080/api/product/" + productId)
@@ -47,6 +65,15 @@ const Products = () => {
 
     function handleUpdate(id) {
 
+    }
+
+    function handleOpenForm() {
+        setOpenForm(true)
+        fetchCategoryData();
+    }
+
+    function handleClose(){
+        setOpenForm(false);
     }
 
     const clear = e => {
@@ -142,6 +169,138 @@ const Products = () => {
         },
     }));
 
+    const StyledTextField = styled(TextField)({
+        // '& label.Mui-focused': {
+        //     color: '#A0AAB4',
+        // },
+        // '& .MuiInput-underline:after': {
+        //     borderBottomColor: '#B2BAC2',
+        // },
+        // '& .MuiOutlinedInput-root': {
+        //     '& fieldset': {
+        //         borderColor: '#E0E3E7',
+        //     },
+        //     '&:hover fieldset': {
+        //         borderColor: '#B2BAC2',
+        //     },
+        //     '&.Mui-focused fieldset': {
+        //         borderColor: '#6F7E8C',
+        //     },
+        // },
+        margin: '10px'
+    });
+
+    const StyledSelect = styled(Select)({
+        '.MuiSelect-select': {
+            color: '#A0AAB4',
+        },
+        '& .MuiInput-underline:after': {
+            borderBottomColor: '#B2BAC2',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: '#E0E3E7',
+            },
+            '&:hover fieldset': {
+                borderColor: '#B2BAC2',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: '#6F7E8C',
+            },
+        },
+        margin: '10px'
+    });
+
+    const StyledLabel = styled(InputLabel)({
+        '& .MuiSelect-select': {
+            color: '#A0AAB4',
+            '&:focus': {
+                backgroundColor: 'transparent',
+            },
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+            '& fieldset': {
+                borderColor: '#E0E3E7',
+            },
+            '&:hover fieldset': {
+                borderColor: '#B2BAC2',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: '#6F7E8C',
+            },
+        },
+        '& .MuiInput-underline:after': {
+            borderBottomColor: '#B2BAC2',
+        },
+        margin: '10px'
+    });
+
+    function ProductForm(props) {
+        const {onClose, open, set} = props;
+        const [name, setName] = useState("")
+        const [characteristics, setCharacteristics] = useState("")
+        const [category, setCategory] = useState("")
+
+        const handleAdd = async () => {
+            handleClose()
+            const response = await axios.post("http://localhost:8080/api/product", {
+                categoryId: +category,
+                name: name,
+                characteristics: characteristics
+            })
+            if (response.data.error) {
+                setErrorMessage("Incorrect data")
+                setTimeout(() => setErrorMessage(""), 3500)
+            } else {
+                fetchProductsData()
+            }
+        }
+
+        return (
+            <Dialog onClose={onClose} open={open}>
+                <DialogContent>
+                    <FormControl fullWidth>
+                        <StyledTextField id="outlined-basic" label="Name" variant="outlined" value={name}
+                                         required
+                                         error={name.length > 50}
+                                         helperText={name.length > 50 ? "Too long" : ""}
+                                         onChange={(event) => {setName(event.target.value)}}/>
+                        <StyledTextField
+                            id="outlined-multiline-flexible"
+                            label="Characteristics"
+                            required
+                            error={characteristics.length > 100}
+                            helperText={characteristics.length > 50 ? "Too long" : ""}
+                            multiline
+                            value={characteristics}
+                            onChange={(event) => {setCharacteristics(event.target.value)}}
+                        />
+                        <FormControl variant="outlined">
+                            <StyledLabel variant="outlined" id="demo-simple-select-label" required>
+                                Category
+                            </StyledLabel>
+                            <StyledSelect
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                label="Category"
+                                onChange={(event) => {setCategory(event.target.value)}}
+                            >
+                                {categories.map((category) => (
+                                    <MenuItem
+                                        key={category.id}
+                                        value={category.id}
+                                    >{category.name}</MenuItem>
+                                    ))}
+                            </StyledSelect>
+                        </FormControl>
+                        <StyledButton variant="text" sx={{width: '50%', alignSelf: 'center'}} onClick={handleAdd}>Add</StyledButton>
+                    </FormControl>
+                </DialogContent>
+            </Dialog>
+        )
+    }
+
+
     function Row(props) {
         const {row} = props;
         const [open, setOpen] = useState(false);
@@ -213,10 +372,14 @@ const Products = () => {
 
     return (
         <Container style={{ marginTop: '50px'}}>
+            <ProductForm
+                open={openForm}
+                onClose={handleClose}
+            />
             <Box sx={{maxWidth: 600, margin: '0 auto'}}>
                 <Stack direction='row' justifyContent='space-between'>
                     {role === 'MANAGER' &&
-                        <StyledButton variant="outlined" startIcon={<AddIcon />}>
+                        <StyledButton variant="outlined" startIcon={<AddIcon />} onClick={handleOpenForm}>
                             Add
                         </StyledButton>}
                     <SearchContainer>
