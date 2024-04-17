@@ -33,6 +33,10 @@ public class ProductService extends BaseService<CreateUpdateProductDto, ProductE
         return mapper.toResponseDtoList(((ProductRepository)repository).findAllProductsFromCategoryOrderByName(id));
     }
 
+    public List<ProductResponseDto> getAllByNameLike(String name) {
+        return mapper.toResponseDtoList(((ProductRepository)repository).findAllProductsNameLike(name));
+    }
+
     @Override
     protected void mergeEntity(ProductEntity entity, CreateUpdateProductDto dto) {
         if(dto.getId() != null)

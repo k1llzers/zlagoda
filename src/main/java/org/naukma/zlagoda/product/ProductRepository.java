@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -29,6 +30,22 @@ public class ProductRepository extends BaseRepository<ProductEntity, Integer> {
     public List<ProductEntity> findAllProductsFromCategoryOrderByName(Integer id) {
         String query = String.format("SELECT * FROM product WHERE category_number=%s ORDER BY product_name", id);
         return findAllByCustomQuery(query);
+    }
+
+    public List<ProductEntity> findAllProductsNameLike(String name) {
+        List<ProductEntity> entities = new ArrayList<>();
+        try(PreparedStatement findAllStatement = connection.prepareStatement("SELECT * FROM product " +
+                "WHERE LOWER(product_name) LIKE ?")) {
+            findAllStatement.setString(1, "%" + name.toLowerCase() + "%");
+            ResultSet resultSet = findAllStatement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

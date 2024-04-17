@@ -1,22 +1,17 @@
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Card from '@mui/material/Card';
 import {
-    alpha,
     Box,
     Button, FormControl,
     Dialog, DialogContent,
     IconButton,
-    InputBase, InputLabel, MenuItem, Select, TextField,
     Stack,
-    styled,
-    tableCellClasses,
-    Typography
+    Typography, MenuItem
 } from "@mui/material";
 import Collapse from '@mui/material/Collapse';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -30,6 +25,15 @@ import Alert from "@mui/material/Alert";
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import StyledTableCell from "../styledComponent/styledTableCell";
+import StyledTextField from "../styledComponent/styledTextField";
+import StyledLabel from "../styledComponent/styldLabel";
+import StyledSelect from "../styledComponent/styledSelect";
+import StyledButton from "../styledComponent/styldButton";
+import StyledTableRow from "../styledComponent/styledTableRow";
+import SearchContainer from "../styledComponent/searchContainer";
+import SearchIconWrapper from "../styledComponent/searchIconWrapper";
+import StyledInputBase from "../styledComponent/styledInputBase";
 
 const Products = () => {
     const [products, setProducts] = useState([])
@@ -39,11 +43,11 @@ const Products = () => {
     const [orderBy, setOrderBy] = React.useState(2);
     const [openForm, setOpenForm] = useState(false);
     const [updateRow, setUpdateRow] = useState(undefined);
+    const [search, setSearch] = useState("")
 
     const fetchProductsData = async (orderBy) => {
             const response = await axios.get("http://localhost:8080/api/product" + (orderBy === 2 ? "/order-by/name" : ""))
             setProducts(response.data);
-
     };
 
     useEffect(() => {
@@ -71,9 +75,22 @@ const Products = () => {
         handleOpenForm()
     }
 
+    const fetchSearchingProductsData = async (name) => {
+        const response = await axios.get("http://localhost:8080/api/product/by-name/" + name)
+        setProducts(response.data);
+    };
+
     const handleOrderBy = async (e) => {
         setOrderBy(e.target.value)
         await fetchProductsData(e.target.value)
+    };
+
+    const handleSearchChange = async (e) => {
+        setSearch(e.target.value)
+        if (e.target.value)
+            await fetchSearchingProductsData(e.target.value)
+        else
+            fetchProductsData(orderBy)
     };
 
     function handleOpenForm() {
@@ -106,132 +123,6 @@ const Products = () => {
     ];
 
     const rows = products.map((product) => processProducts(product));
-
-    const StyledTableCell = styled(TableCell)(({theme}) => ({
-        [`&.${tableCellClasses.head}`]: {
-            backgroundColor: '#748c8d',
-            color: theme.palette.common.white,
-            fontFamily: 'Segoe UI',
-            fontSize: 18,
-            fontWeight: 'normal',
-        },
-        [`&.${tableCellClasses.body}`]: {
-            fontFamily: 'Segoe UI',
-            fontSize: 16
-        },
-    }));
-
-    const StyledTableRow = styled(TableRow)(({theme}) => ({
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.action.hover,
-        },
-        '&:last-child td, &:last-child th': {
-            border: 0,
-        },
-    }));
-
-    const StyledButton = styled(Button)({
-        borderColor: "#748c8d",
-        color: "#748c8d",
-        '&:hover': {
-            borderColor: "#2d434b",
-            color: "#2d434b",
-        }
-    })
-
-    const SearchIconWrapper = styled('div')(({ theme }) => ({
-        padding: theme.spacing(0, 2),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }));
-
-    const StyledInputBase = styled(InputBase)(({ theme }) => ({
-        color: 'inherit',
-        width: '100%',
-        '& .MuiInputBase-input': {
-            padding: theme.spacing(1, 1, 1, 0),
-            paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-            transition: theme.transitions.create('width'),
-            [theme.breakpoints.up('sm')]: {
-                width: '12ch',
-                '&:focus': {
-                    width: '20ch',
-                },
-            },
-        },
-    }));
-
-    const SearchContainer = styled('div')(({ theme }) => ({
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: alpha(theme.palette.common.black, 0.15),
-        '&:hover': {
-            backgroundColor: alpha(theme.palette.common.black, 0.25),
-        },
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(1),
-            width: 'auto',
-        },
-    }));
-
-    const StyledTextField = styled(TextField)({
-        '& label.Mui-focused': {
-            color: '#A0AAB4',
-        },
-        '& .MuiInput-underline:after': {
-            borderBottomColor: '#B2BAC2',
-        },
-        '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-                borderColor: '#E0E3E7',
-            },
-            '&:hover fieldset': {
-                borderColor: '#B2BAC2',
-            },
-            '&.Mui-focused fieldset': {
-                borderColor: '#6F7E8C',
-            },
-        },
-        margin: '10px'
-    });
-
-    const StyledSelect = styled(Select)(({ theme }) => ({
-        '& .MuiSelect-select': {
-            color: '#34383b',
-            '&:focus': {
-                backgroundColor: 'transparent',
-            },
-        },
-        '& .MuiOutlinedInput-notchedOutline': {
-            '& fieldset': {
-                borderColor: '#E0E3E7',
-            },
-            '&:hover fieldset': {
-                borderColor: '#B2BAC2',
-            },
-            '&.Mui-focused fieldset': {
-                borderColor: '#6F7E8C',
-            },
-        },
-
-        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#6F7E8C',
-        },
-        margin: '10px',
-    }));
-
-    const StyledLabel = styled(InputLabel)({
-        '&.Mui-focused': {
-            color: '#A0AAB4',
-        },
-        margin: '10px'
-    });
 
     function ProductForm(props) {
         const {onClose, open, row} = props;
@@ -267,12 +158,11 @@ const Products = () => {
                 })
             }
             if (response.data.error) {
-                setErrorMessage("Incorrect data")
+                setErrorMessage(response.data.error)
                 setTimeout(() => setErrorMessage(""), 3500)
             } else {
-                fetchProductsData()
+                fetchProductsData(orderBy)
             }
-
         }
 
         return (
@@ -281,6 +171,7 @@ const Products = () => {
                     <FormControl fullWidth>
                         <StyledTextField id="outlined-basic" label="Name" variant="outlined" value={name}
                                          required
+                                         multiline
                                          error={name.length > 50}
                                          helperText={name.length > 50 ? "Too long" : ""}
                                          onChange={(event) => {setName(event.target.value)}}/>
@@ -428,7 +319,9 @@ const Products = () => {
                         </SearchIconWrapper>
                         <StyledInputBase
                             placeholder="Search…"
+                            value={search}
                             inputProps={{ 'aria-label': 'search' }}
+                            onChange={handleSearchChange}
                         />
                     </SearchContainer>
                 </Stack>

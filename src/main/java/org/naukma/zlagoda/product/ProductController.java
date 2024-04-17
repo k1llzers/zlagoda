@@ -40,6 +40,12 @@ public class    ProductController {
         return ResponseEntity.ok(service.getAllProductsFromCategoryOrderByName(categoryId));
     }
 
+    @GetMapping("/by-name/{name}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<ProductResponseDto>> getAllProductsNameLike(@PathVariable String name) {
+        return ResponseEntity.ok(service.getAllByNameLike(name));
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
