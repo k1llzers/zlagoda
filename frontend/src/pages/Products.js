@@ -27,21 +27,18 @@ import SearchIcon from '@mui/icons-material/Search';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import StyledTableCell from "../styledComponent/styledTableCell";
 import StyledTextField from "../styledComponent/styledTextField";
-import StyledLabel from "../styledComponent/styldLabel";
-import StyledSelect from "../styledComponent/styledSelect";
 import StyledButton from "../styledComponent/styldButton";
 import StyledTableRow from "../styledComponent/styledTableRow";
 import SearchContainer from "../styledComponent/searchContainer";
 import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import StyledInputBase from "../styledComponent/styledInputBase";
-import CategoryDropdown from "../components/categoruesDropdown";
+import CategoryDropdown from "../components/categoriesDropdown";
 
 const Products = () => {
     const [products, setProducts] = useState([])
     const [categories, setCategories] = useState([]);
     const {role} = useAuth()
     const [errorMessage, setErrorMessage] = useState("");
-    const [orderBy, setOrderBy] = useState(2);
     const [openForm, setOpenForm] = useState(false)
     const [updateRow, setUpdateRow] = useState(undefined)
     const [search, setSearch] = useState("")
@@ -50,14 +47,14 @@ const Products = () => {
     const fetchProductsData = async () => {
         let response
         if (category === 0)
-            response = await axios.get("http://localhost:8080/api/product")
+            response = await axios.get("http://localhost:8080/api/product/order-by/name/")
         else
             response = await axios.get("http://localhost:8080/api/product/order-by/name/" + category)
             setProducts(response.data);
     };
 
     useEffect(() => {
-        fetchProductsData(2);
+        fetchProductsData();
         fetchCategoryData()
     }, [category]);
 
@@ -163,6 +160,8 @@ const Products = () => {
             if (response.data.error) {
                 setErrorMessage(response.data.error)
                 setTimeout(() => setErrorMessage(""), 3500)
+            } else {
+                fetchCategoryData()
             }
         }
 
