@@ -34,6 +34,7 @@ import StyledTableRow from "../styledComponent/styledTableRow";
 import SearchContainer from "../styledComponent/searchContainer";
 import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import StyledInputBase from "../styledComponent/styledInputBase";
+import CategoryDropdown from "../components/categoruesDropdown";
 
 const Products = () => {
     const [products, setProducts] = useState([])
@@ -44,15 +45,21 @@ const Products = () => {
     const [openForm, setOpenForm] = useState(false)
     const [updateRow, setUpdateRow] = useState(undefined)
     const [search, setSearch] = useState("")
+    const [category, setCategory] = useState(0)
 
     const fetchProductsData = async (orderBy) => {
-            const response = await axios.get("http://localhost:8080/api/product" + (orderBy === 2 ? "/order-by/name" : ""))
+        let response
+        if (category === 0)
+            response = await axios.get("http://localhost:8080/api/product" + (orderBy === 2 ? "/order-by/name" : ""))
+        else
+            response = await axios.get("http://localhost:8080/api/product/order-by/name/" + category)
             setProducts(response.data);
     };
 
     useEffect(() => {
         fetchProductsData(2);
-    }, []);
+        fetchCategoryData()
+    }, [category]);
 
     const fetchCategoryData = async () => {
         const response = await axios.get("http://localhost:8080/api/category")
@@ -87,6 +94,7 @@ const Products = () => {
 
     const handleSearchChange = async (e) => {
         setSearch(e.target.value)
+        setCategory(0)
         if (e.target.value)
             await fetchSearchingProductsData(e.target.value)
         else
@@ -184,25 +192,12 @@ const Products = () => {
                             value={characteristics}
                             onChange={(event) => {setCharacteristics(event.target.value)}}
                         />
-                        <FormControl variant="outlined">
-                            <StyledLabel variant="outlined" id="demo-simple-select-label" required>
-                                Category
-                            </StyledLabel>
-                            <StyledSelect
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                label="Category"
-                                value={category}
-                                onChange={(event) => {setCategory(event.target.value)}}
-                            >
-                                {categories.map((category) => (
-                                    <MenuItem
-                                        key={category.id}
-                                        value={category.id}
-                                    >{category.name}</MenuItem>
-                                    ))}
-                            </StyledSelect>
-                        </FormControl>
+                        <CategoryDropdown
+                            required
+                            categories={categories}
+                            category={category}
+                            setCategory={setCategory}
+                        />
                         <StyledButton
                             variant="text"
                             sx={{width: '50%', alignSelf: 'center'}}
@@ -272,9 +267,10 @@ const Products = () => {
                                     </StyledTableCell>
                                 ))}
                                 <StyledTableCell align="right">
-                                    <FormControl sx={{maxWidth: 120}}>
+                                    <FormControl size='small' sx={{maxHeight:'40px', minWidth:'100px', marginBottom:'10px'}}>
                                         <StyledLabel id="demo-simple-select-label">Order by</StyledLabel>
                                         <StyledSelect
+                                            sx={{maxHeight:'40px', minWidth:'100px'}}
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
                                             value={orderBy}
@@ -309,10 +305,22 @@ const Products = () => {
             <Box sx={{maxWidth: 600, margin: '0 auto'}}>
                 <Stack direction='row' justifyContent='space-between'>
                     {role === 'MANAGER' &&
-                        <StyledButton variant="outlined" startIcon={<AddIcon />} onClick={handleOpenForm}>
+                        <StyledButton variant="outlined"
+                                      startIcon={<AddIcon />}
+                                      onClick={handleOpenForm}
+                                      sx={{maxHeight:'40px', marginTop:'10px'}}
+                                          >
                             Add
                         </StyledButton>}
-                    <SearchContainer>
+                    <CategoryDropdown
+                        sx={{maxHeight:'40px', minWidth:'120px'}}
+                        sxChild={{maxHeight:'40px', minWidth:'120px'}}
+                        noneOption={true}
+                        categories={categories}
+                        category={category}
+                        setCategory={setCategory}
+                    />
+                    <SearchContainer sx={{maxHeight:'40px', marginTop:'10px'}}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>

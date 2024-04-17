@@ -23,7 +23,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CategoryResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
