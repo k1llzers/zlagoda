@@ -9,13 +9,13 @@ import Card from '@mui/material/Card';
 import {
     alpha,
     Box,
-    Button,
-    Dialog, DialogContent, FormControl,
+    Button, FormControl,
+    Dialog, DialogContent,
     IconButton,
-    InputBase, InputLabel, MenuItem, Select,
+    InputBase, InputLabel, MenuItem, Select, TextField,
     Stack,
     styled,
-    tableCellClasses, TextField,
+    tableCellClasses,
     Typography
 } from "@mui/material";
 import Collapse from '@mui/material/Collapse';
@@ -36,15 +36,17 @@ const Products = () => {
     const [categories, setCategories] = useState([]);
     const {role} = useAuth()
     const [errorMessage, setErrorMessage] = useState("");
+    const [orderBy, setOrderBy] = React.useState(2);
     const [openForm, setOpenForm] = useState(false);
 
-    const fetchProductsData = async () => {
-        const response = await axios.get("http://localhost:8080/api/product")
-        setProducts(response.data);
+    const fetchProductsData = async (orderBy) => {
+            const response = await axios.get("http://localhost:8080/api/product" + (orderBy === 2 ? "/order-by/name" : ""))
+            setProducts(response.data);
+
     };
 
     useEffect(() => {
-        fetchProductsData();
+        fetchProductsData(2);
     }, []);
 
     const fetchCategoryData = async () => {
@@ -66,6 +68,11 @@ const Products = () => {
     function handleUpdate(id) {
 
     }
+
+    const handleOrderBy = async (e) => {
+        setOrderBy(e.target.value)
+        await fetchProductsData(e.target.value)
+    };
 
     function handleOpenForm() {
         setOpenForm(true)
@@ -356,7 +363,21 @@ const Products = () => {
                                         {column.headerName}
                                     </StyledTableCell>
                                 ))}
-                                {role === "MANAGER" && <StyledTableCell/>}
+                                <StyledTableCell align="right">
+                                    <FormControl sx={{maxWidth: 120}}>
+                                        <InputLabel id="demo-simple-select-label">Order by</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={orderBy}
+                                            label="Order by"
+                                            onChange={handleOrderBy}
+                                        >
+                                            {role === "MANAGER" && <MenuItem value={1}>None</MenuItem>}
+                                            <MenuItem value={2}>Name</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </StyledTableCell>
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
