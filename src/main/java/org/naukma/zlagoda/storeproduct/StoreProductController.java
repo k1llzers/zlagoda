@@ -38,13 +38,13 @@ public class StoreProductController {
 
     @GetMapping("/order-by/count/name")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<StoreProductShortResponseDto>> getAllPromotionalOrderByNumberName(@RequestParam boolean promotional) {
+    public ResponseEntity<List<StoreProductResponseDto>> getAllPromotionalOrderByNumberName(@RequestParam boolean promotional) {
         return ResponseEntity.ok(service.getAllPromotionalOrderByNumberName(promotional));
     }
 
     @GetMapping("/order-by/name")
     @PreAuthorize("hasAuthority('ROLE_CASHIER')")
-    public ResponseEntity<List<StoreProductShortResponseDto>> getAllOrderByName() {
+    public ResponseEntity<List<StoreProductResponseDto>> getAllOrderByName() {
         return ResponseEntity.ok(service.getAllOrderByName());
     }
 
@@ -70,5 +70,11 @@ public class StoreProductController {
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> update(@RequestBody CreateUpdateStoreProductDto body) {
         return ResponseEntity.ok(service.update(body));
+    }
+
+    @PutMapping("/promotion/{id}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    public ResponseEntity<Boolean> makePromotional(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.makePromotional(id));
     }
 }

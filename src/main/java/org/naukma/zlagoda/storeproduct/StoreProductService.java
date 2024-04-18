@@ -1,12 +1,15 @@
 package org.naukma.zlagoda.storeproduct;
 
+import jakarta.validation.ValidationException;
 import org.naukma.zlagoda.abstraction.service.BaseService;
+import org.naukma.zlagoda.exception.NoSuchEntityException;
 import org.naukma.zlagoda.product.ProductService;
 import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductShortResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -32,16 +35,31 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
         return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
 
-    public List<StoreProductShortResponseDto> getAllPromotionalOrderByNumberName(boolean promotional) {
-        return mapper.toShortResponseDtoList(((StoreProductRepository)repository).findAllPromotionalOrderByNumberName(promotional));
+    public List<StoreProductResponseDto> getAllPromotionalOrderByNumberName(boolean promotional) {
+        return mapper.toResponseDtoList(((StoreProductRepository)repository).findAllPromotionalOrderByNumberName(promotional));
     }
 
-    public List<StoreProductShortResponseDto> getAllOrderByName() {
-        return mapper.toShortResponseDtoList(((StoreProductRepository)repository).findAllOrderByName());
+    public List<StoreProductResponseDto> getAllOrderByName() {
+        return mapper.toResponseDtoList(((StoreProductRepository)repository).findAllOrderByName());
     }
 
     public List<StoreProductResponseDto> getAllByProductNameLike(String productName) {
         return mapper.toResponseDtoList(((StoreProductRepository)repository).findAllByProductNameLike(productName));
+    }
+
+    public Boolean makePromotional(Integer id) {
+        StoreProductEntity promotional = getById(id);
+        if (promotional.getPromotion() != null) {
+            throw new ValidationException("Can`t add more than one promotion");
+        }
+        promotional.setPromotional(true);
+        promotional.setSellingPrice(promotional.getSellingPrice().multiply(BigDecimal.valueOf(0.8)));
+        promotional.setId(null);
+        promotional.setId(repository.save(promotional));
+        StoreProductEntity setPromotion = getById(id);
+        setPromotion.setPromotion(promotional);
+        setPromotion.setProductsNumber(0);
+        return repository.update(setPromotion);
     }
 
     @Override

@@ -16,7 +16,7 @@ import {
     Dialog,
     DialogContent,
     FormControl,
-    IconButton,
+    IconButton, MenuItem,
     Stack,
     Typography
 } from "@mui/material";
@@ -38,6 +38,7 @@ import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import SearchIcon from "@mui/icons-material/Search";
 import StyledInputBase from "../styledComponent/styledInputBase";
 import StyledLabel from "../styledComponent/styldLabel";
+import StyledSelect from "../styledComponent/styledSelect";
 
 const StoreProducts = () => {
     const [storeProducts, setStoreProducts] = useState([])
@@ -48,13 +49,25 @@ const StoreProducts = () => {
     const [updateRow, setUpdateRow] = useState(undefined)
     const [cashierSearch, setCashierSearch] = useState("")
     const [UPCSearch, setUPCSearch] = useState("")
+    const [storeProductFilter, setStoreProductFilter] = useState(0);
 
     const fetchStoreProductsData = async () => {
         let response
-        if (role === "MANAGER")
-            response = await axios.get("http://localhost:8080/api/store-product/order-by/count")
-        else
-            response = await axios.get("http://localhost:8080/api/store-product/order-by/name")
+        if (UPCSearch > 0 && !isNaN(UPCSearch)){
+            await fetchSearchingStoreProductsDataUPC(UPCSearch)
+            return;
+        }
+        else {
+            if (storeProductFilter === 0) {
+                if (role === "MANAGER")
+                    response = await axios.get("http://localhost:8080/api/store-product/order-by/count");
+                else
+                    response = await axios.get("http://localhost:8080/api/store-product/order-by/name")
+            } else {
+                response = await axios.get("http://localhost:8080/api/store-product/order-by/count/name?promotional=" + (storeProductFilter === 1))
+            }
+        }
+        console.log(response)
         setStoreProducts(response.data)
     }
 
@@ -78,7 +91,7 @@ const StoreProducts = () => {
 
     useEffect(() => {
         fetchStoreProductsData()
-    }, [])
+    }, [storeProductFilter, UPCSearch])
 
     function processStoreProducts(storeProduct) {
         return {
@@ -127,12 +140,24 @@ const StoreProducts = () => {
             setTimeout(() => setErrorMessage(""), 3500)
         } else {
             if (response.data === true)
-                setStoreProducts(storeProducts.filter(storeProduct => storeProduct.id !== storeProductId));
+                await fetchStoreProductsData()
         }
     }
 
-    function handlePromotional() {
-
+    async function handlePromotional(row) {
+        let response;
+        if (row.promotional) {
+            response = await axios.delete("http://localhost:8080/api/store-product/" + row.id);
+        }
+        else {
+            response = await axios.put("http://localhost:8080/api/store-product/promotion/" + row.id)
+        }
+        if (response.data.error) {
+            setErrorMessage(response.data.error)
+            setTimeout(() => setErrorMessage(""), 3500)
+            return
+        }
+        await fetchStoreProductsData();
     }
 
     const handleSearchCashier = async (e) => {
@@ -145,10 +170,7 @@ const StoreProducts = () => {
 
     const handleSearchUPC = async (e) => {
         setUPCSearch(e.target.value)
-        if (e.target.value.trim().length > 0 && !isNaN(e.target.value))
-            await fetchSearchingStoreProductsDataUPC(e.target.value)
-        else
-            await fetchStoreProductsData()
+        setStoreProductFilter(0)
     };
 
 
@@ -263,8 +285,8 @@ const StoreProducts = () => {
                     <StyledTableCell align="center">{row.sellingPrice}</StyledTableCell>
                     <StyledTableCell align="center">{row.productsNumber}</StyledTableCell>
                     {role === "MANAGER" && <StyledTableCell align="right">
-                        <Button onClick={() => handleUpdate(row)}>
-                            {row.promotional ? <PercentIcon color="success"/> : <PercentIcon color="action"/>}
+                        <Button onClick={() => handlePromotional(row)}>
+                            {row.promotional ? <PercentIcon color="info"/> : <PercentIcon color="action"/>}
                         </Button>
                         <Button onClick={() => handleUpdate(row)}>
                             <ModeEditIcon color='action'/>
@@ -336,6 +358,31 @@ const StoreProducts = () => {
                         >
                             Add
                         </StyledButton>}
+                    <FormControl variant="outlined" size="small" sx={{maxHeight:'40px', minWidth:'120px'}}>
+                        <StyledLabel variant="outlined" id="demo-simple-select-label">
+                            Store products
+                        </StyledLabel>
+                        <StyledSelect sx={{maxHeight:'40px', minWidth:'120px'}}
+                                      labelId="demo-simple-select-label"
+                                      id="demo-simple-select"
+                                      label="Store products"
+                                      value={storeProductFilter}
+                                      onChange={(event) => {setStoreProductFilter(event.target.value); setUPCSearch(""); setCashierSearch("")}}
+                        >
+                            <MenuItem
+                                key={"All"}
+                                value={0}
+                            >All</MenuItem>
+                            <MenuItem
+                                key={"Promotional"}
+                                value={1}
+                            >Promotional</MenuItem>
+                            <MenuItem
+                                key={"Not promotional"}
+                                value={2}
+                            >Not promotional</MenuItem>
+                        </StyledSelect>
+                    </FormControl>
                     {role === "CASHIER" &&
                         <SearchContainer sx={{maxHeight:'40px', marginTop:'10px'}}>
                             <SearchIconWrapper>
