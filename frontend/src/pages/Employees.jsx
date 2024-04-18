@@ -152,7 +152,7 @@ const Employee = () => {
         useEffect(() => {
             if((login.trim() && login.length || row !== undefined) < 20 && role && surname.trim() && name.trim()
             && phoneNumber.trim() && salary && city.trim() && street.trim() && zipCode.trim()
-            && surname.length < 100 && name.length < 100 && patronymic < 100
+            && surname.length < 100 && name.length < 100 && patronymic.length < 100
             && salary > 0 && phoneCheck.test(phoneNumber) && phoneNumber.length < 14 && city.length < 50
             && street.length < 50 && zipCode.length < 9 && dateOfBirth < minDateOfBirth
             ) {
