@@ -246,6 +246,8 @@ const Products = () => {
     }
 
     function ProductsTable() {
+        const width = role === "CASHIER" ? "50%" : "35%"
+
         return (
             <React.Fragment>
                 <TableContainer component={Card} sx={{ maxWidth: 600, margin: '30px auto' }}>
@@ -254,11 +256,11 @@ const Products = () => {
                             <StyledTableRow>
                                 <StyledTableCell/>
                                 {columns.map((column) => (
-                                    <StyledTableCell align="center" key={column.field} sx={{width:"35%"}}>
+                                    <StyledTableCell align="center" key={column.field} sx={{width: {width}}}>
                                         {column.headerName}
                                     </StyledTableCell>
                                 ))}
-                                <StyledTableCell sx={{width:"35%"}} />
+                                {role === "MANAGER" && <StyledTableCell sx={{width:"35%"}} />}
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
