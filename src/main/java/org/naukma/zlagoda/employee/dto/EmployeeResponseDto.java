@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.naukma.zlagoda.employee.Role;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -18,6 +20,8 @@ public class EmployeeResponseDto {
     private String surname;
     private String name;
     private String patronymic;
+    private BigDecimal salary;
+    private Role role;
     private LocalDate dateOfBirth;
     private LocalDate dateOfStart;
     private String phoneNumber;

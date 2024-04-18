@@ -7,6 +7,7 @@ import NotFound from "../pages/NotFound";
 import Products from "../pages/Products"
 import Categories from "../pages/Categories"
 import CustomerCards from "../pages/CustomerCards"
+import Employees from "../pages/Employees";
 
 const Routes = () => {
     const {token} = useAuth()
@@ -27,6 +28,10 @@ const Routes = () => {
                 {
                     path: "/categories",
                     element: <Categories/>,
+                },
+                {
+                    path: "/employees",
+                    element: <Employees/>,
                 },
                 {
                     path: "/customer-cards",

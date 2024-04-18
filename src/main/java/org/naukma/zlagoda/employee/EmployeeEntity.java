@@ -27,7 +27,6 @@ public class EmployeeEntity implements GettableById<Integer>, UserDetails {
     @NotBlank(message = "Login can't be blank.")
     @Size(max=20, message = "Login size can't be more than 20.")
     private String login;
-    @NotNull(message = "Password can't be null.")
     @NotBlank(message = "Password can't be blank.")
     @Size(max=100, message = "Password size can't be more than 100.")
     private String password;

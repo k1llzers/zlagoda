@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import org.naukma.zlagoda.abstraction.repository.GettableById;
 import org.naukma.zlagoda.employee.Role;
+import org.springframework.format.annotation.NumberFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,10 +20,6 @@ public class CreateUpdateEmployeeDto implements GettableById<Integer> {
     @NotBlank(message = "Login can't be blank.")
     @Size(max=20, message = "Login size can't be more than 20.")
     private String login;
-    @NotNull(message = "Password can't be null.")
-    @NotBlank(message = "Password can't be blank.")
-    @Size(max=100, message = "Password size can't be more than 100.")
-    private String password;
     @NotNull(message = "Employee surname can't be null.")
     @NotBlank(message = "Employee surname can't be blank.")
     @Size(max=100, message = "Employee surname size can't be more than 50.")

@@ -1,0 +1,475 @@
+import * as React from 'react';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Card from '@mui/material/Card';
+import {
+    Box,
+    Button, FormControl,
+    Dialog, DialogContent,
+    IconButton,
+    Stack,
+    Typography, MenuItem, Gridem, Grid
+} from "@mui/material";
+import Collapse from '@mui/material/Collapse';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import {useEffect, useState} from "react";
+import axios from "axios";
+import {useAuth} from "../provider/authProvider";
+import {Container} from "react-bootstrap";
+import Alert from "@mui/material/Alert";
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import StyledTableCell from "../styledComponent/styledTableCell";
+import StyledTextField from "../styledComponent/styledTextField"
+import StyledButton from "../styledComponent/styldButton";
+import StyledTableRow from "../styledComponent/styledTableRow";
+import SearchContainer from "../styledComponent/searchContainer";
+import SearchIconWrapper from "../styledComponent/searchIconWrapper";
+import StyledInputBase from "../styledComponent/styledInputBase";
+import StyledLabel from "../styledComponent/styldLabel";
+import StyledSelect from "../styledComponent/styledSelect";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import {DemoContainer} from "@mui/x-date-pickers/internals/demo";
+import dayjs from "dayjs";
+import 'dayjs/locale/uk'
+
+const Employee = () => {
+    const [employees, setEmployees] = useState([])
+    const {role} = useAuth()
+    const [errorMessage, setErrorMessage] = useState("");
+    const [openForm, setOpenForm] = useState(false)
+    const [updateRow, setUpdateRow] = useState(undefined)
+    const [search, setSearch] = useState("")
+
+    const fetchEmployeesData = async () => {
+        let response
+            response = await axios.get("http://localhost:8080/api/employee/order-by/surname")
+        setEmployees(response.data);
+    };
+
+    useEffect(() => {
+        fetchEmployeesData();
+    }, []);
+
+    const handleDelete = async (employeeId) => {
+        const response = await axios.delete("http://localhost:8080/api/employee/" + employeeId)
+        if (response.data.error) {
+            setErrorMessage("Can't delete employee that present at least one check")
+            setTimeout(() => setErrorMessage(""), 3500)
+        } else {
+            if (response.data === true)
+                setEmployees(employees.filter(employee => employee.id !== employeeId));
+        }
+    }
+
+    function handleUpdate(row) {
+        setUpdateRow(row)
+        handleOpenForm()
+    }
+
+    const fetchSearchingEmployeeData = async (surname) => {
+        const response = await axios.get("http://localhost:8080/api/employee/address/phone?surname=" + surname)
+        setEmployees(response.data);
+    };
+
+    const handleSearchChange = async (e) => {
+        setSearch(e.target.value)
+        if (e.target.value.trim().length > 0)
+            await fetchSearchingEmployeeData(e.target.value)
+        else
+            await fetchEmployeesData()
+    };
+
+    function handleOpenForm() {
+        setOpenForm(true)
+    }
+
+    function handleClose(){
+        setOpenForm(false)
+        setUpdateRow(undefined)
+    }
+
+    const clear = e => {
+        setErrorMessage("")
+    };
+
+    function processEmployee(employee) {
+        return {
+            id: employee.id,
+            surname: employee.surname,
+            name: employee.name,
+            patronymic: employee.patronymic,
+            salary: employee.salary,
+            dateOfBirth: employee.dateOfBirth,
+            dateOfStart: employee.dateOfStart,
+            phoneNumber: employee.phoneNumber,
+            role: employee.role.charAt(0).toUpperCase() + employee.role.toLowerCase().slice(1),
+            city: employee.city,
+            street: employee.street,
+            zipCode: employee.zipCode
+        }
+    }
+
+    const columns = [
+        {field: 'surname', headerName: 'Surname'},
+        {field: 'name', headerName: 'Name'},
+        {field: 'patronymic', headerName: 'Patronymic'},
+        {field: 'phoneNumber', headerName: 'Phone number'},
+        {field: 'dateOfStart', headerName: 'Date of start'}
+    ];
+
+    const rows = employees.map((employee) => processEmployee(employee));
+
+    function EmployeeForm(props) {
+        const minDateOfBirth = dayjs().subtract(18, 'year')
+        const {onClose, open, row} = props;
+        const [login, setLogin] = useState("")
+        const [role, setRole] = useState(row ? row.role : "")
+        const [surname, setSurname] = useState(row ? row.surname : "")
+        const [name, setName] = useState(row ? row.name : "")
+        const [patronymic, setPatronymic] = useState(row ? row.patronymic : "")
+        const [phoneNumber, setPhoneNumber] = useState(row ? row.phoneNumber : "")
+        const [salary, setSalary] = useState(row ? row.salary : "")
+        const [dateOfStart, setDateOfStart] = useState(row ? dayjs(row.dateOfStart) : dayjs('2022-04-17'))
+        const [dateOfBirth, setDateOfBirth] = useState(row ? dayjs(row.dateOfBirth) : minDateOfBirth)
+        const [city, setCity] = useState(row ? row.city : "")
+        const [street, setStreet] = useState(row ? row.street : "")
+        const [zipCode, setZipCode] = useState(row ? row.zipCode : "")
+        const [disableAdd, setDisableAdd] = useState(true)
+
+        useEffect(() => {
+            if(zipCode.trim()) {
+                setDisableAdd(false)
+            }else {
+                setDisableAdd(true)
+            }
+
+        }, [zipCode]);
+
+        const handleAdd = async () => {
+            handleClose()
+            let response;
+            if(!row) {
+                response = await axios.post("http://localhost:8080/api/employee", {
+                    surname: surname,
+                    name: name,
+                    patronymic: patronymic,
+                    salary: +salary,
+                    dateOfBirth: dateOfBirth,
+                    dateOfStart: dateOfStart,
+                    phoneNumber: phoneNumber,
+                    role: role.toUpperCase(),
+                    city: city,
+                    street: street,
+                    zipCode: zipCode
+                })
+            } else {
+                response = await axios.put("http://localhost:8080/api/employee", {
+                    id: row.id,
+                    surname: surname,
+                    name: name,
+                    patronymic: patronymic,
+                    salary: +salary,
+                    dateOfBirth: dateOfBirth,
+                    dateOfStart: dateOfStart,
+                    phoneNumber: phoneNumber,
+                    role: role.toUpperCase(),
+                    city: city,
+                    street: street,
+                    zipCode: zipCode
+                })
+            }
+            if (response.data.error) {
+                setErrorMessage(response.data.error)
+                setTimeout(() => setErrorMessage(""), 3500)
+            }
+        }
+
+        return (
+            <Dialog onClose={onClose} open={open}>
+                <DialogContent>
+                    <FormControl fullWidth>
+                        {!row && <StyledTextField
+                            id="outlined-basic"
+                            label="Login"
+                            variant="outlined"
+                            value={login}
+                            required
+                            error={login.length > 20}
+                            helperText={zipCode.length > 20 ? "Too long" : ""}
+                            onChange={(event) => {setLogin(event.target.value)}}/>}
+                        <StyledTextField
+                            id="outlined-basic"
+                            label="Surname"
+                            variant="outlined"
+                            value={surname}
+                            required
+                            multiline
+                            error={surname.length > 100}
+                            helperText={surname.length > 100 ? "Too long" : ""}
+                            onChange={(event) => {setSurname(event.target.value)}}/>
+                        <StyledTextField
+                            id="outlined-basic"
+                            label="Name"
+                            variant="outlined"
+                            value={name}
+                            required
+                            multiline
+                            error={name.length > 100}
+                            helperText={name.length > 100 ? "Too long" : ""}
+                            onChange={(event) => {setName(event.target.value)}}/>
+                        <StyledTextField
+                            id="outlined-basic"
+                            label="Patronymic"
+                            variant="outlined"
+                            value={patronymic}
+                            required
+                            multiline
+                            error={patronymic.length > 100}
+                            helperText={patronymic.length > 100 ? "Too long" : ""}
+                            onChange={(event) => {setPatronymic(event.target.value)}}/>
+                        <Box sx={{width:"99%", margin: '10px', display:"flex", justifyContent:"space-between"}}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <Box sx={{margin:0 ,width:"100%"}}>
+                                    <DatePicker
+                                        label="Date of birth"
+                                        maxDate={minDateOfBirth}
+                                        value={dateOfBirth}
+                                        onChange={(newValue) => setDateOfBirth(newValue)}
+                                    />
+                                </Box>
+                            </LocalizationProvider>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <Box sx={{margin:0 ,width:"100%"}}>
+                                    <DatePicker
+                                        label="Date of start"
+                                        value={dateOfStart}
+                                        onChange={(newValue) => setDateOfStart(newValue)}
+                                    />
+                                </Box>
+                            </LocalizationProvider>
+                        </Box>
+                        <Box sx={{ flexGrow: 1 }}>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <FormControl variant="outlined" sx={{minWidth:"100%"}}>
+                                        <StyledLabel variant="outlined" id="demo-simple-select-label" required>
+                                            Role
+                                        </StyledLabel>
+                                        <StyledSelect
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            label="Role"
+                                            value={role}
+                                            onChange={(event) => {setRole(event.target.value)}}
+                                        >
+                                            <MenuItem
+                                                key={"Manager"}
+                                                value={"Manager"}
+                                            >{"Manager"}</MenuItem>
+                                            <MenuItem
+                                                key={"Cashier"}
+                                                value={"Cashier"}
+                                            >{"Cashier"}</MenuItem>
+                                        </StyledSelect>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <StyledTextField
+                                        sx={{minWidth:"93%"}}
+                                        id="outlined-basic"
+                                        label="Salary"
+                                        variant="outlined"
+                                        value={salary}
+                                        required
+                                        multiline
+                                        error={salary < 1}
+                                        helperText={salary < 1 ? "Less than 1" : ""}
+                                        onChange={(event) => {setSalary(event.target.value)}}/>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <StyledTextField
+                                        sx={{width:"97%"}}
+                                        id="outlined-basic"
+                                        label="Phone number"
+                                        variant="outlined"
+                                        value={phoneNumber}
+                                        required
+                                        multiline
+                                        error={phoneNumber.length > 100}
+                                        helperText={phoneNumber.length > 100 ? "Too long" : ""}
+                                        onChange={(event) => {setPhoneNumber(event.target.value)}}/>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <StyledTextField
+                                        sx={{width:"97%"}}
+                                        id="outlined-basic"
+                                        label="Street"
+                                        variant="outlined"
+                                        value={street}
+                                        required
+                                        multiline
+                                        error={street.length > 50}
+                                        helperText={street.length > 50 ? "Too long" : ""}
+                                        onChange={(event) => {setStreet(event.target.value)}}/>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <StyledTextField
+                                        sx={{width:"94%"}}
+                                        id="outlined-basic"
+                                        label="City"
+                                        variant="outlined"
+                                        value={city}
+                                        required
+                                        multiline
+                                        error={city.length > 50}
+                                        helperText={city.length > 50 ? "Too long" : ""}
+                                        onChange={(event) => {setCity(event.target.value)}}/>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <StyledTextField
+                                        sx={{width:"94%"}}
+                                        id="outlined-basic"
+                                        label="Zip code"
+                                        variant="outlined"
+                                        value={zipCode}
+                                        required
+                                        multiline
+                                        error={zipCode.length > 9}
+                                        helperText={zipCode.length > 9 ? "Too long" : ""}
+                                        onChange={(event) => {setZipCode(event.target.value)}}/>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                        <StyledButton
+                            variant="text"
+                            sx={{width: '50%', alignSelf: 'center'}}
+                            onClick={handleAdd}
+                            disabled={disableAdd}
+                        >{row ? "Update" : "Add"}</StyledButton>
+                    </FormControl>
+                </DialogContent>
+            </Dialog>
+        )
+    }
+
+
+    function Row(props) {
+        const {row} = props;
+        const [open, setOpen] = useState(false);
+
+        return (
+            <React.Fragment>
+                <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
+                    <StyledTableCell>
+                        <IconButton
+                            aria-label="expand row"
+                            size="small"
+                            onClick={() => setOpen(!open)}>
+                            {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+                        </IconButton>
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row " align="center">{row.surname}</StyledTableCell>
+                    <StyledTableCell component="th" scope="row " align="center">{row.name}</StyledTableCell>
+                    <StyledTableCell component="th" scope="row " align="center">{row.patronymic}</StyledTableCell>
+                    <StyledTableCell component="th" scope="row " align="center">{row.phoneNumber}</StyledTableCell>
+                    <StyledTableCell component="th" scope="row " align="center">{row.dateOfStart}</StyledTableCell>
+                    {role === "MANAGER" && <StyledTableCell align="right">
+                        <Button onClick={() => handleUpdate(row)}>
+                            <ModeEditIcon color='action'/>
+                        </Button>
+                        <Button onClick={() => handleDelete(row.id)}>
+                            <DeleteOutlineOutlinedIcon color="error"/>
+                        </Button>
+                    </StyledTableCell>}
+                </TableRow>
+                <TableRow>
+                    <StyledTableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={7}>
+                        <Collapse in={open} timeout="auto" unmountOnExit>
+                            <Box sx={{margin: 1}}>
+                                <Typography variant="h6" gutterBottom component="div">
+                                    Details
+                                </Typography>
+                                Role: {row.role} <br/>
+                                Salary: {row.salary} <br/>
+                                Date of birth: {row.dateOfBirth} <br/>
+                                Address: {row.city}, {row.street} street, {row.zipCode}
+                            </Box>
+                        </Collapse>
+                    </StyledTableCell>
+                </TableRow>
+            </React.Fragment>
+        );
+    }
+
+    function EmployeeTable() {
+        return (
+            <React.Fragment>
+                <TableContainer component={Card} sx={{ maxWidth: 1000, margin: '30px auto' }}>
+                    <Table aria-label="collapsible table">
+                        <TableHead>
+                            <StyledTableRow>
+                                <StyledTableCell/>
+                                {columns.map((column) => (
+                                    <StyledTableCell align="center" key={column.field} sx={{width:"15%"}}>
+                                        {column.headerName}
+                                    </StyledTableCell>
+                                ))}
+                                <StyledTableCell sx={{width:"20%"}} />
+                            </StyledTableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows.map((row) => (
+                                <Row key={row.name} row={row} />
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </React.Fragment>
+        )
+    }
+
+    return (
+        <Container style={{ marginTop: '50px'}}>
+            <EmployeeForm
+                open={openForm}
+                onClose={handleClose}
+                row={updateRow}
+            />
+            <Box sx={{maxWidth: 1000, margin: '0 auto'}}>
+                <Stack direction='row' justifyContent='space-between'>
+                    {role === 'MANAGER' &&
+                        <StyledButton variant="outlined"
+                                      startIcon={<AddIcon />}
+                                      onClick={handleOpenForm}
+                                      sx={{maxHeight:'40px', marginTop:'10px'}}
+                        >
+                            Add
+                        </StyledButton>}
+                    <SearchContainer sx={{maxHeight:'40px', marginTop:'10px'}}>
+                        <SearchIconWrapper>
+                            <SearchIcon />
+                        </SearchIconWrapper>
+                        <StyledInputBase
+                            placeholder="Search…"
+                            value={search}
+                            inputProps={{ 'aria-label': 'search' }}
+                            onChange={handleSearchChange}
+                        />
+                    </SearchContainer>
+                </Stack>
+                {errorMessage && <Alert style={{width: '50%', fontSize: '15px', position: 'fixed', right: '25%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
+                <EmployeeTable/>
+            </Box>
+        </Container>
+    );
+}
+
+export default Employee;
