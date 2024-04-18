@@ -33,13 +33,13 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
     }
 
     public List<EmployeeEntity> findPhoneNumberAndAddressBySurname(String surname) {
-        String query = "SELECT id_employee, empl_surname, empl_name, empl_patronymic, phone_number, city, street, zip_code FROM employee WHERE LOWER(empl_surname) LIKE ?";
+        String query = "SELECT* FROM employee WHERE LOWER(empl_surname) LIKE ?";
         List<EmployeeEntity> entities = new ArrayList<>();
         try(PreparedStatement findAllStatement = connection.prepareStatement(query)) {
             findAllStatement.setString(1, "%" + surname.toLowerCase() + "%");
             ResultSet resultSet = findAllStatement.executeQuery();
             while (resultSet.next()){
-                entities.add(parseSetWithAddressPhoneNumberAndNameToEntity(resultSet));
+                entities.add(parseSetToEntity(resultSet));
             }
             return entities;
         }
@@ -113,19 +113,6 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
                 .street(set.getString("street"))
                 .zipCode(set.getString("zip_code"))
                 .login(set.getString("login"))
-                .build();
-    }
-
-    private EmployeeEntity parseSetWithAddressPhoneNumberAndNameToEntity(ResultSet set) throws SQLException {
-        return EmployeeEntity.builder()
-                .id(set.getInt("id_employee"))
-                .surname(set.getString("empl_surname"))
-                .name(set.getString("empl_name"))
-                .patronymic(set.getString("empl_patronymic"))
-                .phoneNumber(set.getString("phone_number"))
-                .city(set.getString("city"))
-                .street(set.getString("street"))
-                .zipCode(set.getString("zip_code"))
                 .build();
     }
 
