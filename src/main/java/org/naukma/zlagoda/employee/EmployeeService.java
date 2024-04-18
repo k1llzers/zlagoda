@@ -53,6 +53,8 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
             entity.setName(dto.getName());
         if(dto.getPatronymic() != null)
             entity.setPatronymic(dto.getPatronymic());
+        else
+            entity.setPatronymic("");
         if(dto.getRole() != null)
             entity.setRole(dto.getRole());
         if(dto.getSalary() != null)
