@@ -36,7 +36,6 @@ public class EmployeeEntity implements GettableById<Integer>, UserDetails {
     @NotBlank(message = "Employee name can't be blank.")
     @Size(max=100, message = "Employee name size can't be more than 50.")
     private String name;
-    @NotBlank(message = "Employee patronymic can't be blank.")
     @Size(max=100, message = "Employee patronymic size can't be more than 50.")
     private String patronymic;
     @NotNull(message = "Employee role can't be null.")
