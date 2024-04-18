@@ -138,7 +138,7 @@ const Employee = () => {
         const [role, setRole] = useState(row ? row.role : "")
         const [surname, setSurname] = useState(row ? row.surname : "")
         const [name, setName] = useState(row ? row.name : "")
-        const [patronymic, setPatronymic] = useState(row ? row.patronymic : "")
+        const [patronymic, setPatronymic] = useState(row ? row.patronymic ? row.patronymic : "" : "")
         const [phoneNumber, setPhoneNumber] = useState(row ? row.phoneNumber : "+380")
         const [salary, setSalary] = useState(row ? row.salary : 1000)
         const [dateOfStart, setDateOfStart] = useState(row ? dayjs(row.dateOfStart) : dayjs('2022-04-17'))
@@ -152,7 +152,7 @@ const Employee = () => {
         useEffect(() => {
             if((login.trim() && login.length || row !== undefined) < 20 && role && surname.trim() && name.trim()
             && phoneNumber.trim() && salary && city.trim() && street.trim() && zipCode.trim()
-            && surname.length < 100 && name.length < 100
+            && surname.length < 100 && name.length < 100 && patronymic < 100
             && salary > 0 && phoneCheck.test(phoneNumber) && phoneNumber.length < 14 && city.length < 50
             && street.length < 50 && zipCode.length < 9 && dateOfBirth < minDateOfBirth
             ) {
@@ -173,7 +173,7 @@ const Employee = () => {
                     login:login,
                     surname: surname,
                     name: name,
-                    patronymic: patronymic,
+                    patronymic: patronymic ? patronymic : null,
                     salary: +salary,
                     dateOfBirth: dateOfBirth,
                     dateOfStart: dateOfStart,
@@ -188,7 +188,7 @@ const Employee = () => {
                     id: row.id,
                     surname: surname,
                     name: name,
-                    patronymic: patronymic,
+                    patronymic: patronymic ? patronymic : null,
                     salary: +salary,
                     dateOfBirth: dateOfBirth,
                     dateOfStart: dateOfStart,
@@ -247,8 +247,8 @@ const Employee = () => {
                             value={patronymic}
                             required
                             multiline
-                            error={patronymic && patronymic.length > 100}
-                            helperText={patronymic && patronymic.length > 100 ? "Too long" : ""}
+                            error={patronymic.length > 100}
+                            helperText={patronymic.length > 100 ? "Too long" : ""}
                             onChange={(event) => {setPatronymic(event.target.value)}}/>
                         <Box sx={{width:"99%", margin: '10px', display:"flex", justifyContent:"space-between"}}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
