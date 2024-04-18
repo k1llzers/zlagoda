@@ -131,6 +131,7 @@ const Products = () => {
         const [category, setCategory] = useState(row ? row.categoryId : "")
         const [disableAdd, setDisableAdd] = useState(true)
 
+
         useEffect(() => {
             if(name.trim() && characteristics.trim() && category && name.length<=50 && characteristics.length<=100) {
                 setDisableAdd(false)

@@ -32,6 +32,14 @@ import Alert from "@mui/material/Alert";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import NumberInputBasic from "../styledComponent/StyledNumberInput"
+import StyledTextField from "../styledComponent/styledTextField";
+import StyledButton from "../styledComponent/styldButton";
+import AddIcon from "@mui/icons-material/Add";
+import CategoryDropdown from "../components/categoriesDropdown";
+import SearchContainer from "../styledComponent/searchContainer";
+import SearchIconWrapper from "../styledComponent/searchIconWrapper";
+import SearchIcon from "@mui/icons-material/Search";
+import StyledInputBase from "../styledComponent/styledInputBase";
 
 
 
@@ -119,11 +127,24 @@ const StoreProducts = () => {
 
     function StoreProductForm(props) {
         const {onClose, open, row} = props;
-        const [sellingPrice, setSellingPrice] = useState(row ? row.sellingPrice : 0)
+        const [sellingPrice, setSellingPrice] = useState(row ? row.sellingPrice : 1)
         const [productsNumber, setProductsNumber] = useState(row ? row.productsNumber : 0)
         const [product, setProduct] = useState(row ? row.productId : "")
         const [disableAdd, setDisableAdd] = useState(true)
 
+        const productOptions = products.map(product => ({
+            label: product.name,
+            value: product.id
+        }));
+
+        useEffect(() => {
+            if(productsNumber && product && sellingPrice >= 1) {
+                setDisableAdd(false)
+            }else {
+                setDisableAdd(true)
+            }
+
+        }, [sellingPrice, product]);
 
         const handleAdd = async () => {
             handleClose()
@@ -155,6 +176,18 @@ const StoreProducts = () => {
             <Dialog onClose={onClose} open={open}>
                 <DialogContent>
                     <FormControl fullWidth>
+                        {!row ? <Autocomplete
+                            value={productOptions.find(option => option.value === product)}
+                            onChange = {(event, newValue) => {
+                                if(newValue)
+                                    setProduct(newValue.value)
+                                else
+                                    setProduct("")
+                            }}
+                            renderInput={(params) => <StyledTextField {...params} sx={{width: "100%"}} size="medium" label="Product"/>}
+                            options={productOptions}
+                            sx={{display:"flex"}}
+                        /> : null}
                         <NumberInputBasic
                             aria-label="Number of Products"
                             placeholder="Number of Products"
@@ -170,6 +203,12 @@ const StoreProducts = () => {
                             min={1}
                             showAdornment
                         />
+                        <StyledButton
+                            variant="text"
+                            sx={{width: '50%', alignSelf: 'center'}}
+                            onClick={handleAdd}
+                            disabled={disableAdd}
+                        >{row ? "Update" : "Add"}</StyledButton>
                     </FormControl>
                 </DialogContent>
             </Dialog>
@@ -262,6 +301,16 @@ const StoreProducts = () => {
                 row={updateRow}
             />
             <Box sx={{maxWidth: 900, margin: '0 auto'}}>
+                <Stack direction='row' justifyContent='space-between'>
+                    {role === 'MANAGER' &&
+                        <StyledButton variant="outlined"
+                                      startIcon={<AddIcon />}
+                                      onClick={handleOpenForm}
+                                      sx={{maxHeight:'40px', marginTop:'10px'}}
+                        >
+                            Add
+                        </StyledButton>}
+                </Stack>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <StoreProductsTable/>
             </Box>
