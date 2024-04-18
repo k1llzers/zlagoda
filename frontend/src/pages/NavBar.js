@@ -18,7 +18,7 @@ const NavBar = () => {
                         <Nav.Link href="/products">Products</Nav.Link>
                         {role === "MANAGER" && <Nav.Link href="/categories">Categories</Nav.Link>}
                         <Nav.Link href="#storeproducts">Store Products</Nav.Link>
-                        <Nav.Link href="#customercards">Customer Cards</Nav.Link>
+                        <Nav.Link href="/customer-cards">Customer Cards</Nav.Link>
                         {role === "MANAGER" && <Nav.Link href="#employee">Employees</Nav.Link>}
                         {role === "MANAGER" && <Nav.Link href="#checks">Checks</Nav.Link>}
                     </Nav>

@@ -6,6 +6,7 @@ import Logout from "../pages/Logout";
 import NotFound from "../pages/NotFound";
 import Products from "../pages/Products"
 import Categories from "../pages/Categories"
+import CustomerCards from "../pages/CustomerCards"
 
 const Routes = () => {
     const {token} = useAuth()
@@ -26,6 +27,10 @@ const Routes = () => {
                 {
                     path: "/categories",
                     element: <Categories/>,
+                },
+                {
+                    path: "/customer-cards",
+                    element: <CustomerCards/>,
                 },
                 {
                     path: "/logout",
