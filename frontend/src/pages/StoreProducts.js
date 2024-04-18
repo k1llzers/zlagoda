@@ -29,16 +29,15 @@ import Collapse from "@mui/material/Collapse";
 import PercentIcon from '@mui/icons-material/Percent';
 import {Container} from "react-bootstrap";
 import Alert from "@mui/material/Alert";
-import StyledTextField from "../styledComponent/styledTextField";
-import CategoryDropdown from "../components/categoriesDropdown";
-import StyledButton from "../styledComponent/styldButton";
-import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import NumberInputBasic from "../styledComponent/StyledNumberInput"
 
 
 
 const StoreProducts = () => {
-    const[storeProducts, setStoreProducts] = useState([])
+    const [storeProducts, setStoreProducts] = useState([])
+    const [products, setProducts] = useState([])
     const {role} = useAuth()
     const [errorMessage, setErrorMessage] = useState("");
     const [openForm, setOpenForm] = useState(false)
@@ -52,6 +51,11 @@ const StoreProducts = () => {
             response = await axios.get("http://localhost:8080/api/store-product/order-by/name")
         setStoreProducts(response.data)
     }
+
+    const fetchProductsData = async () => {
+        const response = await axios.get("http://localhost:8080/api/product/order-by/name")
+        setProducts(response.data)
+    };
 
     useEffect(() => {
         fetchStoreProductsData()
@@ -85,6 +89,7 @@ const StoreProducts = () => {
 
     function handleOpenForm() {
         setOpenForm(true)
+        fetchProductsData()
     }
 
     function handleUpdate(row) {
