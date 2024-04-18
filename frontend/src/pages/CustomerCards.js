@@ -132,7 +132,7 @@ const CustomerCards = () => {
         const [surname, setSurname] = useState(row ? row.surname : "")
         const [name, setName] = useState(row ? row.name : "")
         const [patronymic, setPatronymic] = useState(row ? row.patronymic : "")
-        const [phoneNumber, setPhoneNumber] = useState(row ? row.phoneNumber : "")
+        const [phoneNumber, setPhoneNumber] = useState(row ? row.phoneNumber : "+380")
         const [city, setCity] = useState(row ? row.city : "")
         const [street, setStreet] = useState(row ? row.street : "")
         const [zipCode, setZipCode] = useState(row ? row.zipCode : "")
@@ -201,7 +201,7 @@ const CustomerCards = () => {
         }, [surname, name, patronymic, phoneNumber, city, street, zipCode, percent]);
 
 
-        const check = /^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$/im
+        const check = /^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{6}$/im
 
         return (
             <Dialog onClose={onClose} open={open}>
