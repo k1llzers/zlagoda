@@ -141,7 +141,7 @@ const Categories = () => {
         return (
             <React.Fragment>
                 <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
-                    <StyledTableCell component="th" scope="row " align="left">{row.name}</StyledTableCell>
+                    <StyledTableCell align="center" component="th" sx={{width: "50%"}} scope="row ">{row.name}</StyledTableCell>
                     {role === "MANAGER" && <StyledTableCell align="right">
                         <Button onClick={() => handleUpdate(row)}>
                             <ModeEditIcon color='action'/>
@@ -162,7 +162,7 @@ const Categories = () => {
                         <TableHead>
                             <StyledTableRow>
                                 {columns.map((column) => (
-                                    <StyledTableCell key={column.field}>
+                                    <StyledTableCell align="center" key={column.field}>
                                         {column.headerName}
                                     </StyledTableCell>
                                 ))}

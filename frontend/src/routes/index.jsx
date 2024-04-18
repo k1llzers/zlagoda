@@ -7,6 +7,8 @@ import NotFound from "../pages/NotFound";
 import Products from "../pages/Products"
 import Categories from "../pages/Categories"
 import CustomerCards from "../pages/CustomerCards"
+import HomePage from "../pages/HomePage";
+import StoreProducts from "../pages/StoreProducts";
 
 const Routes = () => {
     const {token} = useAuth()
@@ -18,7 +20,7 @@ const Routes = () => {
             children : [
                 {
                     path: "/",
-                    element: <div>Home Page</div>,
+                    element: <HomePage/>,
                 },
                 {
                     path: "/products",
@@ -31,6 +33,10 @@ const Routes = () => {
                 {
                     path: "/customer-cards",
                     element: <CustomerCards/>,
+                },
+                {
+                    path: "/store-products",
+                    element: <StoreProducts/>,
                 },
                 {
                     path: "/logout",

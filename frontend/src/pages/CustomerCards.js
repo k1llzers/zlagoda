@@ -9,7 +9,7 @@ import StyledTableRow from "../styledComponent/styledTableRow";
 import StyledTableCell from "../styledComponent/styledTableCell";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
-import {Box, Button, Dialog, DialogContent, FormControl, IconButton, Stack, Typography} from "@mui/material";
+import {Box, Button, Dialog, DialogContent, FormControl, Grid, IconButton, Stack, Typography} from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Collapse from "@mui/material/Collapse";
@@ -207,54 +207,74 @@ const CustomerCards = () => {
             <Dialog onClose={onClose} open={open}>
                 <DialogContent>
                     <FormControl fullWidth>
-                        <StyledTextField id="outlined-basic" label="Surname" variant="outlined" value={surname}
-                                         required
-                                         error={surname.length > 50}
-                                         helperText={surname.length > 50 ? "Too long" : ""}
-                                         onChange={(event) => {setSurname(event.target.value)}}
-                        />
-                        <StyledTextField id="outlined-basic" label="Name" variant="outlined" value={name}
-                                         required
-                                         error={name.length > 50}
-                                         helperText={name.length > 50 ? "Too long" : ""}
-                                         onChange={(event) => {setName(event.target.value)}}
-                        />
-                        <StyledTextField id="outlined-basic" label="Patronymic" variant="outlined" value={patronymic}
-                                         required
-                                         error={patronymic.length > 50}
-                                         helperText={patronymic.length > 50 ? "Too long" : ""}
-                                         onChange={(event) => {setPatronymic(event.target.value)}}
-                        />
-                        <StyledTextField id="outlined-basic" label="Phone Number" variant="outlined" value={phoneNumber}
-                                         required
-                                         error={phoneNumber.length > 13 || !check.test(phoneNumber)}
-                                         helperText={phoneNumber.length > 13 || !check.test(phoneNumber) ? "Incorrect number" : ""}
-                                         onChange={(event) => {setPhoneNumber(event.target.value)}}
-                        />
-                        <StyledTextField id="outlined-basic" label="City" variant="outlined" value={city}
-                                         required
-                                         error={city.length > 50}
-                                         helperText={city.length > 50 ? "Too long" : ""}
-                                         onChange={(event) => {setCity(event.target.value)}}
-                        />
-                        <StyledTextField id="outlined-basic" label="Street" variant="outlined" value={street}
-                                         required
-                                         error={street.length > 50}
-                                         helperText={street.length > 50 ? "Too long" : ""}
-                                         onChange={(event) => {setStreet(event.target.value)}}
-                        />
-                        <StyledTextField id="outlined-basic" label="Zip Code" variant="outlined" value={zipCode}
-                                         required
-                                         error={zipCode.length > 9}
-                                         helperText={zipCode.length > 9 ? "Too long" : ""}
-                                         onChange={(event) => {setZipCode(event.target.value)}}
-                        />
-                        <StyledTextField id="outlined-basic" label="Percent" variant="outlined" value={percent}
-                                         required
-                                         error={isNaN(+percent) || +percent > 100 }
-                                         helperText={isNaN(+percent) || +percent > 100 ? "Incorrect percent" : ""}
-                                         onChange={(event) => {setPercent(event.target.value)}}
-                        />
+                        <Box sx={{flexGrow: 1}}>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Surname" variant="outlined" value={surname}
+                                                     required
+                                                     error={surname.length > 50}
+                                                     helperText={surname.length > 50 ? "Too long" : ""}
+                                                     onChange={(event) => {setSurname(event.target.value)}}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Name" variant="outlined" value={name}
+                                                     required
+                                                     error={name.length > 50}
+                                                     helperText={name.length > 50 ? "Too long" : ""}
+                                                     onChange={(event) => {setName(event.target.value)}}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Patronymic" variant="outlined" value={patronymic}
+                                                     required
+                                                     error={patronymic.length > 50}
+                                                     helperText={patronymic.length > 50 ? "Too long" : ""}
+                                                     onChange={(event) => {setPatronymic(event.target.value)}}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Phone Number" variant="outlined" value={phoneNumber}
+                                                     required
+                                                     error={phoneNumber.length > 13 || !check.test(phoneNumber)}
+                                                     helperText={phoneNumber.length > 13 || !check.test(phoneNumber) ? "Incorrect number" : ""}
+                                                     onChange={(event) => {setPhoneNumber(event.target.value)}}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="City" variant="outlined" value={city}
+                                                     required
+                                                     error={city.length > 50}
+                                                     helperText={city.length > 50 ? "Too long" : ""}
+                                                     onChange={(event) => {setCity(event.target.value)}}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Street" variant="outlined" value={street}
+                                                     required
+                                                     error={street.length > 50}
+                                                     helperText={street.length > 50 ? "Too long" : ""}
+                                                     onChange={(event) => {setStreet(event.target.value)}}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Zip Code" variant="outlined" value={zipCode}
+                                                     required
+                                                     error={zipCode.length > 9}
+                                                     helperText={zipCode.length > 9 ? "Too long" : ""}
+                                                     onChange={(event) => {setZipCode(event.target.value)}}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Percent" variant="outlined" value={percent}
+                                                     required
+                                                     error={isNaN(+percent) || +percent > 100 }
+                                                     helperText={isNaN(+percent) || +percent > 100 ? "Incorrect percent" : ""}
+                                                     onChange={(event) => {setPercent(event.target.value)}}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Box>
 
                         <StyledButton
                             variant="text"

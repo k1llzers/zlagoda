@@ -50,7 +50,7 @@ const Products = () => {
             response = await axios.get("http://localhost:8080/api/product/order-by/name")
         else
             response = await axios.get("http://localhost:8080/api/product/order-by/name/" + category)
-            setProducts(response.data);
+        setProducts(response.data)
     };
 
     useEffect(() => {
@@ -122,7 +122,7 @@ const Products = () => {
         {field: 'category', headerName: 'Category'}
     ];
 
-    const rows = products.map((product) => processProducts(product));
+    const rows = products.map((product) => processProducts(product))
 
     function ProductForm(props) {
         const {onClose, open, row} = props;
@@ -161,7 +161,7 @@ const Products = () => {
                 setErrorMessage(response.data.error)
                 setTimeout(() => setErrorMessage(""), 3500)
             } else {
-                fetchCategoryData()
+                fetchProductsData()
             }
         }
 
@@ -218,8 +218,8 @@ const Products = () => {
                             {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
                         </IconButton>
                     </StyledTableCell>
-                    <StyledTableCell component="th" scope="row " align="left">{row.name}</StyledTableCell>
-                    <StyledTableCell align="left">{row.category}</StyledTableCell>
+                    <StyledTableCell component="th" scope="row " align="center">{row.name}</StyledTableCell>
+                    <StyledTableCell align="center">{row.category}</StyledTableCell>
                     {role === "MANAGER" && <StyledTableCell align="right">
                         <Button onClick={() => handleUpdate(row)}>
                             <ModeEditIcon color='action'/>
@@ -254,7 +254,7 @@ const Products = () => {
                             <StyledTableRow>
                                 <StyledTableCell/>
                                 {columns.map((column) => (
-                                    <StyledTableCell key={column.field} sx={{width:"35%"}}>
+                                    <StyledTableCell align="center" key={column.field} sx={{width:"35%"}}>
                                         {column.headerName}
                                     </StyledTableCell>
                                 ))}
