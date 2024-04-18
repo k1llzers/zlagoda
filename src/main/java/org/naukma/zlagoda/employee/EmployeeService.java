@@ -47,8 +47,6 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
             entity.setId(dto.getId());
         if(dto.getLogin() != null)
             entity.setLogin(dto.getLogin());
-        if(dto.getPassword() != null)
-            entity.setPassword(dto.getPassword());
         if(dto.getSurname() != null)
             entity.setSurname(dto.getSurname());
         if(dto.getName() != null)

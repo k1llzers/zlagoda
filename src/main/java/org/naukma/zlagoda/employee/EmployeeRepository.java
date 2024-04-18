@@ -33,10 +33,10 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
     }
 
     public List<EmployeeEntity> findPhoneNumberAndAddressBySurname(String surname) {
-        String query = "SELECT id_employee, empl_surname, empl_name, empl_patronymic, phone_number, city, street, zip_code FROM employee WHERE empl_surname=?";
+        String query = "SELECT id_employee, empl_surname, empl_name, empl_patronymic, phone_number, city, street, zip_code FROM employee WHERE LOWER(empl_surname) LIKE ?";
         List<EmployeeEntity> entities = new ArrayList<>();
         try(PreparedStatement findAllStatement = connection.prepareStatement(query)) {
-            findAllStatement.setString(1, surname);
+            findAllStatement.setString(1, "%" + surname.toLowerCase() + "%");
             ResultSet resultSet = findAllStatement.executeQuery();
             while (resultSet.next()){
                 entities.add(parseSetWithAddressPhoneNumberAndNameToEntity(resultSet));
@@ -84,7 +84,7 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
     public Integer save(EmployeeEntity entity) {
         try(PreparedStatement createStatement = connection.prepareStatement(createQuery, Statement.RETURN_GENERATED_KEYS)) {
             setMainFields(createStatement, entity);
-            createStatement.setString(13, encoder.encode(entity.getPassword()));
+            createStatement.setString(13, encoder.encode("1111"));
             createStatement.executeUpdate();
             ResultSet generatedKeys = createStatement.getGeneratedKeys();
             if(generatedKeys.next()){
