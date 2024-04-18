@@ -245,7 +245,6 @@ const Employee = () => {
                             label="Patronymic"
                             variant="outlined"
                             value={patronymic}
-                            required
                             multiline
                             error={patronymic.length > 100}
                             helperText={patronymic.length > 100 ? "Too long" : ""}
@@ -411,7 +410,7 @@ const Employee = () => {
                     <StyledTableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={7}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{margin: 1}}>
-                                <Typography variant="h6" gutterBottom component="div">
+                                <Typography variant="span" gutterBottom component="div" style={{fontSize: 19}}>
                                     Details
                                 </Typography>
                                 {

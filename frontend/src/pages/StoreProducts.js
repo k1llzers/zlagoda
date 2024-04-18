@@ -29,7 +29,6 @@ import PercentIcon from '@mui/icons-material/Percent';
 import {Container} from "react-bootstrap";
 import Alert from "@mui/material/Alert";
 import Autocomplete from '@mui/material/Autocomplete';
-import NumberInputBasic from "../styledComponent/StyledNumberInput"
 import StyledTextField from "../styledComponent/styledTextField";
 import StyledButton from "../styledComponent/styldButton";
 import AddIcon from "@mui/icons-material/Add";
@@ -37,6 +36,8 @@ import SearchContainer from "../styledComponent/searchContainer";
 import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import SearchIcon from "@mui/icons-material/Search";
 import StyledInputBase from "../styledComponent/styledInputBase";
+
+
 import StyledLabel from "../styledComponent/styldLabel";
 import StyledSelect from "../styledComponent/styledSelect";
 
@@ -238,20 +239,20 @@ const StoreProducts = () => {
                             options={productOptions}
                             sx={{display:"flex"}}
                         />
-                        <NumberInputBasic
-                            aria-label="Number of Products"
-                            placeholder="Number of Products"
+                        <StyledTextField
+                            type="number"
+                            InputProps={{ inputProps: { min: 0 } }}
+                            onChange={(e) => setProductsNumber(parseInt(e.target.value))}
                             value={productsNumber}
-                            min={0}
-                            onChange={setProductsNumber}
+                            label="Number"
                         />
-                        <NumberInputBasic
-                            aria-label="Selling Price"
-                            placeholder="Selling price"
+                        <StyledTextField
+                            type="number"
+                            step="any"
+                            InputProps={{ inputProps: { min: 1 } }}
+                            onChange={(e) => setSellingPrice(e.target.value)}
                             value={sellingPrice}
-                            onChange={setSellingPrice}
-                            min={1}
-                            showAdornment
+                            label="Price"
                         />
                         <StyledButton
                             variant="text"
@@ -282,7 +283,7 @@ const StoreProducts = () => {
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row " align="center">{row.id}</StyledTableCell>
                     <StyledTableCell component="th" scope="row " align="center">{row.name}</StyledTableCell>
-                    <StyledTableCell align="center">{row.sellingPrice}</StyledTableCell>
+                    <StyledTableCell align="center">{row.sellingPrice} ₴</StyledTableCell>
                     <StyledTableCell align="center">{row.productsNumber}</StyledTableCell>
                     {role === "MANAGER" && <StyledTableCell align="right">
                         <Button onClick={() => handlePromotional(row)}>

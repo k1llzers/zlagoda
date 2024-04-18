@@ -226,7 +226,6 @@ const CustomerCards = () => {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Patronymic" variant="outlined" value={patronymic}
-                                                     required
                                                      error={patronymic.length > 50}
                                                      helperText={patronymic.length > 50 ? "Too long" : ""}
                                                      onChange={(event) => {setPatronymic(event.target.value)}}
@@ -242,7 +241,6 @@ const CustomerCards = () => {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="City" variant="outlined" value={city}
-                                                     required
                                                      error={city.length > 50}
                                                      helperText={city.length > 50 ? "Too long" : ""}
                                                      onChange={(event) => {setCity(event.target.value)}}
@@ -250,7 +248,6 @@ const CustomerCards = () => {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Street" variant="outlined" value={street}
-                                                     required
                                                      error={street.length > 50}
                                                      helperText={street.length > 50 ? "Too long" : ""}
                                                      onChange={(event) => {setStreet(event.target.value)}}
@@ -258,7 +255,6 @@ const CustomerCards = () => {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Zip Code" variant="outlined" value={zipCode}
-                                                     required
                                                      error={zipCode.length > 9}
                                                      helperText={zipCode.length > 9 ? "Too long" : ""}
                                                      onChange={(event) => {setZipCode(event.target.value)}}
