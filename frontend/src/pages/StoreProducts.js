@@ -17,7 +17,6 @@ import {
     DialogContent,
     FormControl,
     IconButton,
-    InputAdornment,
     Stack,
     Typography
 } from "@mui/material";
@@ -38,8 +37,7 @@ import SearchContainer from "../styledComponent/searchContainer";
 import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import SearchIcon from "@mui/icons-material/Search";
 import StyledInputBase from "../styledComponent/styledInputBase";
-
-
+import StyledLabel from "../styledComponent/styldLabel";
 
 const StoreProducts = () => {
     const [storeProducts, setStoreProducts] = useState([])
@@ -98,8 +96,7 @@ const StoreProducts = () => {
         {field: 'upc', headerName: 'UPC'},
         {field: 'product', headerName: 'Product'},
         {field: 'sellingPrice', headerName: 'Price'},
-        {field: 'productsNumber', headerName: 'Number'},
-        {field: 'promotional', headerName: 'Promotional'}
+        {field: 'productsNumber', headerName: 'Number'}
     ];
 
     const rows = storeProducts.map((storeProduct) => processStoreProducts(storeProduct))
@@ -174,7 +171,7 @@ const StoreProducts = () => {
                 setDisableAdd(true)
             }
 
-        }, [sellingPrice, product]);
+        }, [sellingPrice, productsNumber, product]);
 
         const handleAdd = async () => {
             handleClose()
@@ -206,7 +203,7 @@ const StoreProducts = () => {
             <Dialog onClose={onClose} open={open}>
                 <DialogContent>
                     <FormControl fullWidth>
-                        {!row ? <Autocomplete
+                        <Autocomplete
                             value={productOptions.find(option => option.value === product)}
                             onChange = {(event, newValue) => {
                                 if(newValue)
@@ -214,10 +211,11 @@ const StoreProducts = () => {
                                 else
                                     setProduct("")
                             }}
+                            readOnly={row !== undefined}
                             renderInput={(params) => <StyledTextField {...params} sx={{width: "100%"}} size="medium" label="Product"/>}
                             options={productOptions}
                             sx={{display:"flex"}}
-                        /> : null}
+                        />
                         <NumberInputBasic
                             aria-label="Number of Products"
                             placeholder="Number of Products"
@@ -264,14 +262,10 @@ const StoreProducts = () => {
                     <StyledTableCell component="th" scope="row " align="center">{row.name}</StyledTableCell>
                     <StyledTableCell align="center">{row.sellingPrice}</StyledTableCell>
                     <StyledTableCell align="center">{row.productsNumber}</StyledTableCell>
-                    <StyledTableCell align="center">
-                        <IconButton
-                            size="small"
-                            onClick={() => handlePromotional()}>
-                            {row.promotional ? <PercentIcon color="success"/> : <PercentIcon color="action"/>}
-                        </IconButton>
-                    </StyledTableCell>
                     {role === "MANAGER" && <StyledTableCell align="right">
+                        <Button onClick={() => handleUpdate(row)}>
+                            {row.promotional ? <PercentIcon color="success"/> : <PercentIcon color="action"/>}
+                        </Button>
                         <Button onClick={() => handleUpdate(row)}>
                             <ModeEditIcon color='action'/>
                         </Button>
@@ -297,6 +291,8 @@ const StoreProducts = () => {
     }
 
     function StoreProductsTable() {
+        let width = role === "MANAGER" ? "17%" : "25%"
+
         return (
             <React.Fragment>
                 <TableContainer component={Card} sx={{ maxWidth: 900, margin: '30px auto' }}>
@@ -305,11 +301,11 @@ const StoreProducts = () => {
                             <StyledTableRow>
                                 <StyledTableCell/>
                                 {columns.map((column) => (
-                                    <StyledTableCell align="center" key={column.field} sx={{width:"15%"}}>
+                                    <StyledTableCell align="center" key={column.field} sx={{width:{width}}}>
                                         {column.headerName}
                                     </StyledTableCell>
                                 ))}
-                                <StyledTableCell sx={{width:"30%"}} />
+                                {role === "MANAGER" &&  <StyledTableCell sx={{width:"25%"}} />}
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>

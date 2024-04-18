@@ -22,7 +22,7 @@ const CategoryDropdown = ({ categories, category, setCategory, required, noneOpt
                         value={category.id}
                     >{category.name}</MenuItem>
                 ))}
-                {noneOption === true && <MenuItem key={0} value={0}>None</MenuItem>}
+                {noneOption === true && <MenuItem key={0} value={0}>All</MenuItem>}
             </StyledSelect>
         </FormControl>
     );

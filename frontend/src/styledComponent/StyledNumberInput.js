@@ -51,7 +51,6 @@ export default function NumberInputBasic({ value, onChange, showAdornment, min, 
             min={min}
             value={value}
             onChange={(event, val) => onChange(val)}
-            {...props}
             style={{ paddingLeft: "15px", position: "relative", margin: "10px 0" }}
             startAdornment = {showAdornment ? (
                 <InputAdornment position="start" sx={{position: "absolute", top: '50%', left: '2%'}}>
