@@ -51,7 +51,7 @@ public class EmployeeController {
 
     @GetMapping("/address/phone")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
-    public ResponseEntity<List<EmployeePhoneNumberAddressDto>> getAllAddressAndPhoneBySurname(@RequestParam String surname) {
+    public ResponseEntity<List<EmployeeResponseDto>> getAllAddressAndPhoneBySurname(@RequestParam String surname) {
         return ResponseEntity.ok(service.getPhoneNumberAndAddressBySurname(surname));
     }
 

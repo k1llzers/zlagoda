@@ -36,7 +36,6 @@ import StyledLabel from "../styledComponent/styldLabel";
 import StyledSelect from "../styledComponent/styledSelect";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
-import {DemoContainer} from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
 import 'dayjs/locale/uk'
 
@@ -47,16 +46,20 @@ const Employee = () => {
     const [openForm, setOpenForm] = useState(false)
     const [updateRow, setUpdateRow] = useState(undefined)
     const [search, setSearch] = useState("")
+    const [employeeFilter, setEmployeeFilter] = useState(0)
 
     const fetchEmployeesData = async () => {
         let response
+        if (employeeFilter === 0)
             response = await axios.get("http://localhost:8080/api/employee/order-by/surname")
+        else
+            response = await axios.get("http://localhost:8080/api/employee/cashier/order-by/surname")
         setEmployees(response.data);
     };
 
     useEffect(() => {
         fetchEmployeesData();
-    }, []);
+    }, [employeeFilter]);
 
     const handleDelete = async (employeeId) => {
         const response = await axios.delete("http://localhost:8080/api/employee/" + employeeId)
@@ -81,6 +84,7 @@ const Employee = () => {
 
     const handleSearchChange = async (e) => {
         setSearch(e.target.value)
+        setEmployeeFilter(0)
         if (e.target.value.trim().length > 0)
             await fetchSearchingEmployeeData(e.target.value)
         else
@@ -135,29 +139,38 @@ const Employee = () => {
         const [surname, setSurname] = useState(row ? row.surname : "")
         const [name, setName] = useState(row ? row.name : "")
         const [patronymic, setPatronymic] = useState(row ? row.patronymic : "")
-        const [phoneNumber, setPhoneNumber] = useState(row ? row.phoneNumber : "")
-        const [salary, setSalary] = useState(row ? row.salary : "")
+        const [phoneNumber, setPhoneNumber] = useState(row ? row.phoneNumber : "+380")
+        const [salary, setSalary] = useState(row ? row.salary : 1000)
         const [dateOfStart, setDateOfStart] = useState(row ? dayjs(row.dateOfStart) : dayjs('2022-04-17'))
         const [dateOfBirth, setDateOfBirth] = useState(row ? dayjs(row.dateOfBirth) : minDateOfBirth)
         const [city, setCity] = useState(row ? row.city : "")
         const [street, setStreet] = useState(row ? row.street : "")
         const [zipCode, setZipCode] = useState(row ? row.zipCode : "")
         const [disableAdd, setDisableAdd] = useState(true)
+        const phoneCheck = /^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{6}$/im;
 
         useEffect(() => {
-            if(zipCode.trim()) {
+            if((login.trim() && login.length || row !== undefined) < 20 && role && surname.trim() && name.trim() && patronymic.trim()
+            && phoneNumber.trim() && salary && city.trim() && street.trim() && zipCode.trim()
+            && surname.length < 100 && name.length < 100 && patronymic.length < 100
+            && salary > 0 && phoneCheck.test(phoneNumber) && phoneNumber.length < 14 && city.length < 50
+            && street.length < 50 && zipCode.length < 9 && dateOfBirth < minDateOfBirth
+            ) {
                 setDisableAdd(false)
             }else {
                 setDisableAdd(true)
             }
 
-        }, [zipCode]);
+        }, [login, role, surname, name, patronymic, phoneNumber, salary, dateOfStart, dateOfBirth,
+            city, street, zipCode
+        ]);
 
         const handleAdd = async () => {
             handleClose()
             let response;
             if(!row) {
                 response = await axios.post("http://localhost:8080/api/employee", {
+                    login:login,
                     surname: surname,
                     name: name,
                     patronymic: patronymic,
@@ -189,6 +202,8 @@ const Employee = () => {
             if (response.data.error) {
                 setErrorMessage(response.data.error)
                 setTimeout(() => setErrorMessage(""), 3500)
+            } else {
+                fetchEmployeesData()
             }
         }
 
@@ -240,6 +255,7 @@ const Employee = () => {
                                 <Box sx={{margin:0 ,width:"100%"}}>
                                     <DatePicker
                                         label="Date of birth"
+                                        views={['year', 'month', 'day']}
                                         maxDate={minDateOfBirth}
                                         value={dateOfBirth}
                                         onChange={(newValue) => setDateOfBirth(newValue)}
@@ -250,6 +266,7 @@ const Employee = () => {
                                 <Box sx={{margin:0 ,width:"100%"}}>
                                     <DatePicker
                                         label="Date of start"
+                                        views={['year', 'month', 'day']}
                                         value={dateOfStart}
                                         onChange={(newValue) => setDateOfStart(newValue)}
                                     />
@@ -303,8 +320,8 @@ const Employee = () => {
                                         value={phoneNumber}
                                         required
                                         multiline
-                                        error={phoneNumber.length > 100}
-                                        helperText={phoneNumber.length > 100 ? "Too long" : ""}
+                                        error={!phoneCheck.test(phoneNumber)}
+                                        helperText={!phoneCheck.test(phoneNumber) ? "Incorrect" : ""}
                                         onChange={(event) => {setPhoneNumber(event.target.value)}}/>
                                 </Grid>
                                 <Grid item xs={12}>
@@ -380,7 +397,7 @@ const Employee = () => {
                     <StyledTableCell component="th" scope="row " align="center">{row.name}</StyledTableCell>
                     <StyledTableCell component="th" scope="row " align="center">{row.patronymic}</StyledTableCell>
                     <StyledTableCell component="th" scope="row " align="center">{row.phoneNumber}</StyledTableCell>
-                    <StyledTableCell component="th" scope="row " align="center">{row.dateOfStart}</StyledTableCell>
+                    {!search && <StyledTableCell component="th" scope="row " align="center">{row.dateOfStart}</StyledTableCell>}
                     {role === "MANAGER" && <StyledTableCell align="right">
                         <Button onClick={() => handleUpdate(row)}>
                             <ModeEditIcon color='action'/>
@@ -397,10 +414,15 @@ const Employee = () => {
                                 <Typography variant="h6" gutterBottom component="div">
                                     Details
                                 </Typography>
-                                Role: {row.role} <br/>
-                                Salary: {row.salary} <br/>
-                                Date of birth: {row.dateOfBirth} <br/>
-                                Address: {row.city}, {row.street} street, {row.zipCode}
+                                {
+                                    !search ?
+                                        <p>Role: {row.role} <br/>
+                                            Salary: {row.salary} <br/>
+                                            Date of birth: {row.dateOfBirth} <br/>
+                                            Address: {row.city}, {row.street} street, {row.zipCode}</p>
+                                        :
+                                        <p>Address: {row.city}, {row.street} street, {row.zipCode}</p>
+                                }
                             </Box>
                         </Collapse>
                     </StyledTableCell>
@@ -410,6 +432,11 @@ const Employee = () => {
     }
 
     function EmployeeTable() {
+        let width = search ? "18.7%" : "15%"
+
+        if (search)
+            columns.pop()
+
         return (
             <React.Fragment>
                 <TableContainer component={Card} sx={{ maxWidth: 1000, margin: '30px auto' }}>
@@ -418,7 +445,7 @@ const Employee = () => {
                             <StyledTableRow>
                                 <StyledTableCell/>
                                 {columns.map((column) => (
-                                    <StyledTableCell align="center" key={column.field} sx={{width:"15%"}}>
+                                    <StyledTableCell align="center" key={column.field} sx={{width: {width}}}>
                                         {column.headerName}
                                     </StyledTableCell>
                                 ))}
@@ -427,7 +454,7 @@ const Employee = () => {
                         </TableHead>
                         <TableBody>
                             {rows.map((row) => (
-                                <Row key={row.name} row={row} />
+                                <Row key={row.id} row={row} />
                             ))}
                         </TableBody>
                     </Table>
@@ -445,14 +472,34 @@ const Employee = () => {
             />
             <Box sx={{maxWidth: 1000, margin: '0 auto'}}>
                 <Stack direction='row' justifyContent='space-between'>
-                    {role === 'MANAGER' &&
-                        <StyledButton variant="outlined"
-                                      startIcon={<AddIcon />}
-                                      onClick={handleOpenForm}
-                                      sx={{maxHeight:'40px', marginTop:'10px'}}
+                    <StyledButton variant="outlined"
+                                  startIcon={<AddIcon />}
+                                  onClick={handleOpenForm}
+                                  sx={{maxHeight:'40px', marginTop:'10px'}}
+                    >
+                        Add
+                    </StyledButton>
+                    <FormControl variant="outlined" size="small" sx={{maxHeight:'40px', minWidth:'120px'}}>
+                        <StyledLabel variant="outlined" id="demo-simple-select-label">
+                            Employees
+                        </StyledLabel>
+                        <StyledSelect sx={{maxHeight:'40px', minWidth:'120px'}}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Employes"
+                            value={employeeFilter}
+                            onChange={(event) => {setEmployeeFilter(event.target.value); setSearch("")}}
                         >
-                            Add
-                        </StyledButton>}
+                            <MenuItem
+                                key={"All"}
+                                value={0}
+                            >All</MenuItem>
+                            <MenuItem
+                                key={"Cashier"}
+                                value={1}
+                            >Cashier</MenuItem>
+                        </StyledSelect>
+                    </FormControl>
                     <SearchContainer sx={{maxHeight:'40px', marginTop:'10px'}}>
                         <SearchIconWrapper>
                             <SearchIcon />

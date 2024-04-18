@@ -29,8 +29,8 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
         return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
 
-    public List<EmployeePhoneNumberAddressDto> getPhoneNumberAndAddressBySurname(String surname) {
-        return mapper.toPhoneNumberAddressDtoList(((EmployeeRepository) repository).findPhoneNumberAndAddressBySurname(surname));
+    public List<EmployeeResponseDto> getPhoneNumberAndAddressBySurname(String surname) {
+        return mapper.toResponseDtoList(((EmployeeRepository) repository).findPhoneNumberAndAddressBySurname(surname));
     }
 
     public List<EmployeeResponseDto> getAllCashiersOrderBySurname() {
