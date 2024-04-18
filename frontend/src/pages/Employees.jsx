@@ -150,7 +150,7 @@ const Employee = () => {
         const phoneCheck = /^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{6}$/im;
 
         useEffect(() => {
-            if((login.trim() && login.length || row !== undefined) < 20 && role && surname.trim() && name.trim() && patronymic.trim()
+            if((login.trim() && login.length || row !== undefined) < 20 && role && surname.trim() && name.trim()
             && phoneNumber.trim() && salary && city.trim() && street.trim() && zipCode.trim()
             && surname.length < 100 && name.length < 100
             && salary > 0 && phoneCheck.test(phoneNumber) && phoneNumber.length < 14 && city.length < 50
