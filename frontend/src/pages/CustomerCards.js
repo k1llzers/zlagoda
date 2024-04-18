@@ -42,7 +42,7 @@ const CustomerCards = () => {
         setCards(response.data);
     };
 
-    const fetchSearchingCardsDataCasier = async (surname) => {
+    const fetchSearchingCardsDataCashier = async (surname) => {
         const response = await axios.get("http://localhost:8080/api/customer-card/by-surname?surname=" + surname)
         setCards(response.data);
     };
@@ -113,7 +113,7 @@ const CustomerCards = () => {
     const handleSearchCashier = async (e) => {
         setCashierSearch(e.target.value)
         if (e.target.value.trim().length > 0)
-            await fetchSearchingCardsDataCasier(e.target.value)
+            await fetchSearchingCardsDataCashier(e.target.value)
         else
             await fetchCardsData()
     };

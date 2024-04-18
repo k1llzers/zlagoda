@@ -29,13 +29,11 @@ import Collapse from "@mui/material/Collapse";
 import PercentIcon from '@mui/icons-material/Percent';
 import {Container} from "react-bootstrap";
 import Alert from "@mui/material/Alert";
-import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import NumberInputBasic from "../styledComponent/StyledNumberInput"
 import StyledTextField from "../styledComponent/styledTextField";
 import StyledButton from "../styledComponent/styldButton";
 import AddIcon from "@mui/icons-material/Add";
-import CategoryDropdown from "../components/categoriesDropdown";
 import SearchContainer from "../styledComponent/searchContainer";
 import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import SearchIcon from "@mui/icons-material/Search";
@@ -50,6 +48,8 @@ const StoreProducts = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [openForm, setOpenForm] = useState(false)
     const [updateRow, setUpdateRow] = useState(undefined)
+    const [cashierSearch, setCashierSearch] = useState("")
+    const [UPCSearch, setUPCSearch] = useState("")
 
     const fetchStoreProductsData = async () => {
         let response
@@ -63,6 +63,19 @@ const StoreProducts = () => {
     const fetchProductsData = async () => {
         const response = await axios.get("http://localhost:8080/api/product/order-by/name")
         setProducts(response.data)
+    };
+
+    const fetchSearchingStoreProductsDataCashier = async (product) => {
+        const response = await axios.get("http://localhost:8080/api/store-product/by-product?productName=" + product)
+        setStoreProducts(response.data);
+    };
+
+    const fetchSearchingStoreProductsDataUPC = async (upc) => {
+        const response = await axios.get("http://localhost:8080/api/store-product/" + upc)
+        if (response.data.error)
+            setStoreProducts([]);
+        else
+            setStoreProducts([response.data]);
     };
 
     useEffect(() => {
@@ -124,6 +137,23 @@ const StoreProducts = () => {
     function handlePromotional() {
 
     }
+
+    const handleSearchCashier = async (e) => {
+        setCashierSearch(e.target.value)
+        if (e.target.value.trim().length > 0)
+            await fetchSearchingStoreProductsDataCashier(e.target.value)
+        else
+            await fetchStoreProductsData()
+    }
+
+    const handleSearchUPC = async (e) => {
+        setUPCSearch(e.target.value)
+        if (e.target.value.trim().length > 0 && !isNaN(e.target.value))
+            await fetchSearchingStoreProductsDataUPC(e.target.value)
+        else
+            await fetchStoreProductsData()
+    };
+
 
     function StoreProductForm(props) {
         const {onClose, open, row} = props;
@@ -310,6 +340,30 @@ const StoreProducts = () => {
                         >
                             Add
                         </StyledButton>}
+                    {role === "CASHIER" &&
+                        <SearchContainer sx={{maxHeight:'40px', marginTop:'10px'}}>
+                            <SearchIconWrapper>
+                                <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                                placeholder="Product…"
+                                value={cashierSearch}
+                                inputProps={{ 'aria-label': 'search' }}
+                                onChange={handleSearchCashier}
+                            />
+                        </SearchContainer>
+                    }
+                    <SearchContainer sx={{maxHeight:'40px', marginTop:'10px'}}>
+                        <SearchIconWrapper>
+                            <SearchIcon />
+                        </SearchIconWrapper>
+                        <StyledInputBase
+                             placeholder="UPC…"
+                             value={UPCSearch}
+                             inputProps={{ 'aria-label': 'search' }}
+                             onChange={handleSearchUPC}
+                        />
+                    </SearchContainer>
                 </Stack>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <StoreProductsTable/>
