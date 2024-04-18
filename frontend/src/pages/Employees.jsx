@@ -247,8 +247,8 @@ const Employee = () => {
                             value={patronymic}
                             required
                             multiline
-                            error={patronymic.length > 100}
-                            helperText={patronymic.length > 100 ? "Too long" : ""}
+                            error={patronymic && patronymic.length > 100}
+                            helperText={patronymic && patronymic.length > 100 ? "Too long" : ""}
                             onChange={(event) => {setPatronymic(event.target.value)}}/>
                         <Box sx={{width:"99%", margin: '10px', display:"flex", justifyContent:"space-between"}}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
