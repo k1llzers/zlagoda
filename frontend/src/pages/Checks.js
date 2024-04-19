@@ -10,6 +10,7 @@ import StyledTableRow from "../styledComponent/styledTableRow";
 import StyledTableCell from "../styledComponent/styledTableCell";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     Accordion, AccordionDetails, AccordionSummary,
     Box,
@@ -32,11 +33,6 @@ import StyledTextField from "../styledComponent/styledTextField";
 import StyledButton from "../styledComponent/styldButton";
 import CustomerCards from "./CustomerCards";
 import TableCell from "@mui/material/TableCell";
-
-
-function ExpandMoreIcon() {
-    return null;
-}
 
 const Checks = () => {
     const [checks, setChecks] = useState([])
@@ -107,7 +103,7 @@ const Checks = () => {
             sumTotal: check.sumTotal,
             vat: check.vat,
             employee: processEmployee(check.employee),
-            customerCard: processCards(check.customerCard),
+            customerCard: check.customerCard ? processCards(check.customerCard) : "",
             products: check.sales
         }
     }
@@ -178,8 +174,9 @@ const Checks = () => {
                         <P><Label>Print Date: </Label>{new Date(row.printDate).toLocaleString()}</P>
                         <P><Label>Sum Total: </Label>{row.sumTotal} ₴</P>
                         <P><Label>Vat: </Label>{row.vat} ₴</P>
-                        <Accordion sx={{fontSize: '17px'}}>
+                        <Accordion sx={{fontSize: '17px', marginBottom: '10px'}}>
                             <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1-content"
                                 id="panel1-header"
                             >
@@ -190,7 +187,7 @@ const Checks = () => {
                                 <P><Label>Phone Number: </Label>{row.employee.phoneNumber}</P>
                             </AccordionDetails>
                         </Accordion>
-                        <Accordion sx={{fontSize: '17px'}}>
+                        {row.customerCard && <Accordion sx={{fontSize: '17px'}}>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1-content"
@@ -203,7 +200,7 @@ const Checks = () => {
                                 <P><Label>Phone Number: </Label>{row.customerCard.phoneNumber}</P>
                                 <P><Label>Percent: </Label>{row.customerCard.percent} %</P>
                             </AccordionDetails>
-                        </Accordion>
+                        </Accordion>}
                         <Div>Products</Div>
                         <TableContainer component={Paper}>
                             <Table sx={{ minWidth: 200 }} size="small" aria-label="a dense table">
