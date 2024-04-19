@@ -4,10 +4,12 @@ import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.check.dto.CheckResponseDto;
 import org.naukma.zlagoda.check.dto.CreateUpdateCheckDto;
 import org.naukma.zlagoda.customercard.CustomerCardService;
+import org.naukma.zlagoda.employee.EmployeeEntity;
 import org.naukma.zlagoda.employee.EmployeeService;
 import org.naukma.zlagoda.sale.SaleService;
 import org.naukma.zlagoda.storeproduct.StoreProductEntity;
 import org.naukma.zlagoda.storeproduct.StoreProductService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -77,13 +79,13 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
     protected void mergeEntity(CheckEntity entity, CreateUpdateCheckDto dto) {
         if(dto.getId() != null)
             entity.setId(dto.getId());
-        if(dto.getEmployeeId() != null)
-            entity.setEmployee(employeeService.getById(dto.getEmployeeId()));
-        if(dto.getCustomerCardId() != null)
+        if(dto.getCustomerCardId() != null) {
             entity.setCustomerCard(customerCardService.getById(dto.getCustomerCardId()));
+        }
         if (dto.getProductIdToCountMap() != null) {
             entity.setSumTotal(countSumTotal(dto).multiply(BigDecimal.valueOf((100.0 - entity.getCustomerCard().getPercent()) / 100)));
         }
+        entity.setEmployee((EmployeeEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         entity.setPrintDate(LocalDateTime.now());
         entity.setVat(entity.getSumTotal().multiply(BigDecimal.valueOf(0.2)));
     }
