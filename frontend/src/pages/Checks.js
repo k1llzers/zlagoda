@@ -10,18 +10,23 @@ import StyledTableRow from "../styledComponent/styledTableRow";
 import StyledTableCell from "../styledComponent/styledTableCell";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
-import {Box, Button, IconButton, Stack, Typography} from "@mui/material";
+import {Box, Button, Dialog, DialogContent, FormControl, IconButton, Stack, styled, Typography} from "@mui/material";
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import {Container} from "react-bootstrap";
 import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
+import Autocomplete from "@mui/material/Autocomplete";
+import StyledTextField from "../styledComponent/styledTextField";
+import StyledButton from "../styledComponent/styldButton";
 
 
 const Checks = () => {
     const [checks, setChecks] = useState([])
     const {role} = useAuth()
     const [errorMessage, setErrorMessage] = useState("")
+    const [row, setRow] = useState(undefined)
     const [openForm, setOpenForm] = useState(false)
+    const [openInfo, setOpenInfo] = useState(false)
     const [search, setSearch] = useState("")
     const [cashier, setCashier] = useState(0)
     const [dateFrom, setDateFrom] = useState(dayjs(new Date('2023-03-19T01:52:26.000')))
@@ -108,6 +113,10 @@ const Checks = () => {
         setOpenForm(false)
     }
 
+    function handleCloseInfo() {
+        setOpenInfo(false)
+    }
+
     const handleSearch = async (e) => {
         setSearch(e.target.value)
         if (e.target.value.trim().length > 0 && !isNaN(e.target.value))
@@ -117,7 +126,46 @@ const Checks = () => {
     }
 
     function handleInfo(row) {
+        setRow(row)
+        setOpenInfo(true)
+    }
 
+    function Info(props) {
+        const {onClose, open, row} = props;
+
+        const Div = styled('div')(({ theme }) => ({
+            ...theme.typography.button,
+            backgroundColor: theme.palette.background.paper,
+            padding: theme.spacing(1),
+            fontSize: '19px',
+            textAlign: 'center',
+            margin: '10px 0'
+        }));
+
+        const P = styled('p')(() => ({
+            fontSize: '17px'
+        }))
+
+        const Label = styled('span')(() => ({
+            fontWeight: 'bold',
+            color: '#748c8d'
+        }))
+
+        return (
+            <Dialog onClose={onClose} open={open} maxWidth='xs' fullWidth>
+                <DialogContent>
+                    <Div>Check</Div>
+                    <P><Label>Check Number: </Label>{row.id}</P>
+                    <P><Label>Print Date: </Label>{new Date(row.printDate).toLocaleString()}</P>
+                    <P><Label>Sum Total: </Label>{row.sumTotal} ₴</P>
+                    <hr/>
+                    <Div>Employee</Div>
+                    <P><Label>Surname: </Label>{row.employee.surname}</P>
+                    <P><Label>Name: </Label>{row.employee.name}</P>
+                    <P><Label>Patronymic: </Label>{row.employee.patronymic}</P>
+                </DialogContent>
+            </Dialog>
+        )
     }
 
     function Row(props) {
@@ -127,7 +175,7 @@ const Checks = () => {
                 <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
                     <StyledTableCell component="th" scope="row " align="center">{row.id}</StyledTableCell>
                     <StyledTableCell component="th" scope="row " align="center">{new Date(row.printDate).toLocaleString()}</StyledTableCell>
-                    <StyledTableCell component="th" scope="row " align="center">{row.sumTotal}</StyledTableCell>
+                    <StyledTableCell component="th" scope="row " align="center">{row.sumTotal} ₴</StyledTableCell>
                     <StyledTableCell align="right">
                         <Button onClick={() => handleInfo(row)}>
                             <ReceiptLongIcon color="action"/>
@@ -166,6 +214,11 @@ const Checks = () => {
 
     return (
         <Container style={{ marginTop: '50px'}}>
+            <Info
+                open={openInfo}
+                onClose={handleCloseInfo}
+                row={row}
+            />
             <Box sx={{maxWidth: 900, margin: '0 auto'}}>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <ChecksTable/>
