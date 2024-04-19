@@ -7,7 +7,10 @@ import org.naukma.zlagoda.exception.NoSuchEntityException;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,7 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
         String queryWithEmpl = "SELECT * FROM customer_check WHERE print_date BETWEEN ? AND ? AND id_employee=?";
         String queryWithoutEmpl = "SELECT * FROM customer_check WHERE print_date BETWEEN ? AND ?";
         try(PreparedStatement statement = connection.prepareStatement(id == null ? queryWithoutEmpl : queryWithEmpl)) {
-            statement.setTimestamp(1,Timestamp.valueOf(from));
+            statement.setTimestamp(1, Timestamp.valueOf(from));
             statement.setTimestamp(2, Timestamp.valueOf(to));
             if (id != null)
                 statement.setInt(3, id);

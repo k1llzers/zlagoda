@@ -28,6 +28,12 @@ public class    ProductController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping("/without/storeproduct")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    public ResponseEntity<List<ProductResponseDto>> getAllWithoutStoreProduct() {
+        return ResponseEntity.ok(service.getAllWithoutStoreProduct());
+    }
+
     @GetMapping("/order-by/name")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<ProductResponseDto>> getAllOrderByName() {

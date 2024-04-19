@@ -56,6 +56,22 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
         }
     }
 
+    public Optional<StoreProductEntity> findByPromotionId(Integer id) {
+        try(PreparedStatement findByPromotionIdStatement = connection.prepareStatement("SELECT * FROM store_product " +
+                "WHERE store_product.upc_prom = ?")) {
+            findByPromotionIdStatement.setInt(1, id);
+            ResultSet resultSet = findByPromotionIdStatement.executeQuery();
+            StoreProductEntity result = null;
+            if(resultSet.next()){
+                result = parseSetToEntity(resultSet);
+            }
+            return Optional.ofNullable(result);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     protected void setMainFields(PreparedStatement statement, StoreProductEntity entity) throws SQLException {
         if(entity.getPromotion() != null)
