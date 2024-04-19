@@ -108,9 +108,7 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
                         )
                 )
                 .customerCard(customerCardRepository.findById(customerCardId)
-                        .orElseThrow(
-                                () -> new NoSuchEntityException("Can`t find customer card by id: " + customerCardId)
-                        )
+                        .orElse(null)
                 )
                 .printDate(set.getTimestamp("print_date").toLocalDateTime())
                 .sumTotal(set.getBigDecimal("sum_total"))
