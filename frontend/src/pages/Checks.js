@@ -10,7 +10,19 @@ import StyledTableRow from "../styledComponent/styledTableRow";
 import StyledTableCell from "../styledComponent/styledTableCell";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
-import {Box, Button, Dialog, DialogContent, FormControl, IconButton, Stack, styled, Typography} from "@mui/material";
+import {
+    Accordion, AccordionDetails, AccordionSummary,
+    Box,
+    Button,
+    Dialog,
+    DialogContent,
+    FormControl,
+    IconButton,
+    Paper,
+    Stack,
+    styled,
+    Typography
+} from "@mui/material";
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import {Container} from "react-bootstrap";
 import Alert from "@mui/material/Alert";
@@ -18,7 +30,13 @@ import dayjs from "dayjs";
 import Autocomplete from "@mui/material/Autocomplete";
 import StyledTextField from "../styledComponent/styledTextField";
 import StyledButton from "../styledComponent/styldButton";
+import CustomerCards from "./CustomerCards";
+import TableCell from "@mui/material/TableCell";
 
+
+function ExpandMoreIcon() {
+    return null;
+}
 
 const Checks = () => {
     const [checks, setChecks] = useState([])
@@ -89,7 +107,8 @@ const Checks = () => {
             sumTotal: check.sumTotal,
             vat: check.vat,
             employee: processEmployee(check.employee),
-            customerCard: processCards(check.customerCard)
+            customerCard: processCards(check.customerCard),
+            products: check.sales
         }
     }
 
@@ -155,15 +174,60 @@ const Checks = () => {
             return (
                 <Dialog onClose={onClose} open={open} maxWidth='xs' fullWidth>
                     <DialogContent>
-                        <Div>Check</Div>
-                        <P><Label>Check Number: </Label>{row.id}</P>
+                        <Div>Check №{row.id}</Div>
                         <P><Label>Print Date: </Label>{new Date(row.printDate).toLocaleString()}</P>
                         <P><Label>Sum Total: </Label>{row.sumTotal} ₴</P>
-                        <hr/>
-                        <Div>Employee</Div>
-                        <P><Label>Surname: </Label>{row.employee.surname}</P>
-                        <P><Label>Name: </Label>{row.employee.name}</P>
-                        <P><Label>Patronymic: </Label>{row.employee.patronymic}</P>
+                        <P><Label>Vat: </Label>{row.vat} ₴</P>
+                        <Accordion sx={{fontSize: '17px'}}>
+                            <AccordionSummary
+                                aria-controls="panel1-content"
+                                id="panel1-header"
+                            >
+                               Employee
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <P><Label>Name: </Label>{row.employee.surname} {row.employee.name} {row.employee.patronymic}</P>
+                                <P><Label>Phone Number: </Label>{row.employee.phoneNumber}</P>
+                            </AccordionDetails>
+                        </Accordion>
+                        <Accordion sx={{fontSize: '17px'}}>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1-content"
+                                id="panel1-header"
+                            >
+                                Customer
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <P><Label>Name: </Label>{row.customerCard.surname} {row.customerCard.name} {row.customerCard.patronymic}</P>
+                                <P><Label>Phone Number: </Label>{row.customerCard.phoneNumber}</P>
+                                <P><Label>Percent: </Label>{row.customerCard.percent} %</P>
+                            </AccordionDetails>
+                        </Accordion>
+                        <Div>Products</Div>
+                        <TableContainer component={Paper}>
+                            <Table sx={{ minWidth: 200 }} size="small" aria-label="a dense table">
+                                <TableHead>
+                                    <TableRow sx={{backgroundColor: '#748c8d'}}>
+                                        <TableCell sx={{color: 'white'}} align="center">Product</TableCell>
+                                        <TableCell sx={{color: 'white'}} align="center">Number</TableCell>
+                                        <TableCell sx={{color: 'white'}} align="center">Price</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {row.products.map((row) => (
+                                        <TableRow
+                                            key={row.name}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell align="center">{row.name}</TableCell>
+                                            <TableCell align="center">{row.productNumber}</TableCell>
+                                            <TableCell align="center">{row.sellingPrice}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </DialogContent>
                 </Dialog>
             )
