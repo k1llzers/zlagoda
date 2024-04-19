@@ -289,12 +289,12 @@ const StoreProducts = () => {
                         <Button onClick={() => handlePromotional(row)}>
                             {row.promotional ? <PercentIcon color="info"/> : <PercentIcon color="action"/>}
                         </Button>
-                        <Button onClick={() => handleUpdate(row)}>
+                        {!row.promotional && <Button onClick={() => handleUpdate(row)}>
                             <ModeEditIcon color='action'/>
-                        </Button>
-                        <Button onClick={() => handleDelete(row.id)}>
+                        </Button>}
+                        {!row.promotional && <Button onClick={() => handleDelete(row.id)}>
                             <DeleteOutlineOutlinedIcon color="error"/>
-                        </Button>
+                        </Button>}
                     </StyledTableCell>}
                 </TableRow>
                 <TableRow>
