@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class StoreProductRepository extends BaseRepository<StoreProductEntity, Integer> {
@@ -49,6 +50,22 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
                 entities.add(parseSetToEntity(resultSet));
             }
             return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Optional<StoreProductEntity> findByPromotionId(Integer id) {
+        try(PreparedStatement findByPromotionIdStatement = connection.prepareStatement("SELECT * FROM store_product " +
+                "WHERE store_product.upc_prom = ?")) {
+            findByPromotionIdStatement.setInt(1, id);
+            ResultSet resultSet = findByPromotionIdStatement.executeQuery();
+            StoreProductEntity result = null;
+            if(resultSet.next()){
+                result = parseSetToEntity(resultSet);
+            }
+            return Optional.ofNullable(result);
         }
         catch (SQLException e) {
             throw new RuntimeException(e);

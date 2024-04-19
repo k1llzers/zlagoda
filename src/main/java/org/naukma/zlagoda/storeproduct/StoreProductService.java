@@ -2,8 +2,6 @@ package org.naukma.zlagoda.storeproduct;
 
 import jakarta.validation.ValidationException;
 import org.naukma.zlagoda.abstraction.service.BaseService;
-import org.naukma.zlagoda.check.CheckEntity;
-import org.naukma.zlagoda.exception.NoSuchEntityException;
 import org.naukma.zlagoda.product.ProductService;
 import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
 import org.naukma.zlagoda.storeproduct.dto.StoreProductResponseDto;
@@ -71,6 +69,13 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
             repository.delete(byId.getPromotion().getId());
         }
         return true;
+    }
+
+    public Boolean updateByEntity(StoreProductEntity entity) {
+        if (entity.getProductsNumber() == 0)
+            return repository.delete(entity.getId());
+        else
+            return repository.update(entity);
     }
 
     @Override
