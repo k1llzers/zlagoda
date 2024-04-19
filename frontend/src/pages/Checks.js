@@ -151,21 +151,24 @@ const Checks = () => {
             color: '#748c8d'
         }))
 
-        return (
-            <Dialog onClose={onClose} open={open} maxWidth='xs' fullWidth>
-                <DialogContent>
-                    <Div>Check</Div>
-                    <P><Label>Check Number: </Label>{row.id}</P>
-                    <P><Label>Print Date: </Label>{new Date(row.printDate).toLocaleString()}</P>
-                    <P><Label>Sum Total: </Label>{row.sumTotal} ₴</P>
-                    <hr/>
-                    <Div>Employee</Div>
-                    <P><Label>Surname: </Label>{row.employee.surname}</P>
-                    <P><Label>Name: </Label>{row.employee.name}</P>
-                    <P><Label>Patronymic: </Label>{row.employee.patronymic}</P>
-                </DialogContent>
-            </Dialog>
-        )
+        if (row !== undefined)
+            return (
+                <Dialog onClose={onClose} open={open} maxWidth='xs' fullWidth>
+                    <DialogContent>
+                        <Div>Check</Div>
+                        <P><Label>Check Number: </Label>{row.id}</P>
+                        <P><Label>Print Date: </Label>{new Date(row.printDate).toLocaleString()}</P>
+                        <P><Label>Sum Total: </Label>{row.sumTotal} ₴</P>
+                        <hr/>
+                        <Div>Employee</Div>
+                        <P><Label>Surname: </Label>{row.employee.surname}</P>
+                        <P><Label>Name: </Label>{row.employee.name}</P>
+                        <P><Label>Patronymic: </Label>{row.employee.patronymic}</P>
+                    </DialogContent>
+                </Dialog>
+            )
+        else
+            return;
     }
 
     function Row(props) {
