@@ -48,6 +48,11 @@ public class ProductRepository extends BaseRepository<ProductEntity, Integer> {
         }
     }
 
+    public List<ProductEntity> findAllWithoutStoreProduct() {
+        return findAllByCustomQuery("SELECT * FROM product LEFT OUTER JOIN store_product " +
+                "ON product.id_product = store_product.id_product WHERE store_product.upc IS NULL");
+    }
+
     @Override
     protected void setMainFields(PreparedStatement statement, ProductEntity entity) throws SQLException {
         statement.setInt(1, entity.getCategory().getId());

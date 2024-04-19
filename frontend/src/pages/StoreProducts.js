@@ -73,7 +73,7 @@ const StoreProducts = () => {
     }
 
     const fetchProductsData = async () => {
-        const response = await axios.get("http://localhost:8080/api/product/order-by/name")
+        const response = await axios.get("http://localhost:8080/api/product/without/storeproduct")
         setProducts(response.data)
     };
 
@@ -119,14 +119,14 @@ const StoreProducts = () => {
         setErrorMessage("")
     };
 
-    function handleOpenForm() {
+    async function handleOpenForm() {
         setOpenForm(true)
-        fetchProductsData()
+        await fetchProductsData()
     }
 
-    function handleUpdate(row) {
+    async function handleUpdate(row) {
         setUpdateRow(row)
-        handleOpenForm()
+        await handleOpenForm()
     }
 
     function handleClose(){

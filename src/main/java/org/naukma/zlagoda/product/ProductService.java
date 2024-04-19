@@ -26,6 +26,10 @@ public class ProductService extends BaseService<CreateUpdateProductDto, ProductE
         return mapper.toResponseDtoList(repository.findAll());
     }
 
+    public List<ProductResponseDto> getAllWithoutStoreProduct() {
+        return mapper.toResponseDtoList(((ProductRepository)repository).findAllWithoutStoreProduct());
+    }
+
     public List<ProductResponseDto> getAllOrderByName() {
         return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
