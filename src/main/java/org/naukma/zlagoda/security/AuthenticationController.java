@@ -2,13 +2,11 @@ package org.naukma.zlagoda.security;
 
 import lombok.RequiredArgsConstructor;
 import org.naukma.zlagoda.employee.EmployeeEntity;
-import org.naukma.zlagoda.exception.BadCredentials;
 import org.naukma.zlagoda.security.dto.AuthRequest;
 import org.naukma.zlagoda.security.dto.TokenResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
