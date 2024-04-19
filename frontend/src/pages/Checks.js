@@ -28,11 +28,12 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import {Container} from "react-bootstrap";
 import Alert from "@mui/material/Alert";
 import dayjs from "dayjs";
-import Autocomplete from "@mui/material/Autocomplete";
-import StyledTextField from "../styledComponent/styledTextField";
 import StyledButton from "../styledComponent/styldButton";
+import AddIcon from "@mui/icons-material/Add";
 import CustomerCards from "./CustomerCards";
 import TableCell from "@mui/material/TableCell";
+import Autocomplete from "@mui/material/Autocomplete";
+import StyledTextField from "../styledComponent/styledTextField";
 
 const Checks = () => {
     const [checks, setChecks] = useState([])
@@ -41,6 +42,8 @@ const Checks = () => {
     const [row, setRow] = useState(undefined)
     const [openForm, setOpenForm] = useState(false)
     const [openInfo, setOpenInfo] = useState(false)
+    const [customerCards, setCustomerCards] = useState([])
+    const [storeProducts, setStoreProducts] = useState([])
     const [search, setSearch] = useState("")
     const [cashier, setCashier] = useState(0)
     const [dateFrom, setDateFrom] = useState(dayjs(new Date('2023-03-19T01:52:26.000')))
@@ -120,8 +123,20 @@ const Checks = () => {
         setErrorMessage("")
     };
 
-    function handleOpenForm() {
+    async function handleOpenForm() {
         setOpenForm(true)
+        await fetchCustomerCard()
+        await fetchStoreProducts()
+    }
+
+    async function fetchCustomerCard() {
+        const response = await axios.get("http://localhost:8080/api/customer-card")
+        setCustomerCards(response.data)
+    }
+
+    async function fetchStoreProducts() {
+        const response = await axios.get("http://localhost:8080/api/store-product")
+        setStoreProducts(response.data)
     }
 
     function handleClose(){
@@ -232,6 +247,112 @@ const Checks = () => {
             return;
     }
 
+    function ChecksForm(props) {
+        const {onClose, open} = props;
+        const [customer, setCustomer] = useState("");
+        const [storeProduct, setStoreProduct] = useState("");
+        const [disableAdd, setDisableAdd] = useState(true)
+        let checkProducts = []
+
+        const customerCardOptions = customerCards.map(customerCard => ({
+            label: customerCard.surname + " " + customerCard.name + " " + customerCard.patronymic + " " + customerCard.phoneNumber,
+            value: customerCard.id
+        }));
+
+        const storeProductsOption = storeProducts.map(storeProduct => ({
+            label: storeProduct.id + " " + storeProduct.product.name,
+            value: storeProduct.id
+        }));
+
+        useEffect(() => {
+            if(checkProducts) {
+                setDisableAdd(false)
+            }else {
+                setDisableAdd(true)
+            }
+        }, [customer, checkProducts, storeProduct]);
+
+        // const handleAdd = async () => {
+        //     handleClose()
+        //     let response;
+        //     if(!row) {
+        //         response = await axios.post("http://localhost:8080/api/store-product", {
+        //             productId: +product,
+        //             sellingPrice: sellingPrice,
+        //             productsNumber: productsNumber,
+        //             promotional: false
+        //         })
+        //     } else {
+        //         response = await axios.put("http://localhost:8080/api/store-product", {
+        //             id: row.id,
+        //             sellingPrice: sellingPrice,
+        //             productsNumber: productsNumber,
+        //         })
+        //     }
+        //     if (response.data.error) {
+        //         setErrorMessage(response.data.error)
+        //         setTimeout(() => setErrorMessage(""), 3500)
+        //     } else {
+        //         fetchStoreProductsData()
+        //     }
+        // }
+
+
+        return(
+            <Dialog onClose={onClose} open={open}>
+                <DialogContent>
+                    <FormControl fullWidth>
+                        <Autocomplete
+                            value={customerCardOptions.find(option => option.value === storeProduct)}
+                            onChange = {(event, newValue) => {
+                                if(newValue)
+                                    setCustomer(newValue.value)
+                                else
+                                    setCustomer("")
+                            }}
+                            renderInput={(params) => <StyledTextField {...params} sx={{width: "100%"}} size="medium" label="Customer"/>}
+                            options={customerCardOptions}
+                            sx={{display:"flex"}}
+                        />
+                        <Autocomplete
+                            value={storeProductsOption.find(option => option.value === customerCards)}
+                            onChange = {(event, newValue) => {
+                                if(newValue)
+                                    setStoreProduct(newValue.value)
+                                else
+                                    setStoreProduct("")
+                            }}
+                            renderInput={(params) => <StyledTextField {...params} sx={{width: "100%"}} size="medium" label="Product"/>}
+                            options={storeProductsOption}
+                            sx={{display:"flex"}}
+                        />
+                        {/*<StyledTextField*/}
+                        {/*    type="number"*/}
+                        {/*    InputProps={{ inputProps: { min: 0 } }}*/}
+                        {/*    onChange={(e) => setProductsNumber(parseInt(e.target.value))}*/}
+                        {/*    value={productsNumber}*/}
+                        {/*    label="Number"*/}
+                        {/*/>*/}
+                        {/*<StyledTextField*/}
+                        {/*    type="number"*/}
+                        {/*    step="any"*/}
+                        {/*    InputProps={{ inputProps: { min: 1 } }}*/}
+                        {/*    onChange={(e) => setSellingPrice(e.target.value)}*/}
+                        {/*    value={sellingPrice}*/}
+                        {/*    label="Price"*/}
+                        {/*/>*/}
+                        <StyledButton
+                            variant="text"
+                            sx={{width: '50%', alignSelf: 'center'}}
+                            // onClick={handleAdd}
+                            disabled={disableAdd}
+                        >Create</StyledButton>
+                    </FormControl>
+                </DialogContent>
+            </Dialog>
+        )
+    }
+
     function Row(props) {
         const {row} = props;
         return (
@@ -283,7 +404,21 @@ const Checks = () => {
                 onClose={handleCloseInfo}
                 row={row}
             />
-            <Box sx={{maxWidth: 900, margin: '0 auto'}}>
+            <ChecksForm
+                open={openForm}
+                onClose={handleClose}
+            />
+            <Box sx={{maxWidth: 700, margin: '0 auto'}}>
+                <Stack direction='row' justifyContent='space-between'>
+                    {role === 'CASHIER' &&
+                        <StyledButton variant="outlined"
+                                      startIcon={<AddIcon />}
+                                      onClick={handleOpenForm}
+                                      sx={{maxHeight:'40px', marginTop:'10px'}}
+                        >
+                            CREATE
+                        </StyledButton>}
+                </Stack>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <ChecksTable/>
             </Box>

@@ -25,7 +25,7 @@ public class StoreProductController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<StoreProductResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }

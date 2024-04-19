@@ -73,6 +73,11 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
     }
 
     @Override
+    public List<StoreProductEntity> findAll() {
+        return findAllByCustomQuery(String.format("SELECT * FROM %s WHERE upc_prom IS NULL", tableName));
+    }
+
+    @Override
     protected void setMainFields(PreparedStatement statement, StoreProductEntity entity) throws SQLException {
         if(entity.getPromotion() != null)
             statement.setInt(1, entity.getPromotion().getId());

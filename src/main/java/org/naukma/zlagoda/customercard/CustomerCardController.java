@@ -24,7 +24,7 @@ public class CustomerCardController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CustomerCardResponseDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
