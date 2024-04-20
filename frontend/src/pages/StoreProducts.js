@@ -83,11 +83,11 @@ const StoreProducts = () => {
     };
 
     const fetchSearchingStoreProductsDataUPC = async (upc) => {
-        const response = await axios.get("http://localhost:8080/api/store-product/" + upc)
+        const response = await axios.get("http://localhost:8080/api/store-product/by-upc/" + upc)
         if (response.data.error)
             setStoreProducts([]);
         else
-            setStoreProducts([response.data]);
+            setStoreProducts(response.data);
     };
 
     useEffect(() => {
@@ -148,7 +148,7 @@ const StoreProducts = () => {
     async function handlePromotional(row) {
         let response;
         if (row.promotional) {
-            response = await axios.delete("http://localhost:8080/api/store-product/" + row.id);
+            response = await axios.put("http://localhost:8080/api/store-product/unpromotion/" + row.id);
         }
         else {
             response = await axios.put("http://localhost:8080/api/store-product/promotion/" + row.id)

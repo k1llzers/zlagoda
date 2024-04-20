@@ -72,9 +72,25 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
         }
     }
 
+    public List<StoreProductEntity> findAllByUpcLike(Integer upc) {
+        List<StoreProductEntity> entities = new ArrayList<>();
+        try(PreparedStatement findAllStatement = connection.prepareStatement("SELECT * FROM store_product " +
+                "WHERE CAST(upc AS TEXT)LIKE ?")) {
+            findAllStatement.setString(1, "%" + upc + "%");
+            ResultSet resultSet = findAllStatement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public List<StoreProductEntity> findAll() {
-        return findAllByCustomQuery(String.format("SELECT * FROM %s WHERE upc_prom IS NULL", tableName));
+        return findAllByCustomQuery(String.format("SELECT * FROM %s WHERE products_number != 0", tableName));
     }
 
     @Override

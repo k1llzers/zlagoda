@@ -54,6 +54,12 @@ public class StoreProductController {
         return ResponseEntity.ok(service.getAllByProductNameLike(productName));
     }
 
+    @GetMapping("/by-upc/{upc}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<StoreProductResponseDto>> getAllByUpcLike(@PathVariable Integer upc) {
+        return ResponseEntity.ok(service.getAllByUpcLike(upc));
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
@@ -76,5 +82,11 @@ public class StoreProductController {
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> makePromotional(@PathVariable Integer id) {
         return ResponseEntity.ok(service.makePromotional(id));
+    }
+
+    @PutMapping("/unpromotion/{id}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    public ResponseEntity<Boolean> unromotional(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.unpromotion(id));
     }
 }

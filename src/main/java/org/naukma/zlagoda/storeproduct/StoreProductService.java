@@ -46,19 +46,36 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
         return mapper.toResponseDtoList(((StoreProductRepository)repository).findAllByProductNameLike(productName));
     }
 
+    public List<StoreProductResponseDto> getAllByUpcLike(Integer upc) {
+        return mapper.toResponseDtoList(((StoreProductRepository)repository).findAllByUpcLike(upc));
+    }
+
     public Boolean makePromotional(Integer id) {
-        StoreProductEntity promotional = getById(id);
-        if (promotional.getPromotion() != null) {
-            throw new ValidationException("Can`t add more than one promotion");
+        StoreProductEntity product = getById(id);
+        if (product.getPromotion() == null) {
+            product.setPromotional(true);
+            product.setSellingPrice(product.getSellingPrice().multiply(BigDecimal.valueOf(0.8)));
+            product.setId(null);
+            product.setId(repository.save(product));
+            StoreProductEntity setPromotion = getById(id);
+            setPromotion.setPromotion(product);
+            setPromotion.setProductsNumber(0);
+            repository.update(setPromotion);
+        } else {
+            StoreProductEntity promotion = product.getPromotion();
+            promotion.setProductsNumber(promotion.getProductsNumber() + product.getProductsNumber());
+            promotion.setSellingPrice(product.getSellingPrice().multiply(BigDecimal.valueOf(0.8)));
+            repository.update(promotion);
+            product.setProductsNumber(0);
+            repository.update(product);
         }
-        promotional.setPromotional(true);
-        promotional.setSellingPrice(promotional.getSellingPrice().multiply(BigDecimal.valueOf(0.8)));
-        promotional.setId(null);
-        promotional.setId(repository.save(promotional));
-        StoreProductEntity setPromotion = getById(id);
-        setPromotion.setPromotion(promotional);
-        setPromotion.setProductsNumber(0);
-        return repository.update(setPromotion);
+        return true;
+    }
+
+    public Boolean unpromotion(Integer id) {
+        StoreProductEntity product = getById(id);
+        product.setProductsNumber(0);
+        return repository.update(product);
     }
 
     @Override
