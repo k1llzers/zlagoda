@@ -87,6 +87,11 @@ const Checks = () => {
         setChecks(response.data)
     }
 
+    const fetchProductsData = async () => {
+        const response = await axios.get("http://localhost:8080/api/product/without/storeproduct")
+        setProducts(response.data)
+    };
+
     const fetchSum = async () => {
         let response
         if (cashier === 0)
@@ -553,10 +558,6 @@ const Checks = () => {
         )
     }
 
-    const fetchProductsData = async () => {
-        const response = await axios.get("http://localhost:8080/api/product/without/storeproduct")
-        setProducts(response.data)
-    };
 
     const productOptions = products.map(product => ({
         label: product.name,
@@ -575,7 +576,7 @@ const Checks = () => {
                 onClose={handleClose}
             />
             <Box sx={{maxWidth: 700, margin: '0 auto'}}>
-                <Stack direction='row' justifyContent='space-between' sx={{marginBottom: '20px'}}>
+                <Stack direction='row' sx={{marginBottom: '20px'}}>
                     {role === 'CASHIER' &&
                         <StyledButton variant="outlined"
                                       startIcon={<AddIcon />}
@@ -584,6 +585,20 @@ const Checks = () => {
                         >
                             CREATE
                         </StyledButton>}
+                    {role === "MANAGER" &&
+                        <Autocomplete
+                            sx={{width: '22%'}}
+                            value={productOptions.find(option => option.value === product)}
+                            onChange = {(event, newValue) => {
+                                if(newValue)
+                                    setProduct(newValue.value)
+                                else
+                                    setProduct(0)
+                            }}
+                            renderInput={(params) => <StyledTextField {...params} size="small" sx={{margin: '10px 0'}} label="Product"/>}
+                            options={productOptions}
+                        />}
+                    {role === "MANAGER" && <P sx={{margin: '0 10px', display: 'flex', alignItems: 'center'}}><Label sx={{marginRight: '5px'}}>Total Number:</Label>{number}</P>}
                 </Stack>
                 <Stack direction='row'>
                     <Stack direction='row' justifyContent='space-between' sx={{width: '45%'}}>
@@ -632,19 +647,6 @@ const Checks = () => {
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <ChecksTable/>
                 {role === "MANAGER" && <P><Label>Total Sum: </Label>{sum} ₴</P>}
-                {role === "MANAGER" &&
-                    <Autocomplete
-                        value={productOptions.find(option => option.value === product)}
-                        onChange = {(event, newValue) => {
-                            if(newValue)
-                                setProduct(newValue.value)
-                            else
-                                setProduct(0)
-                        }}
-                        renderInput={(params) => <StyledTextField {...params} sx={{width: "100%"}} size="medium" label="Product"/>}
-                        options={productOptions}
-                        sx={{display:"flex"}}
-                    />}
             </Box>
         </Container>
     );
