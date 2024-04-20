@@ -646,7 +646,7 @@ const Checks = () => {
                 </Stack>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <ChecksTable/>
-                {role === "MANAGER" && <P><Label>Total Sum: </Label>{sum} ₴</P>}
+                {role === "MANAGER" && <P><Label>Total Sum: </Label>{sum ? sum : 0} ₴</P>}
             </Box>
         </Container>
     );
