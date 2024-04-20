@@ -18,7 +18,7 @@ import {
     Dialog,
     DialogContent,
     FormControl,
-    IconButton,
+    IconButton, MenuItem,
     Paper,
     Stack,
     styled,
@@ -34,6 +34,10 @@ import CustomerCards from "./CustomerCards";
 import TableCell from "@mui/material/TableCell";
 import Autocomplete from "@mui/material/Autocomplete";
 import StyledTextField from "../styledComponent/styledTextField";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import StyledLabel from "../styledComponent/styldLabel";
+import StyledSelect from "../styledComponent/styledSelect";
 
 const Checks = () => {
     const [checks, setChecks] = useState([])
@@ -45,19 +49,55 @@ const Checks = () => {
     const [customerCards, setCustomerCards] = useState([])
     const [storeProducts, setStoreProducts] = useState([])
     const [search, setSearch] = useState("")
+    const [sum, setSum] = useState(0)
+    const [number, setNumber] = useState(0)
     const [cashier, setCashier] = useState(0)
+    const [cashiers, setCashiers] = useState([])
     const [dateFrom, setDateFrom] = useState(dayjs(new Date('2023-03-19T01:52:26.000')))
     const [dateTo, setDateTo] = useState(dayjs(new Date('2025-03-19T01:52:26.000')))
+    const [products, setProducts] = useState([])
+    const [product, setProduct] = useState(0);
 
 
     useEffect(() => {
         fetchChecksData()
+        fetchCashierData()
+        fetchSum()
+    }, [dateTo, dateFrom, cashier])
+
+    useEffect(() => {
+        fetchProductsData()
     }, [])
+
+    useEffect(() => {
+        fetchNumber()
+    }, [dateTo, dateFrom, product])
 
     const fetchChecksData = async () => {
         let response
-        response = await axios.get("http://localhost:8080/api/check/by-employee?from=" + dateFrom.format('YYYY-MM-DDTHH:mm:ss.SSS00') + "&to=" + dateTo.format('YYYY-MM-DDTHH:mm:ss.SSS00'))
+        if (cashier === 0)
+            response = await axios.get("http://localhost:8080/api/check/by-employee?from=" + dateFrom.format('YYYY-MM-DDTHH:mm:ss.SSS00') + "&to=" + dateTo.format('YYYY-MM-DDTHH:mm:ss.SSS00'))
+        else
+            response = await axios.get("http://localhost:8080/api/check/by-employee?empl=" + cashier + "&from=" + dateFrom.format('YYYY-MM-DDTHH:mm:ss.SSS00') + "&to=" + dateTo.format('YYYY-MM-DDTHH:mm:ss.SSS00'))
         setChecks(response.data)
+    }
+
+    const fetchSum = async () => {
+        let response
+        if (cashier === 0)
+            response = await axios.get("http://localhost:8080/api/check/by-employee/products-sum?from=" + dateFrom.format('YYYY-MM-DDTHH:mm:ss.SSS00') + "&to=" + dateTo.format('YYYY-MM-DDTHH:mm:ss.SSS00'))
+        else
+            response = await axios.get("http://localhost:8080/api/check/by-employee/products-sum?empl=" + cashier + "&from=" + dateFrom.format('YYYY-MM-DDTHH:mm:ss.SSS00') + "&to=" + dateTo.format('YYYY-MM-DDTHH:mm:ss.SSS00'))
+        setSum(response.data)
+    }
+
+    const fetchNumber = async () => {
+        let response
+        if (product !== 0) {
+            response = await axios.get("http://localhost:8080/api/check/count/product/" + product + "?from=" + dateFrom.format('YYYY-MM-DDTHH:mm:ss.SSS00') + "&to=" + dateTo.format('YYYY-MM-DDTHH:mm:ss.SSS00'))
+            setNumber(response.data)
+        }
+
     }
 
     const fetchSearchingCheckData = async (id) => {
@@ -66,6 +106,11 @@ const Checks = () => {
             setChecks([])
         else
             setChecks([response.data])
+    }
+
+    const fetchCashierData = async () => {
+        const response = await axios.get("http://localhost:8080/api/employee/cashier/order-by/surname")
+        setCashiers(response.data)
     }
 
     function processEmployee(employee) {
@@ -160,6 +205,15 @@ const Checks = () => {
         setOpenInfo(true)
     }
 
+    const P = styled('p')(() => ({
+        fontSize: '17px'
+    }))
+
+    const Label = styled('span')(() => ({
+        fontWeight: 'bold',
+        color: '#748c8d'
+    }))
+
     function Info(props) {
         const {onClose, open, row} = props;
 
@@ -172,22 +226,13 @@ const Checks = () => {
             margin: '10px 0'
         }));
 
-        const P = styled('p')(() => ({
-            fontSize: '17px'
-        }))
-
-        const Label = styled('span')(() => ({
-            fontWeight: 'bold',
-            color: '#748c8d'
-        }))
-
         if (row !== undefined)
             return (
                 <Dialog onClose={onClose} open={open} maxWidth='xs' fullWidth>
                     <DialogContent>
                         <Div>Check №{row.id}</Div>
                         <P><Label>Print Date: </Label>{new Date(row.printDate).toLocaleString()}</P>
-                        <P><Label>Sum Total: </Label>{row.sumTotal} ₴</P>
+                        <P><Label>Total Sum: </Label>{row.sumTotal} ₴</P>
                         <P><Label>Vat: </Label>{row.vat} ₴</P>
                         <Accordion sx={{fontSize: '17px', marginBottom: '10px'}}>
                             <AccordionSummary
@@ -195,7 +240,7 @@ const Checks = () => {
                                 aria-controls="panel1-content"
                                 id="panel1-header"
                             >
-                               Employee
+                               Cashier
                             </AccordionSummary>
                             <AccordionDetails>
                                 <P><Label>Name: </Label>{row.employee.surname} {row.employee.name} {row.employee.patronymic}</P>
@@ -221,6 +266,7 @@ const Checks = () => {
                             <Table sx={{ minWidth: 200 }} size="small" aria-label="a dense table">
                                 <TableHead>
                                     <TableRow sx={{backgroundColor: '#748c8d'}}>
+                                        <TableCell sx={{color: 'white'}} align="center">UPC</TableCell>
                                         <TableCell sx={{color: 'white'}} align="center">Product</TableCell>
                                         <TableCell sx={{color: 'white'}} align="center">Number</TableCell>
                                         <TableCell sx={{color: 'white'}} align="center">Price</TableCell>
@@ -232,6 +278,7 @@ const Checks = () => {
                                             key={row.name}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
+                                            <TableCell align="center">{row.id}</TableCell>
                                             <TableCell align="center">{row.name}</TableCell>
                                             <TableCell align="center">{row.productNumber}</TableCell>
                                             <TableCell align="center">{row.sellingPrice}</TableCell>
@@ -418,6 +465,16 @@ const Checks = () => {
         )
     }
 
+    const fetchProductsData = async () => {
+        const response = await axios.get("http://localhost:8080/api/product/without/storeproduct")
+        setProducts(response.data)
+    };
+
+    const productOptions = products.map(product => ({
+        label: product.name,
+        value: product.id
+    }));
+
     return (
         <Container style={{ marginTop: '50px'}}>
             <Info
@@ -430,7 +487,7 @@ const Checks = () => {
                 onClose={handleClose}
             />
             <Box sx={{maxWidth: 700, margin: '0 auto'}}>
-                <Stack direction='row' justifyContent='space-between'>
+                <Stack direction='row' justifyContent='space-between' sx={{marginBottom: '20px'}}>
                     {role === 'CASHIER' &&
                         <StyledButton variant="outlined"
                                       startIcon={<AddIcon />}
@@ -440,8 +497,66 @@ const Checks = () => {
                             CREATE
                         </StyledButton>}
                 </Stack>
+                <Stack direction='row'>
+                    <Stack direction='row' justifyContent='space-between' sx={{width: '45%'}}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="From"
+                                views={['year', 'month', 'day']}
+                                value={dateFrom}
+                                slotProps={{ textField: { size: 'small' } }}
+                                sx={{width: '50%', marginRight: '10px'}}
+                                onChange={(newValue) => setDateFrom(newValue)}
+                            />
+                        </LocalizationProvider>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="To"
+                                views={['year', 'month', 'day']}
+                                value={dateTo}
+                                slotProps={{ textField: { size: 'small' } }}
+                                sx={{width: '50%'}}
+                                onChange={(newValue) => setDateTo(newValue)}
+                            />
+                        </LocalizationProvider>
+                    </Stack>
+                    {role === "MANAGER" && <FormControl variant="outlined" size="small" sx={{maxHeight:'40px', minWidth:'120px'}}>
+                        <StyledLabel variant="outlined" id="demo-simple-select-label" sx={{margin: '0 0 0 10px'}}>
+                            Cashier
+                        </StyledLabel>
+                        <StyledSelect sx={{maxHeight:'40px', minWidth:'120px', margin:'0 0 0 10px'}}
+                                      labelId="demo-simple-select-label"
+                                      id="demo-simple-select"
+                                      label="Cashier"
+                                      value={cashier}
+                                      onChange={(event) => {setCashier(event.target.value); setSearch("")}}
+                        >
+                            {cashiers.map((cashier) => (
+                                <MenuItem
+                                    key={cashier.id}
+                                    value={cashier.id}
+                                >{cashier.surname} {cashier.name} {cashier.patronymic} {cashier.phoneNumber}</MenuItem>
+                            ))}
+                            <MenuItem key={0} value={0}>All</MenuItem>
+                        </StyledSelect>
+                    </FormControl>}
+                </Stack>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <ChecksTable/>
+                {role === "MANAGER" && <P><Label>Total Sum: </Label>{sum} ₴</P>}
+                {role === "MANAGER" &&
+                    <Autocomplete
+                        value={productOptions.find(option => option.value === product)}
+                        onChange = {(event, newValue) => {
+                            if(newValue)
+                                setProduct(newValue.value)
+                            else
+                                setProduct(0)
+                        }}
+                        renderInput={(params) => <StyledTextField {...params} sx={{width: "100%"}} size="medium" label="Product"/>}
+                        options={productOptions}
+                        sx={{display:"flex"}}
+                    />}
             </Box>
         </Container>
     );

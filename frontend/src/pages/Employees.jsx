@@ -485,7 +485,7 @@ const Employee = () => {
                         <StyledSelect sx={{maxHeight:'40px', minWidth:'120px'}}
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            label="Employes"
+                            label="Employees"
                             value={employeeFilter}
                             onChange={(event) => {setEmployeeFilter(event.target.value); setSearch("")}}
                         >
