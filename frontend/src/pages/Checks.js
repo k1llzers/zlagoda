@@ -260,8 +260,9 @@ const Checks = () => {
         }));
 
         const storeProductsOption = storeProducts.map(storeProduct => ({
-            label: storeProduct.id + " " + storeProduct.product.name,
-            value: storeProduct.id
+            label: storeProduct.id + ": " + storeProduct.product.name + ", number: " + storeProduct.productsNumber,
+            color: storeProduct.promotion ? "#0288d1" : "rgba(0, 0, 0, 1)",
+            value: storeProduct
         }));
 
         useEffect(() => {
@@ -271,6 +272,13 @@ const Checks = () => {
                 setDisableAdd(true)
             }
         }, [customer, checkProducts, storeProduct]);
+
+        const handleAddProduct = (event, newValue) => {
+            if(newValue)
+                setStoreProduct(newValue.value)
+            else
+                setStoreProduct("")
+        }
 
         // const handleAdd = async () => {
         //     handleClose()
@@ -299,11 +307,11 @@ const Checks = () => {
 
 
         return(
-            <Dialog onClose={onClose} open={open}>
+            <Dialog onClose={onClose} open={open} maxWidth='xs' fullWidth>
                 <DialogContent>
                     <FormControl fullWidth>
                         <Autocomplete
-                            value={customerCardOptions.find(option => option.value === storeProduct)}
+                            value={customerCardOptions.find(option => option.value === customer)}
                             onChange = {(event, newValue) => {
                                 if(newValue)
                                     setCustomer(newValue.value)
@@ -315,32 +323,45 @@ const Checks = () => {
                             sx={{display:"flex"}}
                         />
                         <Autocomplete
-                            value={storeProductsOption.find(option => option.value === customerCards)}
-                            onChange = {(event, newValue) => {
-                                if(newValue)
-                                    setStoreProduct(newValue.value)
-                                else
-                                    setStoreProduct("")
-                            }}
+                            value={storeProductsOption.find(option => option.value === storeProduct)}
+                            onChange = {handleAddProduct}
                             renderInput={(params) => <StyledTextField {...params} sx={{width: "100%"}} size="medium" label="Product"/>}
+                            renderOption={(props, option) => {
+                                const { label, color } = option;
+                                return (
+                                    <span {...props} style={{ color: color }}>
+                                        {label}
+                                    </span>
+                                );
+                            }}
                             options={storeProductsOption}
                             sx={{display:"flex"}}
                         />
-                        {/*<StyledTextField*/}
-                        {/*    type="number"*/}
-                        {/*    InputProps={{ inputProps: { min: 0 } }}*/}
-                        {/*    onChange={(e) => setProductsNumber(parseInt(e.target.value))}*/}
-                        {/*    value={productsNumber}*/}
-                        {/*    label="Number"*/}
-                        {/*/>*/}
-                        {/*<StyledTextField*/}
-                        {/*    type="number"*/}
-                        {/*    step="any"*/}
-                        {/*    InputProps={{ inputProps: { min: 1 } }}*/}
-                        {/*    onChange={(e) => setSellingPrice(e.target.value)}*/}
-                        {/*    value={sellingPrice}*/}
-                        {/*    label="Price"*/}
-                        {/*/>*/}
+                        <TableContainer sx={{margin:'10px'}} component={Paper}>
+                            <Table sx={{ minWidth: 200}} size="small" aria-label="a dense table">
+                                <TableHead>
+                                    <TableRow sx={{backgroundColor: '#748c8d'}}>
+                                        <TableCell sx={{color: 'white'}} align="center">UPC</TableCell>
+                                        <TableCell sx={{color: 'white'}} align="center">Product</TableCell>
+                                        <TableCell sx={{color: 'white'}} align="center">Number</TableCell>
+                                        <TableCell sx={{color: 'white'}} align="center">Price</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {checkProducts.map((product) => (
+                                        <TableRow
+                                            key={product.upc}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell align="center">{product.upc}</TableCell>
+                                            <TableCell align="center">{product.name}</TableCell>
+                                            <TableCell align="center">{product.productNumber}</TableCell>
+                                            <TableCell align="center"></TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                         <StyledButton
                             variant="text"
                             sx={{width: '50%', alignSelf: 'center'}}
