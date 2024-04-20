@@ -70,7 +70,8 @@ const Checks = () => {
     }, [dateTo, dateFrom, cashier])
 
     useEffect(() => {
-        fetchProductsData()
+        if(role==="MANAGER")
+            fetchProductsData()
     }, [])
 
     useEffect(() => {
