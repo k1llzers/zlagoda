@@ -288,7 +288,7 @@ const Checks = () => {
                                             key={row.name}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
-                                            <TableCell align="center">{row.id}</TableCell>
+                                            <TableCell align="center">{row.upc}</TableCell>
                                             <TableCell align="center">{row.name}</TableCell>
                                             <TableCell align="center">{row.productNumber}</TableCell>
                                             <TableCell align="center">{row.sellingPrice}</TableCell>
@@ -308,13 +308,12 @@ const Checks = () => {
         const {onClose, open} = props;
         const [customer, setCustomer] = useState("");
         const [storeProduct, setStoreProduct] = useState("");
-        const [disableAdd, setDisableAdd] = useState(true)
         const [checkProducts, setCheckProducts] = useState([])
         const [rerender, setRerender] = useState(0)
 
         const customerCardOptions = customerCards.map(customerCard => ({
             label: customerCard.surname + " " + customerCard.name + " " + customerCard.patronymic + " " + customerCard.phoneNumber,
-            value: customerCard.id
+            value: customerCard
         }));
 
         const storeProductsOption = storeProducts.map(storeProduct => ({
@@ -328,11 +327,6 @@ const Checks = () => {
         }));
 
         useEffect(() => {
-            if(checkProducts) {
-                setDisableAdd(false)
-            }else {
-                setDisableAdd(true)
-            }
         }, [customer, checkProducts, storeProduct]);
 
         const handleAddProduct = (event, newValue) => {
@@ -378,31 +372,22 @@ const Checks = () => {
             setRerender(rerender + 1)
         }
 
-        // const handleAdd = async () => {
-        //     handleClose()
-        //     let response;
-        //     if(!row) {
-        //         response = await axios.post("http://localhost:8080/api/store-product", {
-        //             productId: +product,
-        //             sellingPrice: sellingPrice,
-        //             productsNumber: productsNumber,
-        //             promotional: false
-        //         })
-        //     } else {
-        //         response = await axios.put("http://localhost:8080/api/store-product", {
-        //             id: row.id,
-        //             sellingPrice: sellingPrice,
-        //             productsNumber: productsNumber,
-        //         })
-        //     }
-        //     if (response.data.error) {
-        //         setErrorMessage(response.data.error)
-        //         setTimeout(() => setErrorMessage(""), 3500)
-        //     } else {
-        //         fetchStoreProductsData()
-        //     }
-        // }
-
+        const handleCreate = async () => {
+            handleClose()
+            const response = await axios.post("http://localhost:8080/api/check", {
+                customerCardId: customer ? customer.id : null,
+                productIdToCountMap: checkProducts.reduce((map, product) => {
+                    map[product.id] = product.inCheck;
+                    return map;
+                }, {})
+            })
+            if (response.data.error) {
+                setErrorMessage(response.data.error)
+                setTimeout(() => setErrorMessage(""), 3500)
+            } else {
+                await fetchChecksData()
+            }
+        }
 
         return(
             <Dialog onClose={onClose} open={open} fullWidth>
@@ -501,12 +486,20 @@ const Checks = () => {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        <P><Label>Total Sum: </Label>{sum} ₴</P>
+                        <Container>
+                            <P><Label>Total Sum: </Label>{
+                                checkProducts.reduce(
+                                    (accumulator, currentValue) =>
+                                        accumulator + currentValue.inCheck * currentValue.sellingPrice *
+                                        (customer ? (100.0 - customer.percent) / 100 : 1), 0)
+                            }
+                                ₴</P>
+                        </Container>
                         <StyledButton
                             variant="text"
                             sx={{width: '50%', alignSelf: 'center'}}
-                            // onClick={handleAdd}
-                            disabled={disableAdd}
+                            onClick={handleCreate}
+                            disabled={checkProducts.length === 0}
                         >Create</StyledButton>
                     </FormControl>
                 </DialogContent>

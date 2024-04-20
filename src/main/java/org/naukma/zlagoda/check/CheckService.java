@@ -6,6 +6,7 @@ import org.naukma.zlagoda.check.dto.CreateUpdateCheckDto;
 import org.naukma.zlagoda.customercard.CustomerCardService;
 import org.naukma.zlagoda.employee.EmployeeEntity;
 import org.naukma.zlagoda.employee.EmployeeService;
+import org.naukma.zlagoda.employee.Role;
 import org.naukma.zlagoda.sale.SaleService;
 import org.naukma.zlagoda.storeproduct.StoreProductEntity;
 import org.naukma.zlagoda.storeproduct.StoreProductService;
@@ -60,7 +61,14 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
         return mapper.toResponseDtoList(repository.findAll());
     }
 
+    public List<CheckResponseDto> getAllByIdLike(Integer id) {
+        return mapper.toResponseDtoList(((CheckRepository)repository).findAllByIdLike(id));
+    }
+
     public List<CheckResponseDto> getAllByCashierAndPrintDateBetween(Integer id, LocalDateTime from, LocalDateTime to) {
+        EmployeeEntity user = (EmployeeEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user.getRole() == Role.CASHIER)
+            id = user.getId();
         List<CheckEntity> result = ((CheckRepository) repository).findAllByCashierAndPrintDateBetween(id, from, to).stream()
                 .peek(check -> check.setSales(saleService.findAllByCheckNumber(check.getId())))
                 .toList();
@@ -99,8 +107,6 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
         return getProductEntityToCountMap(dto.getProductIdToCountMap()).entrySet().stream()
                 .map(entry -> {
                     StoreProductEntity storeProduct = entry.getKey();
-                    if (entry.getKey().getPromotion() != null)
-                        storeProduct = entry.getKey().getPromotion();
                     return storeProduct.getSellingPrice().multiply(BigDecimal.valueOf(entry.getValue()));
                 }).reduce(BigDecimal.ZERO, BigDecimal::add);
     }

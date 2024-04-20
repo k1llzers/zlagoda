@@ -8,5 +8,6 @@ import org.naukma.zlagoda.sale.dto.SaleResponseDto;
 @Mapper(config = MapperConfig.class)
 public interface SaleMapper {
     @Mapping(target = "name", expression = "java(entity.getId().getStoreProduct().getProduct().getName())")
+    @Mapping(target = "upc", expression = "java(entity.getId().getStoreProduct().getId())")
     SaleResponseDto toResponseDto(SaleEntity entity);
 }

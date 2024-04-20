@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SaleResponseDto {
+    private Integer upc;
     private String name;
     private Integer productNumber;
     private BigDecimal sellingPrice;

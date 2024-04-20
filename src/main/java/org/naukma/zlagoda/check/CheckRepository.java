@@ -2,8 +2,10 @@ package org.naukma.zlagoda.check;
 
 import org.naukma.zlagoda.abstraction.repository.BaseRepository;
 import org.naukma.zlagoda.customercard.CustomerCardRepository;
+import org.naukma.zlagoda.employee.EmployeeEntity;
 import org.naukma.zlagoda.employee.EmployeeRepository;
 import org.naukma.zlagoda.exception.NoSuchEntityException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -81,6 +83,23 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             return resultSet.getLong(1);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<CheckEntity> findAllByIdLike(Integer id) {
+        List<CheckEntity> entities = new ArrayList<>();
+        try(PreparedStatement findAllStatement = connection.prepareStatement("SELECT * FROM customer_check " +
+                "WHERE CAST(check_number AS TEXT)LIKE ? AND id_employee = ?")) {
+            findAllStatement.setString(1, "%" + id + "%");
+            findAllStatement.setInt(2, ((EmployeeEntity)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId());
+            ResultSet resultSet = findAllStatement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
         }
         catch (SQLException e) {
             throw new RuntimeException(e);

@@ -31,6 +31,12 @@ public class CheckController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping("/by-id/{id}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    public ResponseEntity<List<CheckResponseDto>> getAllByIdLike(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getAllByIdLike(id));
+    }
+
     @GetMapping("/by-employee")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CheckResponseDto>> getAllByCashierAndPrintDateBetween(@RequestParam(name = "empl", required = false) Integer employeeId,
