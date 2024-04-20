@@ -56,22 +56,6 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
         }
     }
 
-    public Optional<StoreProductEntity> findByPromotionId(Integer id) {
-        try(PreparedStatement findByPromotionIdStatement = connection.prepareStatement("SELECT * FROM store_product " +
-                "WHERE store_product.upc_prom = ?")) {
-            findByPromotionIdStatement.setInt(1, id);
-            ResultSet resultSet = findByPromotionIdStatement.executeQuery();
-            StoreProductEntity result = null;
-            if(resultSet.next()){
-                result = parseSetToEntity(resultSet);
-            }
-            return Optional.ofNullable(result);
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public List<StoreProductEntity> findAllByUpcLike(Integer upc) {
         List<StoreProductEntity> entities = new ArrayList<>();
         try(PreparedStatement findAllStatement = connection.prepareStatement("SELECT * FROM store_product " +
