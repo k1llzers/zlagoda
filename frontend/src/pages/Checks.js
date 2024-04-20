@@ -11,10 +11,13 @@ import StyledTableCell from "../styledComponent/styledTableCell";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {
-    Accordion, AccordionDetails, AccordionSummary,
+    Accordion, AccordionDetails, AccordionSummary, Badge,
     Box,
-    Button,
+    Button, ButtonGroup,
     Dialog,
     DialogContent,
     FormControl,
@@ -38,6 +41,7 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import StyledLabel from "../styledComponent/styldLabel";
 import StyledSelect from "../styledComponent/styledSelect";
+import StyledBadge from "../styledComponent/styledBadge";
 
 const Checks = () => {
     const [checks, setChecks] = useState([])
@@ -299,7 +303,8 @@ const Checks = () => {
         const [customer, setCustomer] = useState("");
         const [storeProduct, setStoreProduct] = useState("");
         const [disableAdd, setDisableAdd] = useState(true)
-        let checkProducts = []
+        const [checkProducts, setCheckProducts] = useState([])
+        const [rerender, setRerender] = useState(0)
 
         const customerCardOptions = customerCards.map(customerCard => ({
             label: customerCard.surname + " " + customerCard.name + " " + customerCard.patronymic + " " + customerCard.phoneNumber,
@@ -309,7 +314,11 @@ const Checks = () => {
         const storeProductsOption = storeProducts.map(storeProduct => ({
             label: storeProduct.id + ": " + storeProduct.product.name + ", number: " + storeProduct.productsNumber,
             color: storeProduct.promotion ? "#0288d1" : "rgba(0, 0, 0, 1)",
-            value: storeProduct
+            value: storeProduct,
+            disabled:
+                checkProducts.find((checkProduct) => checkProduct.id === storeProduct.id) !== undefined &&
+                checkProducts.find((checkProduct) => checkProduct.id === storeProduct.id).inCheck
+                === storeProduct.productsNumber
         }));
 
         useEffect(() => {
@@ -321,10 +330,46 @@ const Checks = () => {
         }, [customer, checkProducts, storeProduct]);
 
         const handleAddProduct = (event, newValue) => {
-            if(newValue)
-                setStoreProduct(newValue.value)
+            if(newValue) {
+                let newProduct = newValue.value
+                let findIndex = checkProducts.findIndex((product) => product.id === newProduct.id);
+                if (findIndex !== -1) {
+                    checkProducts[findIndex].inCheck = checkProducts[findIndex].inCheck + 1
+                    newProduct = checkProducts[findIndex]
+                } else {
+                    newProduct.inCheck = 1
+                    checkProducts.push(newValue.value)
+                }
+                if (newProduct.inCheck === newProduct.productsNumber)
+                setCheckProducts(checkProducts)
+                setRerender(rerender + 1)
+            }
             else
                 setStoreProduct("")
+        }
+
+        const handleIncreaseCount = (product) => {
+            let findIndex = checkProducts.findIndex((checkProduct) => checkProduct.id === product.id);
+            checkProducts[findIndex].inCheck = checkProducts[findIndex].inCheck + 1
+            setCheckProducts(checkProducts)
+            setRerender(rerender + 1)
+        }
+
+        const handleDecreaseCount = (product) => {
+            let findIndex = checkProducts.findIndex((checkProduct) => checkProduct.id === product.id);
+            checkProducts[findIndex].inCheck = checkProducts[findIndex].inCheck - 1
+            let filtered = checkProducts;
+            if (checkProducts[findIndex].inCheck === 0)
+                filtered = checkProducts.filter((checkProduct) => checkProduct.id !== checkProducts[findIndex].id);
+            setCheckProducts(filtered)
+            setRerender(rerender + 1)
+        }
+
+        const handleDelete = (product) => {
+            let findIndex = checkProducts.findIndex((checkProduct) => checkProduct.id === product.id);
+            let filtered = checkProducts.filter((checkProduct) => checkProduct.id !== checkProducts[findIndex].id);
+            setCheckProducts(filtered)
+            setRerender(rerender + 1)
         }
 
         // const handleAdd = async () => {
@@ -354,7 +399,7 @@ const Checks = () => {
 
 
         return(
-            <Dialog onClose={onClose} open={open} maxWidth='xs' fullWidth>
+            <Dialog onClose={onClose} open={open} fullWidth>
                 <DialogContent>
                     <FormControl fullWidth>
                         <Autocomplete
@@ -370,8 +415,10 @@ const Checks = () => {
                             sx={{display:"flex"}}
                         />
                         <Autocomplete
+                            key={rerender}
                             value={storeProductsOption.find(option => option.value === storeProduct)}
                             onChange = {handleAddProduct}
+                            getOptionDisabled={(option) => !!option.disabled}
                             renderInput={(params) => <StyledTextField {...params} sx={{width: "100%"}} size="medium" label="Product"/>}
                             renderOption={(props, option) => {
                                 const { label, color } = option;
@@ -384,31 +431,71 @@ const Checks = () => {
                             options={storeProductsOption}
                             sx={{display:"flex"}}
                         />
-                        <TableContainer sx={{margin:'10px'}} component={Paper}>
-                            <Table sx={{ minWidth: 200}} size="small" aria-label="a dense table">
+                        <TableContainer key={checkProducts} sx={{margin:'10px', fontSize:"20px", maxWidth: "96%"}} component={Paper}>
+                            <Table sx={{ maxWidth: "100%"}} size="small" aria-label="a dense table">
                                 <TableHead>
                                     <TableRow sx={{backgroundColor: '#748c8d'}}>
+                                        <TableCell sx={{color: 'white'}} align="center">#</TableCell>
                                         <TableCell sx={{color: 'white'}} align="center">UPC</TableCell>
                                         <TableCell sx={{color: 'white'}} align="center">Product</TableCell>
-                                        <TableCell sx={{color: 'white'}} align="center">Number</TableCell>
                                         <TableCell sx={{color: 'white'}} align="center">Price</TableCell>
+                                        <TableCell sx={{color: 'white'}} align="center"></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {checkProducts.map((product) => (
                                         <TableRow
-                                            key={product.upc}
+                                            key={product.id}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
-                                            <TableCell align="center">{product.upc}</TableCell>
-                                            <TableCell align="center">{product.name}</TableCell>
-                                            <TableCell align="center">{product.productNumber}</TableCell>
-                                            <TableCell align="center"></TableCell>
+                                            <TableCell sx={{width: "15%"}} align="center">
+                                                <StyledBadge color="secondary" badgeContent={product.inCheck}>
+                                                    <ShoppingCartIcon sx={{color: '#748c8d'}} size="small"  />
+                                                </StyledBadge>
+                                            </TableCell>
+                                            <TableCell sx={{width: "15%"}} align="center">{product.id}</TableCell>
+                                            <TableCell sx={{width: "30%"}} align="center">{product.product.name}</TableCell>
+                                            <TableCell sx={{width: "20%"}} align="center">{product.sellingPrice * product.inCheck} ₴</TableCell>
+                                            <TableCell sx={{width: "20%"}} align="center">
+                                                <div>
+                                                    <ButtonGroup>
+                                                        <Button
+                                                            sx={{border: "none", color: '#748c8d', padding: "5px"}}
+                                                            aria-label="reduce"
+                                                            onClick={() => {
+                                                                handleDecreaseCount(product)
+                                                            }}
+                                                        >
+                                                            <RemoveIcon fontSize="small"/>
+                                                        </Button>
+                                                        <Button
+                                                            sx={{border: "none", color: '#748c8d', padding: "5px"}}
+                                                            aria-label="increase"
+                                                            onClick={() => {
+                                                                handleIncreaseCount(product)
+                                                            }}
+                                                            disabled={product.inCheck === product.productsNumber}
+                                                        >
+                                                            <AddIcon fontSize="small"/>
+                                                        </Button>
+                                                        <Button
+                                                            sx={{border: "none", color: '#748c8d', padding: "5px"}}
+                                                            aria-label="increase"
+                                                            onClick={() => {
+                                                                handleDelete(product);
+                                                            }}
+                                                        >
+                                                            <DeleteOutlineIcon fontSize="small"/>
+                                                        </Button>
+                                                    </ButtonGroup>
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                        <P><Label>Total Sum: </Label>{sum} ₴</P>
                         <StyledButton
                             variant="text"
                             sx={{width: '50%', alignSelf: 'center'}}
@@ -456,7 +543,7 @@ const Checks = () => {
                         </TableHead>
                         <TableBody>
                             {rows.map((row) => (
-                                <Row key={row.name} row={row} />
+                                <Row key={row.id} row={row} />
                             ))}
                         </TableBody>
                     </Table>
