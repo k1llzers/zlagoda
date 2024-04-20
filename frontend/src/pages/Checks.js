@@ -88,7 +88,7 @@ const Checks = () => {
     }
 
     const fetchProductsData = async () => {
-        const response = await axios.get("http://localhost:8080/api/product/without/storeproduct")
+        const response = await axios.get("http://localhost:8080/api/product")
         setProducts(response.data)
     };
 
