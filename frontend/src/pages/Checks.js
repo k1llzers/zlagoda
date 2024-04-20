@@ -42,6 +42,10 @@ import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import StyledLabel from "../styledComponent/styldLabel";
 import StyledSelect from "../styledComponent/styledSelect";
 import StyledBadge from "../styledComponent/styledBadge";
+import SearchContainer from "../styledComponent/searchContainer";
+import SearchIconWrapper from "../styledComponent/searchIconWrapper";
+import SearchIcon from "@mui/icons-material/Search";
+import StyledInputBase from "../styledComponent/styledInputBase";
 
 const Checks = () => {
     const [checks, setChecks] = useState([])
@@ -65,8 +69,9 @@ const Checks = () => {
 
     useEffect(() => {
         fetchChecksData()
-        fetchCashierData()
-        fetchSum()
+        if (role === 'MANAGER')
+            fetchCashierData()
+            fetchSum()
     }, [dateTo, dateFrom, cashier])
 
     useEffect(() => {
@@ -111,11 +116,11 @@ const Checks = () => {
     }
 
     const fetchSearchingCheckData = async (id) => {
-        const response = await axios.get("http://localhost:8080/api/check/" + id)
+        const response = await axios.get("http://localhost:8080/api/check/by-id/" + id)
         if(response.data.error)
             setChecks([])
         else
-            setChecks([response.data])
+            setChecks(response.data)
     }
 
     const fetchCashierData = async () => {
@@ -213,6 +218,11 @@ const Checks = () => {
     function handleInfo(row) {
         setRow(row)
         setOpenInfo(true)
+    }
+
+    function handleToday() {
+        setDateFrom(dayjs(new Date().setHours(0, 0, 0, 0)))
+        setDateTo(dayjs(new Date()))
     }
 
     const P = styled('p')(() => ({
@@ -574,10 +584,23 @@ const Checks = () => {
                         <StyledButton variant="outlined"
                                       startIcon={<AddIcon />}
                                       onClick={handleOpenForm}
-                                      sx={{maxHeight:'40px', marginTop:'10px'}}
+                                      sx={{maxHeight:'40px', marginTop:'10px', marginRight: '20px'}}
                         >
                             CREATE
                         </StyledButton>}
+                    {role === "CASHIER" &&
+                        <SearchContainer sx={{maxHeight:'40px', marginTop:'10px'}}>
+                            <SearchIconWrapper>
+                                <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                                placeholder="UPC…"
+                                value={search}
+                                inputProps={{ 'aria-label': 'search' }}
+                                onChange={handleSearch}
+                            />
+                        </SearchContainer>
+                    }
                     {role === "MANAGER" &&
                         <Autocomplete
                             sx={{width: '22%'}}
@@ -593,7 +616,7 @@ const Checks = () => {
                         />}
                     {role === "MANAGER" && <P sx={{margin: '0 10px', display: 'flex', alignItems: 'center'}}><Label sx={{marginRight: '5px'}}>Total Number:</Label>{number}</P>}
                 </Stack>
-                <Stack direction='row'>
+                <Stack direction='row' justifyContent='space-between'>
                     <Stack direction='row' justifyContent='space-between' sx={{width: '45%'}}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
@@ -616,6 +639,13 @@ const Checks = () => {
                             />
                         </LocalizationProvider>
                     </Stack>
+                    {role === 'CASHIER' &&
+                        <StyledButton variant="outlined"
+                                      onClick={handleToday}
+                                      sx={{maxHeight:'40px'}}
+                        >
+                            TODAY
+                        </StyledButton>}
                     {role === "MANAGER" && <FormControl variant="outlined" size="small" sx={{maxHeight:'40px', minWidth:'120px'}}>
                         <StyledLabel variant="outlined" id="demo-simple-select-label" sx={{margin: '0 0 0 10px'}}>
                             Cashier

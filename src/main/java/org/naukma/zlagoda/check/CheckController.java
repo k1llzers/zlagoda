@@ -32,7 +32,7 @@ public class CheckController {
     }
 
     @GetMapping("/by-id/{id}")
-    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    @PreAuthorize("hasAuthority('ROLE_CASHIER')")
     public ResponseEntity<List<CheckResponseDto>> getAllByIdLike(@PathVariable Integer id) {
         return ResponseEntity.ok(service.getAllByIdLike(id));
     }
