@@ -63,7 +63,7 @@ const Checks = () => {
     const [cashier, setCashier] = useState(0)
     const [cashiers, setCashiers] = useState([])
     const [dateFrom, setDateFrom] = useState(dayjs(new Date('2020-03-19T00:00:00.000')))
-    const [dateTo, setDateTo] = useState(dayjs(new Date()))
+    const [dateTo, setDateTo] = useState(dayjs(new Date().setHours(23, 59, 59, 59)))
     const [products, setProducts] = useState([])
     const [product, setProduct] = useState(0);
 
@@ -82,7 +82,7 @@ const Checks = () => {
 
     useEffect(() => {
         fetchNumber()
-    }, [dateTo, dateFrom, product])
+    }, [dateTo, dateFrom, product, checks])
 
     const fetchChecksData = async () => {
         let response
@@ -202,6 +202,7 @@ const Checks = () => {
 
     function handleClose(){
         setOpenForm(false)
+        fetchChecksData()
     }
 
     function handleCloseInfo() {
@@ -544,7 +545,7 @@ const Checks = () => {
 
     function ChecksTable() {
         return (
-            <React.Fragment>
+            <React.Fragment key={checks}>
                 <TableContainer component={Card} sx={{ maxWidth: 750, margin: '30px auto', maxHeight: '70vh', overflowY: 'auto' }}>
                     <Table stickyHeader>
                         <TableHead>
