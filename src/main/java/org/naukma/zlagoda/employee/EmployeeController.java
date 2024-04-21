@@ -79,7 +79,7 @@ public class EmployeeController {
         return ResponseEntity.ok(service.update(body));
     }
 
-    @PutMapping
+    @PutMapping("/change-password")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Boolean> changePassword(@RequestBody String password) {
         return ResponseEntity.ok(service.changePassword(password));
