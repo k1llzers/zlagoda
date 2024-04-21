@@ -285,17 +285,17 @@ const StoreProducts = () => {
                     <StyledTableCell component="th" scope="row " align="center">{row.name}</StyledTableCell>
                     <StyledTableCell align="center">{row.sellingPrice} ₴</StyledTableCell>
                     <StyledTableCell align="center">{row.productsNumber}</StyledTableCell>
-                    {role === "MANAGER" && <StyledTableCell align="right">
-                        <Button onClick={() => handlePromotional(row)}>
+                    <StyledTableCell align="right">
+                        <Button disabled={role === "CASHIER"} onClick={() => handlePromotional(row)}>
                             {row.promotional ? <PercentIcon color="info"/> : <PercentIcon color="action"/>}
                         </Button>
-                        {!row.promotional && <Button onClick={() => handleUpdate(row)}>
+                        {!row.promotional && role === "MANAGER" && <Button onClick={() => handleUpdate(row)}>
                             <ModeEditIcon color='action'/>
                         </Button>}
-                        {!row.promotional && <Button onClick={() => handleDelete(row.id)}>
+                        {!row.promotional && role === "MANAGER" && <Button onClick={() => handleDelete(row.id)}>
                             <DeleteOutlineOutlinedIcon color="error"/>
                         </Button>}
-                    </StyledTableCell>}
+                    </StyledTableCell>
                 </TableRow>
                 <TableRow>
                     <StyledTableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
@@ -328,7 +328,7 @@ const StoreProducts = () => {
                                         {column.headerName}
                                     </StyledTableCell>
                                 ))}
-                                {role === "MANAGER" &&  <StyledTableCell sx={{width:"25%"}} />}
+                                <StyledTableCell sx={{width:"25%"}} />
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
