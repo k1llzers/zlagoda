@@ -1,6 +1,8 @@
 package org.naukma.zlagoda.employee;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.ValidationException;
+import lombok.SneakyThrows;
 import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.employee.dto.CreateUpdateEmployeeDto;
 import org.naukma.zlagoda.employee.dto.EmployeePhoneNumberAddressDto;
@@ -8,14 +10,18 @@ import org.naukma.zlagoda.employee.dto.EmployeeResponseDto;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
 public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, EmployeeEntity, Integer> {
     private final EmployeeMapper mapper;
-    public EmployeeService(EmployeeMapper mapper) {
+    private final ObjectMapper objectMapper;
+
+    public EmployeeService(EmployeeMapper mapper, ObjectMapper objectMapper) {
         super(EmployeeEntity::new, "employee");
         this.mapper = mapper;
+        this.objectMapper = objectMapper;
     }
 
     public EmployeeResponseDto getEmployeeResponseDto(Integer id) {
@@ -42,9 +48,11 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
         return mapper.toResponseDto((EmployeeEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
+    @SneakyThrows
     public Boolean changePassword(String password) {
         if (password.isBlank()) throw new ValidationException("Password can`t be blank");
-        return ((EmployeeRepository) repository).changePassword(password);
+        HashMap<String, String> hashMap = objectMapper.readValue(password, HashMap.class);
+        return ((EmployeeRepository) repository).changePassword(hashMap.get("password"));
     }
 
     @Override

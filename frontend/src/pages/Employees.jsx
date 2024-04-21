@@ -417,7 +417,7 @@ const Employee = () => {
                                 {
                                     !search ?
                                         <p>Role: {row.role} <br/>
-                                            Salary: {row.salary} <br/>
+                                            Salary: {row.salary} ₴ <br/>
                                             Date of birth: {row.dateOfBirth} <br/>
                                             Address: {row.city}, {row.street} street, {row.zipCode}</p>
                                         :

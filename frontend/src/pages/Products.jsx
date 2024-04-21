@@ -17,7 +17,7 @@ import Collapse from '@mui/material/Collapse';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {useAuth} from "../provider/authProvider";
 import {Container} from "react-bootstrap";
@@ -43,6 +43,7 @@ const Products = () => {
     const [updateRow, setUpdateRow] = useState(undefined)
     const [search, setSearch] = useState("")
     const [category, setCategory] = useState(0)
+    const componentRef = useRef();
 
     const fetchProductsData = async () => {
         let response
@@ -276,7 +277,7 @@ const Products = () => {
     }
 
     return (
-        <Container style={{ marginTop: '50px'}}>
+        <Container style={{ marginTop: '50px'}} ref={componentRef}>
             <ProductForm
                 open={openForm}
                 onClose={handleClose}
@@ -314,6 +315,10 @@ const Products = () => {
                 </Stack>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <ProductsTable/>
+                {/*<ReactToPrint*/}
+                {/*    trigger={() => <button>Print this out!</button>}*/}
+                {/*    content={() => componentRef.current}*/}
+                {/*/>*/}
             </Box>
         </Container>
     );
