@@ -462,7 +462,9 @@ const Checks = () => {
                                                 <div>
                                                     <ButtonGroup>
                                                         <Button
-                                                            sx={{border: "none", color: '#748c8d', padding: "5px"}}
+                                                            sx={{border: "none", color: '#748c8d', padding: "5px", '&:hover': {
+                                                                    border: 'none'
+                                                                }}}
                                                             aria-label="reduce"
                                                             onClick={() => {
                                                                 handleDecreaseCount(product)
@@ -471,7 +473,9 @@ const Checks = () => {
                                                             <RemoveIcon fontSize="small"/>
                                                         </Button>
                                                         <Button
-                                                            sx={{border: "none", color: '#748c8d', padding: "5px"}}
+                                                            sx={{border: "none", color: '#748c8d', padding: "5px", '&:hover': {
+                                                                    border: 'none'
+                                                                }}}
                                                             aria-label="increase"
                                                             onClick={() => {
                                                                 handleIncreaseCount(product)
@@ -481,7 +485,9 @@ const Checks = () => {
                                                             <AddIcon fontSize="small"/>
                                                         </Button>
                                                         <Button
-                                                            sx={{border: "none", color: '#748c8d', padding: "5px"}}
+                                                            sx={{border: "none", color: '#748c8d', padding: "5px", '&:hover': {
+                                                                    border: 'none'
+                                                                }}}
                                                             aria-label="increase"
                                                             onClick={() => {
                                                                 handleDelete(product);

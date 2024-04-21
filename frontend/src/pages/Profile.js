@@ -12,6 +12,8 @@ import axios from "axios";
 import profile1 from "../images/profile1.jpg"
 import profile2 from "../images/profile2.jpg"
 import profile3 from "../images/profile3.jpg"
+import profile4 from "../images/profile4.jpg"
+import profile5 from "../images/profile5.jpg"
 import StyledButton from "../styledComponent/styldButton";
 import {Dialog, DialogContent, FormControl} from "@mui/material";
 import StyledTextField from "../styledComponent/styledTextField";
@@ -32,13 +34,12 @@ const Profile = () => {
     }, [])
 
     const fetchMyselfData = async () => {
-        console.log("AAAAA")
         const response = await axios.get("http://localhost:8080/api/employee/myself")
         setMyself(response.data)
     }
 
     const getProfileImage = () => {
-        const remainder = myself.id % 3;
+        const remainder = myself.id % 5;
         switch (remainder) {
             case 0:
                 return profile1;
@@ -46,6 +47,10 @@ const Profile = () => {
                 return profile2;
             case 2:
                 return profile3;
+            case 3:
+                return profile4;
+            case 4:
+                return profile5;
             default:
                 return profile1;
         }
@@ -72,7 +77,7 @@ const Profile = () => {
         useEffect(() => {
             if(password.trim() && password.length >= 6) {
                 setDisableChange(false)
-            }else {
+            } else {
                 setDisableChange(true)
             }
 
@@ -147,38 +152,19 @@ const Profile = () => {
                                         src={getProfileImage()}
                                         alt="avatar"
                                         className="rounded-circle"
-                                        style={{ width: '130px', height: '130px', objectFit: 'cover' }}
+                                        style={{ width: '140px', height: '140px', objectFit: 'cover' }}
                                     />
                                     <p style={{marginTop: '10px', marginBottom: '5px'}} className="text-muted">{myself.role ? myself.role.charAt(0).toUpperCase() + myself.role.toLowerCase().slice(1) : ""}</p>
-                                    <p className="text-muted">Salary: {myself.salary}₴</p>
                                 </MDBCardBody>
-                                <MDBRow>
-                                    <MDBCol sm="3">
-                                        <MDBCardText>Surname</MDBCardText>
-                                    </MDBCol>
-                                    <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{myself.surname}</MDBCardText>
-                                    </MDBCol>
-                                </MDBRow>
-                                <hr style={{margin: '10px 0'}} />
                                 <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Name</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{myself.name}</MDBCardText>
+                                        <MDBCardText className="text-muted">{myself.surname} {myself.name} {myself.patronymic}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
-                                <hr style={{margin: '10px 0'}}/>
-                                <MDBRow>
-                                    <MDBCol sm="3">
-                                        <MDBCardText>Patronymic</MDBCardText>
-                                    </MDBCol>
-                                    <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{myself.patronymic}</MDBCardText>
-                                    </MDBCol>
-                                </MDBRow>
-                                <hr style={{margin: '10px 0'}}/>
+                                <hr />
                                 <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Mobile</MDBCardText>
@@ -187,7 +173,7 @@ const Profile = () => {
                                         <MDBCardText className="text-muted">{myself.phoneNumber}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
-                                <hr style={{margin: '10px 0'}}/>
+                                <hr/>
                                 <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Birth Date</MDBCardText>
@@ -196,7 +182,7 @@ const Profile = () => {
                                         <MDBCardText className="text-muted">{myself.dateOfBirth}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
-                                <hr style={{margin: '10px 0'}}/>
+                                <hr/>
                                 <MDBRow>
                                     <MDBCol sm="3">
                                         <MDBCardText>Start Date</MDBCardText>
@@ -205,31 +191,13 @@ const Profile = () => {
                                         <MDBCardText className="text-muted">{myself.dateOfStart}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
-                                <hr style={{margin: '10px 0'}}/>
+                                <hr/>
                                 <MDBRow>
                                     <MDBCol sm="3">
-                                        <MDBCardText>City</MDBCardText>
+                                        <MDBCardText>Address</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{myself.city}</MDBCardText>
-                                    </MDBCol>
-                                </MDBRow>
-                                <hr style={{margin: '10px 0'}}/>
-                                <MDBRow>
-                                    <MDBCol sm="3">
-                                        <MDBCardText>Street</MDBCardText>
-                                    </MDBCol>
-                                    <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{myself.street}</MDBCardText>
-                                    </MDBCol>
-                                </MDBRow>
-                                <hr style={{margin: '10px 0'}}/>
-                                <MDBRow>
-                                    <MDBCol sm="3">
-                                        <MDBCardText>Zip Code</MDBCardText>
-                                    </MDBCol>
-                                    <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">{myself.zipCode}</MDBCardText>
+                                        <MDBCardText className="text-muted">{myself.city}, {myself.street}, {myself.zipCode}</MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                             </MDBCardBody>
