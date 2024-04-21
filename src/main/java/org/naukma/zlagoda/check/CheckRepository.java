@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +110,10 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
     @Override
     protected void setMainFields(PreparedStatement statement, CheckEntity entity) throws SQLException {
         statement.setInt(1, entity.getEmployee().getId());
-        statement.setInt(2, entity.getCustomerCard().getId());
+        if (entity.getCustomerCard() == null)
+            statement.setNull(2, Types.INTEGER);
+        else
+            statement.setNull(2, entity.getCustomerCard().getId());
         statement.setTimestamp(3, Timestamp.valueOf(entity.getPrintDate()));
         statement.setBigDecimal(4, entity.getSumTotal());
         statement.setBigDecimal(5, entity.getVat());
