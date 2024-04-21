@@ -90,8 +90,10 @@ public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity,
         if(dto.getCustomerCardId() != null) {
             entity.setCustomerCard(customerCardService.getById(dto.getCustomerCardId()));
         }
-        if (dto.getProductIdToCountMap() != null) {
+        if (dto.getCustomerCardId() != null) {
             entity.setSumTotal(countSumTotal(dto).multiply(BigDecimal.valueOf((100.0 - entity.getCustomerCard().getPercent()) / 100)));
+        } else {
+            entity.setSumTotal(countSumTotal(dto));
         }
         entity.setEmployee((EmployeeEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         entity.setPrintDate(LocalDateTime.now());

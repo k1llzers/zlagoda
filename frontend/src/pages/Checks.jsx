@@ -328,7 +328,7 @@ const Checks = () => {
         }));
 
         const storeProductsOption = storeProducts.map(storeProduct => ({
-            label: storeProduct.id + ": " + storeProduct.product.name + ", number: " + storeProduct.productsNumber,
+            label: storeProduct.id + ": " + storeProduct.product.name + ", number: " + storeProduct.productsNumber + ",",
             color: storeProduct.promotional ? "#0288d1" : "rgba(0, 0, 0, 1)",
             value: storeProduct,
             disabled:
