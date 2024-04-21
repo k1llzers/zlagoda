@@ -329,7 +329,7 @@ const Checks = () => {
 
         const storeProductsOption = storeProducts.map(storeProduct => ({
             label: storeProduct.id + ": " + storeProduct.product.name + ", number: " + storeProduct.productsNumber,
-            color: storeProduct.promotion ? "#0288d1" : "rgba(0, 0, 0, 1)",
+            color: storeProduct.promotional ? "#0288d1" : "rgba(0, 0, 0, 1)",
             value: storeProduct,
             disabled:
                 checkProducts.find((checkProduct) => checkProduct.id === storeProduct.id) !== undefined &&
