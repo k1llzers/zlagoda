@@ -62,8 +62,8 @@ const Checks = () => {
     const [number, setNumber] = useState(0)
     const [cashier, setCashier] = useState(0)
     const [cashiers, setCashiers] = useState([])
-    const [dateFrom, setDateFrom] = useState(dayjs(new Date('2023-03-19T01:52:26.000')))
-    const [dateTo, setDateTo] = useState(dayjs(new Date('2025-03-19T01:52:26.000')))
+    const [dateFrom, setDateFrom] = useState(dayjs(new Date('2020-03-19T00:00:00.000')))
+    const [dateTo, setDateTo] = useState(dayjs(new Date()))
     const [products, setProducts] = useState([])
     const [product, setProduct] = useState(0);
 
@@ -545,8 +545,8 @@ const Checks = () => {
     function ChecksTable() {
         return (
             <React.Fragment>
-                <TableContainer component={Card} sx={{ maxWidth: 700, margin: '30px auto' }}>
-                    <Table>
+                <TableContainer component={Card} sx={{ maxWidth: 750, margin: '30px auto', maxHeight: '70vh', overflowY: 'auto' }}>
+                    <Table stickyHeader>
                         <TableHead>
                             <StyledTableRow>
                                 {columns.map((column) => (
@@ -585,7 +585,7 @@ const Checks = () => {
                 open={openForm}
                 onClose={handleClose}
             />
-            <Box sx={{maxWidth: 700, margin: '0 auto'}}>
+            <Box sx={{maxWidth: 750, margin: '0 auto'}}>
                 <Stack direction='row' sx={{marginBottom: '20px'}}>
                     {role === 'CASHIER' &&
                         <StyledButton variant="outlined"

@@ -157,8 +157,8 @@ const Categories = () => {
     function CategoriesTable() {
         return (
             <React.Fragment>
-                <TableContainer component={Card} sx={{ maxWidth: 400, margin: '30px auto' }}>
-                    <Table>
+                <TableContainer component={Card} sx={{ maxWidth: 450, margin: '30px auto', maxHeight: '70vh', overflowY: 'auto'  }}>
+                    <Table stickyHeader>
                         <TableHead>
                             <StyledTableRow>
                                 {columns.map((column) => (
@@ -187,7 +187,7 @@ const Categories = () => {
                 onClose={handleClose}
                 row={updateRow}
             />
-            <Box sx={{maxWidth: 400, margin: '0 auto'}}>
+            <Box sx={{maxWidth: 450, margin: '0 auto'}}>
                 <Stack direction='row' justifyContent='space-between'>
                     {role === 'MANAGER' &&
                         <StyledButton variant="outlined" startIcon={<AddIcon />} onClick={handleOpenForm}>

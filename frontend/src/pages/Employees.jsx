@@ -439,8 +439,8 @@ const Employee = () => {
 
         return (
             <React.Fragment>
-                <TableContainer component={Card} sx={{ maxWidth: 1000, margin: '30px auto' }}>
-                    <Table aria-label="collapsible table">
+                <TableContainer component={Card} sx={{ maxWidth: 1050, margin: '30px auto', maxHeight: '70vh', overflowY: 'auto' }}>
+                    <Table stickyHeader aria-label="collapsible table">
                         <TableHead>
                             <StyledTableRow>
                                 <StyledTableCell/>
@@ -470,7 +470,7 @@ const Employee = () => {
                 onClose={handleClose}
                 row={updateRow}
             />
-            <Box sx={{maxWidth: 1000, margin: '0 auto'}}>
+            <Box sx={{maxWidth: 1050, margin: '0 auto'}}>
                 <Stack direction='row' justifyContent='space-between'>
                     <StyledButton variant="outlined"
                                   startIcon={<AddIcon />}
