@@ -501,7 +501,7 @@ const Checks = () => {
                                 checkProducts.reduce(
                                     (accumulator, currentValue) =>
                                         accumulator + currentValue.inCheck * currentValue.sellingPrice *
-                                        (customer ? (100.0 - customer.percent) / 100 : 1), 0)
+                                        (customer ? (100.0 - customer.percent) / 100 : 1), 0).toFixed(2)
                             }
                                 ₴</P>
                         </Container>
@@ -669,7 +669,7 @@ const Checks = () => {
                 </Stack>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <ChecksTable/>
-                {role === "MANAGER" && <P><Label>Total Sum: </Label>{sum ? sum : 0} ₴</P>}
+                {role === "MANAGER" && <P><Label>Total Sum: </Label>{sum ? sum.toFixed(2) : 0} ₴</P>}
             </Box>
         </Container>
     );

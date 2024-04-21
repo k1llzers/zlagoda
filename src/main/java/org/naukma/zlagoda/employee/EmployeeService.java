@@ -1,5 +1,6 @@
 package org.naukma.zlagoda.employee;
 
+import jakarta.validation.ValidationException;
 import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.employee.dto.CreateUpdateEmployeeDto;
 import org.naukma.zlagoda.employee.dto.EmployeePhoneNumberAddressDto;
@@ -39,6 +40,11 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
 
     public EmployeeResponseDto getMyselfInfo() {
         return mapper.toResponseDto((EmployeeEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    }
+
+    public Boolean changePassword(String password) {
+        if (password.isBlank()) throw new ValidationException("Password can`t be blank");
+        return ((EmployeeRepository) repository).changePassword(password);
     }
 
     @Override

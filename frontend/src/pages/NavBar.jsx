@@ -1,6 +1,9 @@
 import { useAuth } from "../provider/authProvider";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Container } from 'react-bootstrap';
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+
 const NavBar = () => {
     const {role} = useAuth()
     const {token} = useAuth();
@@ -23,7 +26,8 @@ const NavBar = () => {
                         <Nav.Link href="/checks">Checks</Nav.Link>
                     </Nav>
                     <Nav>
-                        <Nav.Link href="/logout">Log out</Nav.Link>
+                        <Nav.Link href="/profile"><PersonOutlineIcon/></Nav.Link>
+                        <Nav.Link href="/logout"><LogoutIcon/></Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

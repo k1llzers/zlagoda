@@ -1,6 +1,7 @@
 package org.naukma.zlagoda.employee;
 
 import org.naukma.zlagoda.abstraction.repository.BaseRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -58,6 +59,18 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
                 result.setPassword(resultSet.getString("password"));
             }
             return Optional.ofNullable(result);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Boolean changePassword(String newPassword) {
+        try(PreparedStatement changePasswordStatement = connection.prepareStatement("UPDATE employee SET password=? WHERE id_employee=?")) {
+            changePasswordStatement.setString(1, encoder.encode(newPassword));
+            changePasswordStatement.setInt(2, ((EmployeeEntity)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId());
+            changePasswordStatement.executeUpdate();
+            return changePasswordStatement.executeUpdate() > 0;
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
