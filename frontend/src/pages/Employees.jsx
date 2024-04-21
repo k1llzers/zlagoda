@@ -34,8 +34,9 @@ import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import StyledInputBase from "../styledComponent/styledInputBase";
 import StyledLabel from "../styledComponent/styldLabel";
 import StyledSelect from "../styledComponent/styledSelect";
+import StyledDatePicker from "../styledComponent/styledDatePicker";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import { LocalizationProvider} from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import 'dayjs/locale/uk'
 
@@ -252,7 +253,7 @@ const Employee = () => {
                         <Box sx={{width:"99%", margin: '10px', display:"flex", justifyContent:"space-between"}}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <Box sx={{margin:0 ,width:"100%"}}>
-                                    <DatePicker
+                                    <StyledDatePicker
                                         label="Date of birth"
                                         views={['year', 'month', 'day']}
                                         maxDate={minDateOfBirth}
@@ -263,7 +264,7 @@ const Employee = () => {
                             </LocalizationProvider>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <Box sx={{margin:0 ,width:"100%"}}>
-                                    <DatePicker
+                                    <StyledDatePicker
                                         label="Date of start"
                                         views={['year', 'month', 'day']}
                                         value={dateOfStart}

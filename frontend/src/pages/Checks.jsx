@@ -46,6 +46,7 @@ import SearchContainer from "../styledComponent/searchContainer";
 import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import SearchIcon from "@mui/icons-material/Search";
 import StyledInputBase from "../styledComponent/styledInputBase";
+import StyledDatePicker from "../styledComponent/styledDatePicker";
 
 const Checks = () => {
     const [checks, setChecks] = useState([])
@@ -619,7 +620,7 @@ const Checks = () => {
                 <Stack direction='row' justifyContent='space-between'>
                     <Stack direction='row' justifyContent='space-between' sx={{width: '45%'}}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
+                            <StyledDatePicker
                                 label="From"
                                 views={['year', 'month', 'day']}
                                 value={dateFrom}
@@ -629,7 +630,7 @@ const Checks = () => {
                             />
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
+                            <StyledDatePicker
                                 label="To"
                                 views={['year', 'month', 'day']}
                                 value={dateTo}

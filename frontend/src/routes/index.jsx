@@ -11,6 +11,7 @@ import HomePage from "../pages/HomePage";
 import StoreProducts from "../pages/StoreProducts";
 import Employees from "../pages/Employees";
 import Checks from "../pages/Checks"
+import Profile from "../pages/Profile"
 
 const Routes = () => {
     const {token} = useAuth()
@@ -51,6 +52,10 @@ const Routes = () => {
                 {
                     path: "/logout",
                     element: <Logout/>,
+                },
+                {
+                    path: "/profile",
+                    element: <Profile/>,
                 }
             ]
         }
