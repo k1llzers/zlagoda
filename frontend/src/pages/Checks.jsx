@@ -457,7 +457,7 @@ const Checks = () => {
                                             </TableCell>
                                             <TableCell sx={{width: "15%"}} align="center">{product.id}</TableCell>
                                             <TableCell sx={{width: "30%"}} align="center">{product.product.name}</TableCell>
-                                            <TableCell sx={{width: "20%"}} align="center">{product.sellingPrice * product.inCheck} ₴</TableCell>
+                                            <TableCell sx={{width: "20%"}} align="center">{product.sellingPrice * product.inCheck}.toFixed(2) ₴</TableCell>
                                             <TableCell sx={{width: "20%"}} align="center">
                                                 <div>
                                                     <ButtonGroup>
@@ -531,7 +531,7 @@ const Checks = () => {
                 <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
                     <StyledTableCell component="th" scope="row " align="center">{row.id}</StyledTableCell>
                     <StyledTableCell component="th" scope="row " align="center">{new Date(row.printDate).toLocaleString()}</StyledTableCell>
-                    <StyledTableCell component="th" scope="row " align="center">{row.sumTotal} ₴</StyledTableCell>
+                    <StyledTableCell component="th" scope="row " align="center">{row.sumTotal}.toFixed(2) ₴</StyledTableCell>
                     <StyledTableCell align="right">
                         <Button onClick={() => handleInfo(row)}>
                             <ReceiptLongIcon color="action"/>
