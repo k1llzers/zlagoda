@@ -35,6 +35,10 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
         return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
 
+    public List<EmployeeResponseDto> getCashiersWhoServedAllCustomers() {
+        return mapper.toResponseDtoList(((EmployeeRepository)repository).findCashiersWhoServedAllCustomers());
+    }
+
     public List<EmployeeResponseDto> getPhoneNumberAndAddressBySurname(String surname) {
         return mapper.toResponseDtoList(((EmployeeRepository) repository).findPhoneNumberAndAddressBySurname(surname));
     }

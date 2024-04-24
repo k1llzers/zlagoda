@@ -28,6 +28,12 @@ public class CategoryController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping("/top/by-customer-card/{id}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    public ResponseEntity<List<CategoryResponseDto>> getMostPopularCategoryByCustomerCard(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getMostPopularCategoryByCustomerCard(id));
+    }
+
     @GetMapping("/order-by/name")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<List<CategoryResponseDto>> getAllOrderByName() {

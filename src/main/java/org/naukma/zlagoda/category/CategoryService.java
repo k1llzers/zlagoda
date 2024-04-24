@@ -25,6 +25,10 @@ public class CategoryService extends BaseService<CreateUpdateCategoryDto, Catego
         return mapper.toResponseDtoList(repository.findAllOrderByDefault());
     }
 
+    public List<CategoryResponseDto> getMostPopularCategoryByCustomerCard(Integer cardNumber) {
+        return mapper.toResponseDtoList(((CategoryRepository)repository).findMostPopularCategoryByCustomerCard(cardNumber));
+    }
+
     public CategoryResponseDto getCategoryResponseDto(Integer id){
         return mapper.toResponseDto(getById(id));
     }

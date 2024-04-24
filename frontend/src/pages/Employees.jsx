@@ -53,8 +53,10 @@ const Employee = () => {
         let response
         if (employeeFilter === 0)
             response = await axios.get("http://localhost:8080/api/employee/order-by/surname")
-        else
+        else if (employeeFilter === 1)
             response = await axios.get("http://localhost:8080/api/employee/cashier/order-by/surname")
+        else
+            response = await axios.get("http://localhost:8080/api/employee/cashier/served-all-customers")
         setEmployees(response.data);
     };
 
@@ -492,7 +494,11 @@ const Employee = () => {
                             <MenuItem
                                 key={"Cashier"}
                                 value={1}
-                            >Cashier</MenuItem>
+                            >Cashiers</MenuItem>
+                            <MenuItem
+                                key={"Cashiers served all"}
+                                value={2}
+                            >Cashiers Who Served All Customers</MenuItem>
                         </StyledSelect>
                     </FormControl>
                     <SearchContainer sx={{maxHeight:'40px', marginTop:'10px'}}>

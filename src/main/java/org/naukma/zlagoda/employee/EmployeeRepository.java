@@ -12,6 +12,15 @@ import java.util.Optional;
 
 @Repository
 public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> {
+
+    private static final String CASHIERS_SERVED_ALL_CUSTOMERS_QUERY = "SELECT * " +
+            "FROM employee " +
+            "WHERE NOT EXISTS(SELECT * " +
+            "FROM customer_card " +
+            "WHERE NOT EXISTS(SELECT * " +
+            "FROM customer_check " +
+            "WHERE employee.id_employee = customer_check.id_employee " +
+            "AND customer_card.card_number = customer_check.card_number))";
     private final PasswordEncoder encoder;
 
     public EmployeeRepository(PasswordEncoder encoder) {
@@ -31,6 +40,20 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
     public List<EmployeeEntity> findAllCashiersOrderedBySurname() {
         String query = "SELECT * FROM employee WHERE empl_role='CASHIER' ORDER BY empl_surname";
         return findAllByCustomQuery(query);
+    }
+
+    public List<EmployeeEntity> findCashiersWhoServedAllCustomers() {
+        List<EmployeeEntity> entities = new ArrayList<>();
+        try(PreparedStatement statement = connection.prepareStatement(CASHIERS_SERVED_ALL_CUSTOMERS_QUERY)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<EmployeeEntity> findPhoneNumberAndAddressBySurname(String surname) {

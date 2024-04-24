@@ -55,6 +55,12 @@ public class EmployeeController {
         return ResponseEntity.ok(service.getPhoneNumberAndAddressBySurname(surname));
     }
 
+    @GetMapping("/cashier/served-all-customers")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    public ResponseEntity<List<EmployeeResponseDto>> getCashiersWhoServedAllCustomers() {
+        return ResponseEntity.ok(service.getCashiersWhoServedAllCustomers());
+    }
+
     @GetMapping("/myself")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<EmployeeResponseDto> getMyselfInfo() {

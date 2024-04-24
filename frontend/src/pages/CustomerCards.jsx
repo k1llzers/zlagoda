@@ -9,7 +9,18 @@ import StyledTableRow from "../styledComponent/styledTableRow";
 import StyledTableCell from "../styledComponent/styledTableCell";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
-import {Box, Button, Dialog, DialogContent, FormControl, Grid, IconButton, Stack, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogContent,
+    FormControl,
+    Grid,
+    IconButton, Paper,
+    Stack,
+    styled,
+    Typography
+} from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Collapse from "@mui/material/Collapse";
@@ -25,6 +36,8 @@ import SearchContainer from "../styledComponent/searchContainer";
 import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import SearchIcon from "@mui/icons-material/Search";
 import StyledInputBase from "../styledComponent/styledInputBase";
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TableCell from "@mui/material/TableCell";
 
 
 const CustomerCards = () => {
@@ -35,6 +48,8 @@ const CustomerCards = () => {
     const [updateRow, setUpdateRow] = useState(undefined)
     const [cashierSearch, setCashierSearch] = useState("")
     const [managerSearch, setManagerSearch] = useState("")
+    const [topCategories, setTopCategories] = useState([])
+    const [openCategoryPopup, setOpenCategoryPopup] = useState(false)
 
     const fetchCardsData = async () => {
         const response = await axios.get("http://localhost:8080/api/customer-card/order-by/surname")
@@ -103,8 +118,24 @@ const CustomerCards = () => {
         handleOpenForm()
     }
 
+    const fetchTopCategoryData = async (row) => {
+        const response = await axios.get("http://localhost:8080/api/category/top/by-customer-card/" + row.id);
+        setTopCategories(response.data)
+    }
+
+    function handleOpenTopCategoryPopup(row) {
+        fetchTopCategoryData(row)
+        setUpdateRow(row)
+        setOpenCategoryPopup(true)
+    }
+
     function handleClose(){
         setOpenForm(false)
+        setUpdateRow(undefined)
+    }
+
+    function handleClosePopup() {
+        setOpenCategoryPopup(false)
         setUpdateRow(undefined)
     }
 
@@ -123,6 +154,56 @@ const CustomerCards = () => {
         else
             await fetchCardsData()
     };
+
+    function TopCategoryPopup(props) {
+        const {onClose, open, row} = props;
+
+        const P = styled('p')(() => ({
+            fontSize: '17px'
+        }))
+
+        const Label = styled('span')(() => ({
+            fontWeight: 'bold',
+            color: '#748c8d'
+        }))
+
+        const Div = styled('div')(({ theme }) => ({
+            ...theme.typography.button,
+            backgroundColor: theme.palette.background.paper,
+            padding: theme.spacing(1),
+            fontSize: '16px',
+            textAlign: 'center',
+            margin: '5px 0'
+        }));
+
+        return (
+            <Dialog onClose={onClose} open={open}>
+                <DialogContent>
+                    <P><Label>Customer: </Label>{row ? row.surname : ""} {row ? row.name : ""} {row ? row.patronymic ? row.patronymic : "" : ""}</P>
+                    <Div>Top categories</Div>
+                    <TableContainer component={Paper} sx={{maxHeight: 150, overflowY: 'auto' }}>
+                        <Table sx={{ minWidth: 200}} stickyHeader size="small" aria-label="a dense table">
+                            <TableHead>
+                                <TableRow sx={{backgroundColor: '#748c8d'}}>
+                                    <TableCell sx={{color: 'white', backgroundColor: '#748c8d'}} align="center">Category</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {topCategories.map((category) => (
+                                    <TableRow
+                                        key={category.id}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell align="center">{category.name}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </DialogContent>
+            </Dialog>
+        )
+    }
 
 
     function CardForm(props) {
@@ -306,6 +387,9 @@ const CustomerCards = () => {
                         {role === "MANAGER" && <Button onClick={() => handleDelete(row.id)}>
                             <DeleteOutlineOutlinedIcon color="error"/>
                         </Button>}
+                        {role === "MANAGER" && <Button onClick={() => handleOpenTopCategoryPopup(row)}>
+                            <TrendingUpIcon color="#455a64"/>
+                        </Button>}
                     </StyledTableCell>
                 </TableRow>
                 <TableRow>
@@ -328,17 +412,17 @@ const CustomerCards = () => {
     function ProductsTable() {
         return (
             <React.Fragment>
-                <TableContainer component={Card} sx={{ maxWidth: 1050, margin: '30px auto', maxHeight: '60vh', overflowY: 'auto' }}>
+                <TableContainer component={Card} sx={{ maxWidth: 1100, margin: '30px auto', maxHeight: '60vh', overflowY: 'auto' }}>
                     <Table stickyHeader aria-label="collapsible table">
                         <TableHead>
                             <StyledTableRow>
                                 <StyledTableCell/>
                                 {columns.map((column) => (
-                                    <StyledTableCell align="center" key={column.field} sx={{width:"16%"}}>
+                                    <StyledTableCell align="center" key={column.field} sx={{width:"15%"}}>
                                         {column.headerName}
                                     </StyledTableCell>
                                 ))}
-                                <StyledTableCell sx={{width:"20%"}} />
+                                <StyledTableCell sx={{width:"25%"}} />
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
@@ -359,7 +443,12 @@ const CustomerCards = () => {
                 onClose={handleClose}
                 row={updateRow}
             />
-            <Box sx={{maxWidth: 1050, margin: '0 auto'}}>
+            <TopCategoryPopup
+                open={openCategoryPopup}
+                onClose={handleClosePopup}
+                row={updateRow}
+            />
+            <Box sx={{maxWidth: 1100, margin: '0 auto'}}>
                 <Stack direction='row' justifyContent='space-between'>
                         <StyledButton variant="outlined"
                                       startIcon={<AddIcon />}
