@@ -47,6 +47,12 @@ public class CustomerCardController {
         return ResponseEntity.ok(service.getAllBySurname(surname));
     }
 
+    @GetMapping("/buy-all-products")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    public ResponseEntity<List<CustomerCardResponseDto>> getAllCustomerWhoBuyAllProducts() {
+        return ResponseEntity.ok(service.getAllWhoBuyAllProducts());
+    }
+
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {

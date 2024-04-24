@@ -5,7 +5,18 @@ import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
 import StyledTableRow from "../styledComponent/styledTableRow";
 import StyledTableCell from "../styledComponent/styledTableCell";
-import {Box, Button, Dialog, DialogContent, FormControl, IconButton, MenuItem, Stack, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogContent,
+    FormControl,
+    IconButton,
+    MenuItem, Paper,
+    Stack,
+    styled,
+    Typography
+} from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import {useEffect, useState} from "react";
 import {useAuth} from "../provider/authProvider";
@@ -18,6 +29,8 @@ import StyledButton from "../styledComponent/styldButton";
 import {Container} from "react-bootstrap";
 import AddIcon from "@mui/icons-material/Add";
 import Alert from "@mui/material/Alert";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TableCell from "@mui/material/TableCell";
 
 const Categories = () => {
     const [categories, setCategories] = useState([])
@@ -25,6 +38,8 @@ const Categories = () => {
     const [errorMessage, setErrorMessage] = useState("")
     const [openForm, setOpenForm] = useState(false)
     const [updateRow, setUpdateRow] = useState(undefined)
+    const [topProducts, setTopProducts] = useState([])
+    const [openProductPopup, setOpenProductPopup] = useState(false)
 
     useEffect(() => {
         fetchCategoryData();
@@ -33,6 +48,11 @@ const Categories = () => {
     const fetchCategoryData = async () => {
         const response = await axios.get("http://localhost:8080/api/category/order-by/name")
         setCategories(response.data);
+    }
+
+    const fetchTopProductData = async (row) => {
+        const response = await axios.get("http://localhost:8080/api/store-product/top-product/" + row.id);
+        setTopProducts(response.data)
     }
 
     function processCategories(category) {
@@ -76,6 +96,17 @@ const Categories = () => {
             if (response.data === true)
                 setCategories(categories.filter(category => category.id !== categoryId));
         }
+    }
+
+    async function handleOpenTopProductPopup(row) {
+        await fetchTopProductData(row)
+        setUpdateRow(row)
+        setOpenProductPopup(true)
+    }
+
+    function handleClosePopup() {
+        setOpenProductPopup(false)
+        setUpdateRow(undefined)
     }
 
     function CategoryForm(props) {
@@ -149,6 +180,9 @@ const Categories = () => {
                         <Button onClick={() => handleDelete(row.id)}>
                             <DeleteOutlineOutlinedIcon color="error"/>
                         </Button>
+                        <Button onClick={() => handleOpenTopProductPopup(row)}>
+                            <TrendingUpIcon color="#455a64"/>
+                        </Button>
                     </StyledTableCell>}
                 </TableRow>
             </React.Fragment>
@@ -180,11 +214,66 @@ const Categories = () => {
         )
     }
 
+    function TopProductPopup(props) {
+        const {onClose, open, row} = props;
+
+        const P = styled('p')(() => ({
+            fontSize: '17px'
+        }))
+
+        const Label = styled('span')(() => ({
+            fontWeight: 'bold',
+            color: '#748c8d'
+        }))
+
+        const Div = styled('div')(({ theme }) => ({
+            ...theme.typography.button,
+            backgroundColor: theme.palette.background.paper,
+            padding: theme.spacing(1),
+            fontSize: '16px',
+            textAlign: 'center',
+            margin: '5px 0'
+        }));
+
+        return (
+            <Dialog onClose={onClose} open={open}>
+                <DialogContent>
+                    <P><Label>Category: </Label>{row ? row.name : ""}</P>
+                    <Div>Top products</Div>
+                    <TableContainer component={Paper} sx={{maxHeight: 150, overflowY: 'auto' }}>
+                        <Table sx={{ minWidth: 200}} stickyHeader size="small" aria-label="a dense table">
+                            <TableHead>
+                                <TableRow sx={{backgroundColor: '#748c8d'}}>
+                                    <TableCell sx={{color: 'white', backgroundColor: '#748c8d'}} align="center">Products</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {topProducts.map((product) => (
+                                    <TableRow
+                                        key={product.id}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell align="center">{product.product.name}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </DialogContent>
+            </Dialog>
+        )
+    }
+
     return (
         <Container style={{ marginTop: '50px'}}>
             <CategoryForm
                 open={openForm}
                 onClose={handleClose}
+                row={updateRow}
+            />
+            <TopProductPopup
+                open={openProductPopup}
+                onClose={handleClosePopup}
                 row={updateRow}
             />
             <Box sx={{maxWidth: 450, margin: '0 auto'}}>

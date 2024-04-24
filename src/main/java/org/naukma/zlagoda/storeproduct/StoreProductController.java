@@ -60,6 +60,12 @@ public class StoreProductController {
         return ResponseEntity.ok(service.getAllByUpcLike(upc));
     }
 
+    @GetMapping("/top-product/{categoryId}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    public ResponseEntity<List<StoreProductResponseDto>> getMostPopularByCategory(@PathVariable Integer categoryId) {
+        return ResponseEntity.ok(service.getMostPopularProductByCategory(categoryId));
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) {

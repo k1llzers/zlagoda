@@ -16,7 +16,7 @@ import {
     DialogContent,
     FormControl,
     Grid,
-    IconButton, Paper,
+    IconButton, MenuItem, Paper,
     Stack,
     styled,
     Typography
@@ -38,6 +38,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import StyledInputBase from "../styledComponent/styledInputBase";
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TableCell from "@mui/material/TableCell";
+import StyledLabel from "../styledComponent/styldLabel";
+import StyledSelect from "../styledComponent/styledSelect";
 
 
 const CustomerCards = () => {
@@ -48,11 +50,16 @@ const CustomerCards = () => {
     const [updateRow, setUpdateRow] = useState(undefined)
     const [cashierSearch, setCashierSearch] = useState("")
     const [managerSearch, setManagerSearch] = useState("")
+    const [customerFilter, setCustomerFilter] = useState(0)
     const [topCategories, setTopCategories] = useState([])
     const [openCategoryPopup, setOpenCategoryPopup] = useState(false)
 
     const fetchCardsData = async () => {
-        const response = await axios.get("http://localhost:8080/api/customer-card/order-by/surname")
+        let response;
+        if (customerFilter === 0)
+            response = await axios.get("http://localhost:8080/api/customer-card/order-by/surname")
+        else
+            response = await axios.get("http://localhost:8080/api/customer-card/buy-all-products")
         setCards(response.data);
     };
 
@@ -68,7 +75,7 @@ const CustomerCards = () => {
 
     useEffect(() => {
         fetchCardsData();
-    }, []);
+    }, [customerFilter]);
 
     function processCards(card) {
         return {
@@ -469,6 +476,30 @@ const CustomerCards = () => {
                                 onChange={handleSearchCashier}
                             />
                         </SearchContainer>
+                    }
+                    {role === "MANAGER" &&
+                        <FormControl variant="outlined" size="small" sx={{maxHeight:'40px', minWidth:'120px'}}>
+                            <StyledLabel variant="outlined" id="demo-simple-select-label">
+                                Customers
+                            </StyledLabel>
+                            <StyledSelect sx={{maxHeight:'40px', minWidth:'120px'}}
+                                          labelId="demo-simple-select-label"
+                                          id="demo-simple-select"
+                                          label="Employees"
+                                          value={customerFilter}
+                                          onChange={(event) => {setCustomerFilter(event.target.value);
+                                              setManagerSearch(""); setCashierSearch("")}}
+                            >
+                                <MenuItem
+                                    key={"All"}
+                                    value={0}
+                                >All</MenuItem>
+                                <MenuItem
+                                    key={"Customer Who Buy All Products"}
+                                    value={1}
+                                >Customer Who Bought All Products</MenuItem>
+                            </StyledSelect>
+                        </FormControl>
                     }
                     {role === "MANAGER" &&
                         <SearchContainer sx={{maxHeight:'40px', marginTop:'10px'}}>

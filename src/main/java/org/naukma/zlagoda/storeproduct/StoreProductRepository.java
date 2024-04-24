@@ -8,10 +8,25 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class StoreProductRepository extends BaseRepository<StoreProductEntity, Integer> {
+    private final static String MOST_POPULAR_PRODUCT_BY_CATEGORY = "SELECT store_product.upc, store_product.id_product " +
+            "FROM customer_check INNER JOIN sale ON customer_check.check_number = sale.check_number " +
+            "INNER JOIN store_product ON sale.upc = store_product.upc INNER JOIN " +
+            "product ON store_product.id_product = product.id_product INNER JOIN " +
+            "category ON product.category_number = category.category_number " +
+            "WHERE category.category_number = ? " +
+            "GROUP BY category.category_number, category.category_name, " +
+            "store_product.upc, product.product_name " +
+            "HAVING COUNT(store_product.id_product) = (SELECT MAX(sub_table.purchase_count) " +
+            "FROM (SELECT COUNT(store_product.id_product) AS purchase_count FROM customer_check " +
+            "INNER JOIN sale ON customer_check.check_number = sale.check_number " +
+            "INNER JOIN store_product ON sale.upc = store_product.upc " +
+            "INNER JOIN product ON store_product.id_product = product.id_product " +
+            "WHERE product.category_number = category.category_number " +
+            "GROUP BY store_product.upc) AS sub_table)";
+
     private final ProductRepository productRepository;
 
     public StoreProductRepository(ProductRepository productRepository) {
@@ -24,6 +39,21 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
                 "SELECT * FROM store_product WHERE upc=?",
                 "products_number");
         this.productRepository = productRepository;
+    }
+
+    public List<StoreProductEntity> findMostPopularProductByCategory(Integer categoryId) {
+        List<StoreProductEntity> entities = new ArrayList<>();
+        try(PreparedStatement statement = connection.prepareStatement(MOST_POPULAR_PRODUCT_BY_CATEGORY)) {
+            statement.setInt(1, categoryId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetToShortEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<StoreProductEntity> findAllPromotionalOrderByNumberName(boolean promotional) {
@@ -86,6 +116,18 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
         statement.setBigDecimal(3, entity.getSellingPrice());
         statement.setInt(4, entity.getProductsNumber());
         statement.setBoolean(5, entity.isPromotional());
+    }
+
+    protected StoreProductEntity parseSetToShortEntity(ResultSet set) throws SQLException {
+        Integer productId = set.getInt("id_product");
+        StoreProductEntity.StoreProductEntityBuilder builder = StoreProductEntity.builder()
+                .id(set.getInt("upc"))
+                .product(productRepository.findById(productId)
+                        .orElseThrow(
+                                () -> new NoSuchEntityException("Can`t find product by id: " + productId)
+                        )
+                );
+        return builder.build();
     }
 
     @Override

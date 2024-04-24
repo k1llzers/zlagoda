@@ -11,6 +11,13 @@ import java.util.List;
 
 @Repository
 public class CustomerCardRepository extends BaseRepository<CustomerCardEntity, Integer> {
+    private static final String CUSTOMER_WHO_BUY_ALL_PRODUCT_QUERY = "SELECT * " +
+            "FROM customer_card WHERE NOT EXISTS(SELECT * " +
+            "FROM store_product WHERE NOT EXISTS(" +
+            "SELECT * FROM sale WHERE sale.upc = store_product.upc " +
+            "AND sale.check_number IN (SELECT check_number FROM customer_check " +
+            "WHERE customer_check.card_number = customer_card.card_number)))";
+
     public CustomerCardRepository() {
         super("customer_card",
                 "INSERT INTO customer_card (cust_surname, cust_name, cust_patronymic, " +
@@ -26,6 +33,20 @@ public class CustomerCardRepository extends BaseRepository<CustomerCardEntity, I
     public List<CustomerCardEntity> findAllCustomerWithPercentOrderBySurname(Integer percent) {
         String query = String.format("SELECT * FROM customer_card WHERE percent=%s ORDER BY cust_surname", percent);
         return findAllByCustomQuery(query);
+    }
+
+    public List<CustomerCardEntity> findCustomerWhoBuyAllProducts() {
+        List<CustomerCardEntity> entities = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(CUSTOMER_WHO_BUY_ALL_PRODUCT_QUERY)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<CustomerCardEntity> findAllBySurname(String surname) {

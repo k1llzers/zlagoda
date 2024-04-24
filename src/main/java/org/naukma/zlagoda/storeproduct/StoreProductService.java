@@ -1,6 +1,5 @@
 package org.naukma.zlagoda.storeproduct;
 
-import jakarta.validation.ValidationException;
 import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.product.ProductService;
 import org.naukma.zlagoda.storeproduct.dto.CreateUpdateStoreProductDto;
@@ -48,6 +47,10 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
 
     public List<StoreProductResponseDto> getAllByUpcLike(Integer upc) {
         return mapper.toResponseDtoList(((StoreProductRepository)repository).findAllByUpcLike(upc));
+    }
+
+    public List<StoreProductResponseDto> getMostPopularProductByCategory(Integer categoryId) {
+        return mapper.toResponseDtoList(((StoreProductRepository)repository).findMostPopularProductByCategory(categoryId));
     }
 
     public Boolean makePromotional(Integer id) {
