@@ -72,8 +72,7 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
         }
     }
 
-    @Override
-    public List<StoreProductEntity> findAll() {
+    public List<StoreProductEntity> findAllWhereCountNotZero() {
         return findAllByCustomQuery(String.format("SELECT * FROM %s WHERE products_number != 0", tableName));
     }
 

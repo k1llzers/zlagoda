@@ -254,8 +254,8 @@ const Checks = () => {
                     <DialogContent>
                         <Div>Check №{row.id}</Div>
                         <P><Label>Print Date: </Label>{new Date(row.printDate).toLocaleString()}</P>
-                        <P><Label>Total Sum: </Label>{row.sumTotal} ₴</P>
-                        <P><Label>Vat: </Label>{row.vat} ₴</P>
+                        <P><Label>Total Sum: </Label>{row.sumTotal.toFixed(2)}₴</P>
+                        <P><Label>Vat: </Label>{row.vat.toFixed(2)}₴</P>
                         <Accordion sx={{fontSize: '17px', marginBottom: '10px'}}>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
@@ -280,18 +280,18 @@ const Checks = () => {
                             <AccordionDetails>
                                 <P><Label>Name: </Label>{row.customerCard.surname} {row.customerCard.name} {row.customerCard.patronymic}</P>
                                 <P><Label>Phone Number: </Label>{row.customerCard.phoneNumber}</P>
-                                <P><Label>Percent: </Label>{row.customerCard.percent} %</P>
+                                <P><Label>Percent: </Label>{row.customerCard.percent}%</P>
                             </AccordionDetails>
                         </Accordion>}
                         <Div>Products</Div>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 200 }} size="small" aria-label="a dense table">
+                        <TableContainer component={Paper} sx={{maxHeight: 150, overflowY: 'auto' }}>
+                            <Table sx={{ minWidth: 200}} stickyHeader size="small" aria-label="a dense table">
                                 <TableHead>
                                     <TableRow sx={{backgroundColor: '#748c8d'}}>
-                                        <TableCell sx={{color: 'white'}} align="center">UPC</TableCell>
-                                        <TableCell sx={{color: 'white'}} align="center">Product</TableCell>
-                                        <TableCell sx={{color: 'white'}} align="center">Number</TableCell>
-                                        <TableCell sx={{color: 'white'}} align="center">Price</TableCell>
+                                        <TableCell sx={{color: 'white', backgroundColor: '#748c8d'}} align="center">UPC</TableCell>
+                                        <TableCell sx={{color: 'white', backgroundColor: '#748c8d'}} align="center">Product</TableCell>
+                                        <TableCell sx={{color: 'white', backgroundColor: '#748c8d'}} align="center">Number</TableCell>
+                                        <TableCell sx={{color: 'white', backgroundColor: '#748c8d'}} align="center">Price</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -309,6 +309,13 @@ const Checks = () => {
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                        <Stack direction='row' justifyContent='center'>
+                            <a href={"http://localhost:8080/report/check/" + row.id} target="_blank">
+                                <StyledButton variant="outlined" sx={{maxHeight:'40px', marginTop:'25px'}}>
+                                    PRINT
+                                </StyledButton>
+                            </a>
+                        </Stack>
                     </DialogContent>
                 </Dialog>
             )
@@ -458,7 +465,7 @@ const Checks = () => {
                                             </TableCell>
                                             <TableCell sx={{width: "15%"}} align="center">{product.id}</TableCell>
                                             <TableCell sx={{width: "30%"}} align="center">{product.product.name}</TableCell>
-                                            <TableCell sx={{width: "20%"}} align="center">{(product.sellingPrice * product.inCheck).toFixed(2)} ₴</TableCell>
+                                            <TableCell sx={{width: "20%"}} align="center">{(product.sellingPrice * product.inCheck).toFixed(2)}₴</TableCell>
                                             <TableCell sx={{width: "20%"}} align="center">
                                                 <div>
                                                     <ButtonGroup>
@@ -532,7 +539,7 @@ const Checks = () => {
                 <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
                     <StyledTableCell component="th" scope="row " align="center">{row.id}</StyledTableCell>
                     <StyledTableCell component="th" scope="row " align="center">{new Date(row.printDate).toLocaleString()}</StyledTableCell>
-                    <StyledTableCell component="th" scope="row " align="center">{row.sumTotal.toFixed(2)} ₴</StyledTableCell>
+                    <StyledTableCell component="th" scope="row " align="center">{row.sumTotal.toFixed(2)}₴</StyledTableCell>
                     <StyledTableCell align="right">
                         <Button onClick={() => handleInfo(row)}>
                             <ReceiptLongIcon color="action"/>
@@ -546,7 +553,7 @@ const Checks = () => {
     function ChecksTable() {
         return (
             <React.Fragment key={checks}>
-                <TableContainer component={Card} sx={{ maxWidth: 750, margin: '30px auto', maxHeight: '70vh', overflowY: 'auto' }}>
+                <TableContainer component={Card} sx={{ maxWidth: 750, margin: '30px auto', maxHeight: '50vh', overflowY: 'auto' }}>
                     <Table stickyHeader>
                         <TableHead>
                             <StyledTableRow>
@@ -602,7 +609,7 @@ const Checks = () => {
                                 <SearchIcon />
                             </SearchIconWrapper>
                             <StyledInputBase
-                                placeholder="UPC…"
+                                placeholder="Number…"
                                 value={search}
                                 inputProps={{ 'aria-label': 'search' }}
                                 onChange={handleSearch}
@@ -678,6 +685,15 @@ const Checks = () => {
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <ChecksTable/>
                 {role === "MANAGER" && <P><Label>Total Sum: </Label>{sum ? sum.toFixed(2) : 0} ₴</P>}
+                {role === 'MANAGER' &&
+                    <Stack direction='row' justifyContent='center'>
+                        <a href="http://localhost:8080/report/CHECKS" target="_blank">
+                            <StyledButton variant="outlined" sx={{maxHeight:'40px'}}>
+                                PRINT REPORT
+                            </StyledButton>
+                        </a>
+                    </Stack>
+                }
             </Box>
         </Container>
     );

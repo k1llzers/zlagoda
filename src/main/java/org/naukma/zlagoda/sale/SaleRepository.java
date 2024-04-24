@@ -14,10 +14,9 @@ import java.util.List;
 
 @Repository
 public class SaleRepository extends BaseRepository<SaleEntity, SaleId> {
-    private final CheckRepository checkRepository;
     private final StoreProductRepository storeProductRepository;
 
-    public SaleRepository(CheckRepository checkRepository, StoreProductRepository storeProductRepository) {
+    public SaleRepository(StoreProductRepository storeProductRepository) {
         super("sale",
                 "INSERT INTO sale (upc, check_number, product_number, selling_price)" +
                 "VALUES (?,?,?,?)",
@@ -26,7 +25,6 @@ public class SaleRepository extends BaseRepository<SaleEntity, SaleId> {
                 "DELETE FROM sale WHERE upc=? AND check_number=?",
                 "SELECT * FROM sale WHERE upc=? AND check_number=?",
                 null);
-        this.checkRepository = checkRepository;
         this.storeProductRepository = storeProductRepository;
     }
 
@@ -81,13 +79,7 @@ public class SaleRepository extends BaseRepository<SaleEntity, SaleId> {
     @Override
     protected SaleEntity parseSetToEntity(ResultSet set) throws SQLException {
         Integer upc = set.getInt("upc");
-        Integer checkNumber = set.getInt("check_number");
         SaleId id = SaleId.builder()
-                .checkEntity(checkRepository.findById(checkNumber)
-                        .orElseThrow(
-                                () -> new NoSuchEntityException("Can't find check by id: " + checkNumber)
-                        )
-                )
                 .storeProduct(storeProductRepository.findById(upc)
                         .orElseThrow(
                                 () -> new NoSuchEntityException("Can`t find store product by id: " + upc)

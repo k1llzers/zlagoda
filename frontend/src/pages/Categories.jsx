@@ -157,7 +157,7 @@ const Categories = () => {
     function CategoriesTable() {
         return (
             <React.Fragment>
-                <TableContainer component={Card} sx={{ maxWidth: 450, margin: '30px auto', maxHeight: '70vh', overflowY: 'auto'  }}>
+                <TableContainer component={Card} sx={{ maxWidth: 450, margin: '30px auto', maxHeight: '60vh', overflowY: 'auto'  }}>
                     <Table stickyHeader>
                         <TableHead>
                             <StyledTableRow>
@@ -196,6 +196,15 @@ const Categories = () => {
                 </Stack>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <CategoriesTable/>
+                {role === 'MANAGER' &&
+                    <Stack direction='row' justifyContent='center'>
+                        <a href="http://localhost:8080/report/CATEGORIES" target="_blank">
+                            <StyledButton variant="outlined" sx={{maxHeight:'40px', marginTop:'10px'}}>
+                                PRINT REPORT
+                            </StyledButton>
+                        </a>
+                    </Stack>
+                }
             </Box>
         </Container>
     )

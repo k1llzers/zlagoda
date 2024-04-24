@@ -439,7 +439,7 @@ const Employee = () => {
 
         return (
             <React.Fragment>
-                <TableContainer component={Card} sx={{ maxWidth: 1050, margin: '30px auto', maxHeight: '70vh', overflowY: 'auto' }}>
+                <TableContainer component={Card} sx={{ maxWidth: 1050, margin: '30px auto', maxHeight: '60vh', overflowY: 'auto' }}>
                     <Table stickyHeader aria-label="collapsible table">
                         <TableHead>
                             <StyledTableRow>
@@ -514,6 +514,15 @@ const Employee = () => {
                 </Stack>
                 {errorMessage && <Alert style={{width: '50%', fontSize: '15px', position: 'fixed', right: '25%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <EmployeeTable/>
+                {role === 'MANAGER' &&
+                    <Stack direction='row' justifyContent='center'>
+                        <a href="http://localhost:8080/report/EMPLOYEES" target="_blank">
+                            <StyledButton variant="outlined" sx={{maxHeight:'40px', marginTop:'10px'}}>
+                                PRINT REPORT
+                            </StyledButton>
+                        </a>
+                    </Stack>
+                }
             </Box>
         </Container>
     );

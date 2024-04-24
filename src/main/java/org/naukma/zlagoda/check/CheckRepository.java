@@ -5,6 +5,7 @@ import org.naukma.zlagoda.customercard.CustomerCardRepository;
 import org.naukma.zlagoda.employee.EmployeeEntity;
 import org.naukma.zlagoda.employee.EmployeeRepository;
 import org.naukma.zlagoda.exception.NoSuchEntityException;
+import org.naukma.zlagoda.sale.SaleRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
@@ -23,8 +24,9 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
 
     private final EmployeeRepository employeeRepository;
     private final CustomerCardRepository customerCardRepository;
+    private final SaleRepository saleRepository;
 
-    public CheckRepository(EmployeeRepository employeeRepository, CustomerCardRepository customerCardRepository) {
+    public CheckRepository(EmployeeRepository employeeRepository, CustomerCardRepository customerCardRepository, SaleRepository saleRepository) {
         super("customer_check",
                 "INSERT INTO customer_check (id_employee, card_number, print_date, sum_total, vat) " +
                         "VALUES (?, ?, ?, ?, ?)",
@@ -35,6 +37,7 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
                 null);
         this.employeeRepository = employeeRepository;
         this.customerCardRepository = customerCardRepository;
+        this.saleRepository = saleRepository;
     }
 
     public List<CheckEntity> findAllByCashierAndPrintDateBetween(Integer id, LocalDateTime from, LocalDateTime to) {
@@ -136,6 +139,7 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
                 .printDate(set.getTimestamp("print_date").toLocalDateTime())
                 .sumTotal(set.getBigDecimal("sum_total"))
                 .vat(set.getBigDecimal("vat"))
+                .sales(saleRepository.findAllByCheckNumber(set.getInt("check_number")))
                 .build();
     }
 

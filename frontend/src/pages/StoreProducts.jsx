@@ -318,7 +318,7 @@ const StoreProducts = () => {
 
         return (
             <React.Fragment>
-                <TableContainer component={Card} sx={{ maxWidth: 950, margin: '30px auto', maxHeight: '70vh', overflowY: 'auto' }}>
+                <TableContainer component={Card} sx={{ maxWidth: 950, margin: '30px auto', maxHeight: '60vh', overflowY: 'auto' }}>
                     <Table stickyHeader aria-label="collapsible table">
                         <TableHead>
                             <StyledTableRow>
@@ -411,6 +411,15 @@ const StoreProducts = () => {
                 </Stack>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <StoreProductsTable/>
+                {role === 'MANAGER' &&
+                    <Stack direction='row' justifyContent='center'>
+                        <a href="http://localhost:8080/report/STORE_PRODUCTS" target="_blank">
+                            <StyledButton variant="outlined" sx={{maxHeight:'40px', marginTop:'10px'}}>
+                                PRINT REPORT
+                            </StyledButton>
+                        </a>
+                    </Stack>
+                }
             </Box>
         </Container>
     );

@@ -65,6 +65,10 @@ public class EmployeeEntity implements GettableById<Integer>, UserDetails {
     @Size(max=9, message = "Zip code size can't be more than 9.")
     private String zipCode;
 
+    public String getFullName() {
+        return surname + " " + name + " " + patronymic;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role));

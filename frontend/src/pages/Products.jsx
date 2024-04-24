@@ -33,6 +33,7 @@ import SearchContainer from "../styledComponent/searchContainer";
 import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import StyledInputBase from "../styledComponent/styledInputBase";
 import CategoryDropdown from "../components/categoriesDropdown";
+import {useNavigate} from "react-router-dom";
 
 const Products = () => {
     const [products, setProducts] = useState([])
@@ -44,6 +45,7 @@ const Products = () => {
     const [search, setSearch] = useState("")
     const [category, setCategory] = useState(0)
     const componentRef = useRef();
+    const navigate = useNavigate();
 
     const fetchProductsData = async () => {
         let response
@@ -252,7 +254,7 @@ const Products = () => {
 
         return (
             <React.Fragment>
-                <TableContainer component={Card} sx={{ maxWidth: 650, margin: '30px auto', maxHeight: '70vh', overflowY: 'auto' }}>
+                <TableContainer component={Card} sx={{ maxWidth: 650, margin: '30px auto', maxHeight: '60vh', overflowY: 'auto' }}>
                     <Table stickyHeader aria-label="collapsible table">
                         <TableHead>
                             <StyledTableRow>
@@ -315,10 +317,15 @@ const Products = () => {
                 </Stack>
                 {errorMessage && <Alert style={{width: '40%', fontSize: '15px', position: 'fixed', right: '30%', top: '5%'}} severity="error" onClose={clear}>{errorMessage}</Alert>}
                 <ProductsTable/>
-                {/*<ReactToPrint*/}
-                {/*    trigger={() => <button>Print this out!</button>}*/}
-                {/*    content={() => componentRef.current}*/}
-                {/*/>*/}
+                {role === 'MANAGER' &&
+                    <Stack direction='row' justifyContent='center'>
+                        <a href="http://localhost:8080/report/PRODUCTS" target="_blank">
+                            <StyledButton variant="outlined" sx={{maxHeight:'40px', marginTop:'10px'}}>
+                                PRINT REPORT
+                            </StyledButton>
+                        </a>
+                    </Stack>
+                }
             </Box>
         </Container>
     );

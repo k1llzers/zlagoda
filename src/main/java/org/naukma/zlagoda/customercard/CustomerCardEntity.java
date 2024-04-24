@@ -41,4 +41,8 @@ public class CustomerCardEntity implements GettableById<Integer> {
     @Min(value = 0, message = "Percent can't be less than zero.")
     @Max(value = 100, message = "Percent can't be more than 100.")
     private Integer percent;
+
+    public String getFullName() {
+        return surname + " " + name + " " + patronymic;
+    }
 }

@@ -23,15 +23,13 @@ import java.util.stream.Collectors;
 public class CheckService extends BaseService<CreateUpdateCheckDto, CheckEntity, Integer> {
 
     private final CheckMapper mapper;
-    private final EmployeeService employeeService;
     private final CustomerCardService customerCardService;
     private final StoreProductService storeProductService;
     private final SaleService saleService;
 
-    public CheckService(CheckMapper mapper, EmployeeService employeeService, CustomerCardService customerCardService, StoreProductService storeProductService, SaleService saleService) {
+    public CheckService(CheckMapper mapper, CustomerCardService customerCardService, StoreProductService storeProductService, SaleService saleService) {
         super(CheckEntity::new, "check");
         this.mapper = mapper;
-        this.employeeService = employeeService;
         this.customerCardService = customerCardService;
         this.storeProductService = storeProductService;
         this.saleService = saleService;
