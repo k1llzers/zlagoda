@@ -23,6 +23,7 @@ public class CustomerCardEntity implements GettableById<Integer> {
     @NotBlank(message = "Customer name can't be blank.")
     @Size(max=50, message = "Customer name size can't be more than 50.")
     private String name;
+    @Size(max=50, message = "Customer patronymic size can't be more than 50.")
     private String patronymic;
     @NotNull(message = "Customer phone number can't be null.")
     @NotBlank(message = "Customer phone number can't be blank.")

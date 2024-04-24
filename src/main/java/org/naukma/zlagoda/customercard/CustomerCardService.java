@@ -1,5 +1,6 @@
 package org.naukma.zlagoda.customercard;
 
+import jakarta.validation.ValidationException;
 import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.customercard.dto.CreateUpdateCustomerCardDto;
 import org.naukma.zlagoda.customercard.dto.CustomerCardResponseDto;
@@ -43,16 +44,21 @@ public class CustomerCardService extends BaseService<CreateUpdateCustomerCardDto
             entity.setSurname(dto.getSurname());
         if (dto.getName() != null)
             entity.setName(dto.getName());
-        entity.setPatronymic(dto.getPatronymic());
         if (dto.getPhoneNumber() != null)
             entity.setPhoneNumber(dto.getPhoneNumber());
-        if (dto.getCity() != null)
-            entity.setCity(dto.getCity());
-        if (dto.getStreet() != null)
-            entity.setStreet(dto.getStreet());
-        if (dto.getZipCode() != null)
-            entity.setZipCode(dto.getZipCode());
         if (dto.getPercent() != null)
             entity.setPercent(dto.getPercent());
+        entity.setStreet(dto.getStreet());
+        entity.setZipCode(dto.getZipCode());
+        entity.setCity(dto.getCity());
+        entity.setPatronymic(dto.getPatronymic());
+        if (dto.getPatronymic() != null && dto.getPatronymic().isBlank())
+            throw new ValidationException("Customer patronymic can't be blank");
+        if (dto.getZipCode() != null && dto.getZipCode().isBlank())
+            throw new ValidationException("Customer zip code can't be blank");
+        if (dto.getCity() != null && dto.getCity().isBlank())
+            throw new ValidationException("Customer city code can't be blank");
+        if (dto.getStreet() != null && dto.getStreet().isBlank())
+            throw new ValidationException("Customer street code can't be blank");
     }
 }
