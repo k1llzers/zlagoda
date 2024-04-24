@@ -395,7 +395,7 @@ const CustomerCards = () => {
                             <DeleteOutlineOutlinedIcon color="error"/>
                         </Button>}
                         {role === "MANAGER" && <Button onClick={() => handleOpenTopCategoryPopup(row)}>
-                            <TrendingUpIcon color="#455a64"/>
+                            <TrendingUpIcon/>
                         </Button>}
                     </StyledTableCell>
                 </TableRow>
