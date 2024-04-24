@@ -66,6 +66,8 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
         if(dto.getName() != null)
             entity.setName(dto.getName());
         entity.setPatronymic(dto.getPatronymic());
+        if (dto.getPatronymic() != null && dto.getPatronymic().isBlank())
+            throw new ValidationException("Employee patronymic can't be blank");
         if(dto.getRole() != null)
             entity.setRole(dto.getRole());
         if(dto.getSalary() != null)

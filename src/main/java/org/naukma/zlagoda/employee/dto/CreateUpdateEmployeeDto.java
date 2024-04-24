@@ -28,7 +28,6 @@ public class CreateUpdateEmployeeDto implements GettableById<Integer> {
     @Size(max=100, message = "Employee name size can't be more than 50.")
     private String name;
     @Size(max=100, message = "Employee patronymic size can't be more than 50.")
-    @NotBlank(message = "Employee patronymic can't be blank.")
     private String patronymic;
     @NotNull(message = "Employee role can't be null.")
     private Role role;
