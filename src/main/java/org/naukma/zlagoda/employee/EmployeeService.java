@@ -5,7 +5,6 @@ import jakarta.validation.ValidationException;
 import lombok.SneakyThrows;
 import org.naukma.zlagoda.abstraction.service.BaseService;
 import org.naukma.zlagoda.employee.dto.CreateUpdateEmployeeDto;
-import org.naukma.zlagoda.employee.dto.EmployeePhoneNumberAddressDto;
 import org.naukma.zlagoda.employee.dto.EmployeeResponseDto;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -46,6 +45,13 @@ public class EmployeeService extends BaseService<CreateUpdateEmployeeDto, Employ
 
     public EmployeeResponseDto getMyselfInfo() {
         return mapper.toResponseDto((EmployeeEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    }
+
+    @Override
+    public Boolean delete(Integer id) {
+        if (((EmployeeEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId().equals(id))
+            throw new ValidationException("You can't delete yourself!");
+        return repository.delete(id);
     }
 
     @SneakyThrows
