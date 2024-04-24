@@ -1,5 +1,6 @@
 package org.naukma.zlagoda.security;
 
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.naukma.zlagoda.exception.NoSuchEntityException;
@@ -22,14 +23,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok(new ErrorResponse("Incorrect username or password", HttpStatus.UNAUTHORIZED.value()));
     }
 
-    @ExceptionHandler(NoSuchEntityException.class)
-    public ResponseEntity<ErrorResponse> handleNoSuchEntityException(NoSuchEntityException e) {
+    @ExceptionHandler({NoSuchEntityException.class, MethodArgumentNotValidException.class, ValidationException.class})
+    public ResponseEntity<ErrorResponse> handleNoSuchEntityException(Exception e) {
         return ResponseEntity.ok(new ErrorResponse(e.getMessage(), HttpStatus.CONFLICT.value()));
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleNoSuchEntityException(MethodArgumentNotValidException  e) {
-        return ResponseEntity.ok(new ErrorResponse(e.getBindingResult().getAllErrors().stream().findFirst().get().getDefaultMessage(), HttpStatus.CONFLICT.value()));
     }
 
     @ExceptionHandler(Exception.class)
