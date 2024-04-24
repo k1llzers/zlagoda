@@ -29,13 +29,10 @@ public class CustomerCardEntity implements GettableById<Integer> {
     @NotBlank(message = "Customer phone number can't be blank.")
     @Size(max=13, message = "Customer phone number size can't be more than 13.")
     private String phoneNumber;
-    @NotBlank(message = "City can't be blank.")
     @Size(max=50, message = "City size can't be more than 50.")
     private String city;
-    @NotBlank(message = "Street can't be blank.")
     @Size(max=50, message = "Street size can't be more than 50.")
     private String street;
-    @NotBlank(message = "Zip code can't be blank.")
     @Size(max=9, message = "Zip code size can't be more than 9.")
     private String zipCode;
     @NotNull(message = "Percent can't be null.")
