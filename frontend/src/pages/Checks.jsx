@@ -47,6 +47,7 @@ import SearchIconWrapper from "../styledComponent/searchIconWrapper";
 import SearchIcon from "@mui/icons-material/Search";
 import StyledInputBase from "../styledComponent/styledInputBase";
 import StyledDatePicker from "../styledComponent/styledDatePicker";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const Checks = () => {
     const [checks, setChecks] = useState([])
@@ -222,6 +223,12 @@ const Checks = () => {
         setOpenInfo(true)
     }
 
+    const handleDelete = async (id) => {
+        const response = await axios.delete("http://localhost:8080/api/check/" + id)
+        if (response.data === true)
+            setChecks(checks.filter(check => check.id !== id));
+    }
+
     function handleToday() {
         setDateFrom(dayjs(new Date().setHours(0, 0, 0, 0)))
         setDateTo(dayjs(new Date()))
@@ -303,7 +310,7 @@ const Checks = () => {
                                             <TableCell align="center">{row.upc}</TableCell>
                                             <TableCell align="center">{row.name}</TableCell>
                                             <TableCell align="center">{row.productNumber}</TableCell>
-                                            <TableCell align="center">{row.sellingPrice.toFixed(2)}</TableCell>
+                                            <TableCell align="center">{row.sellingPrice.toFixed(2)}₴</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -331,7 +338,8 @@ const Checks = () => {
         const [rerender, setRerender] = useState(0)
 
         const customerCardOptions = customerCards.map(customerCard => ({
-            label: customerCard.surname + " " + customerCard.name + " " + customerCard.patronymic + " " + customerCard.phoneNumber,
+            label: customerCard.patronymic ? customerCard.surname + " " + customerCard.name + " " + customerCard.patronymic + " " + customerCard.phoneNumber
+                : customerCard.surname + " " + customerCard.name + " " + customerCard.phoneNumber,
             value: customerCard
         }));
 
@@ -544,6 +552,9 @@ const Checks = () => {
                         <Button onClick={() => handleInfo(row)}>
                             <ReceiptLongIcon color="action"/>
                         </Button>
+                        {role === "MANAGER" && <Button onClick={() => handleDelete(row.id)}>
+                            <DeleteOutlineOutlinedIcon color="error"/>
+                        </Button>}
                     </StyledTableCell>
                 </TableRow>
             </React.Fragment>

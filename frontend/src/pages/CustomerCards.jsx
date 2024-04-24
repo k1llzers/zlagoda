@@ -77,7 +77,6 @@ const CustomerCards = () => {
         {field: 'percent', headerName: 'Percent'}
     ];
 
-    console.log(cards)
     const rows = cards.map((card) => processCards(card));
 
     const handleDelete = async (cardId) => {
@@ -145,11 +144,11 @@ const CustomerCards = () => {
                 response = await axios.post("http://localhost:8080/api/customer-card", {
                     surname: surname,
                     name: name,
-                    patronymic: patronymic,
+                    patronymic: patronymic ? patronymic : null,
                     phoneNumber: phoneNumber,
-                    city: city,
-                    street: street,
-                    zipCode: zipCode,
+                    city: city ? city : null,
+                    street: street ? street : null,
+                    zipCode: zipCode ? zipCode : null,
                     percent: +percent
                 })
             } else {
@@ -157,11 +156,11 @@ const CustomerCards = () => {
                     id: row.id,
                     surname: surname,
                     name: name,
-                    patronymic: patronymic,
+                    patronymic: patronymic ? patronymic : null,
                     phoneNumber: phoneNumber,
-                    city: city,
-                    street: street,
-                    zipCode: zipCode,
+                    city: city ? city : null,
+                    street: street ? street : null,
+                    zipCode: zipCode ? zipCode : null,
                     percent: +percent
                 })
             }
@@ -177,15 +176,13 @@ const CustomerCards = () => {
             if(surname.trim()
                 && name.trim()
                 && phoneNumber.trim()
-                && city.trim()
-                && street.trim()
-                && zipCode.trim()
+                && percent
                 && surname.length <= 50
                 && name.length <= 50
-                && patronymic.length <= 50
-                && city.length <= 50
-                && street.length <= 50
-                && zipCode.length <= 9
+                && (!patronymic || patronymic.length <= 50)
+                && (!city || city.length <= 50)
+                && (!street || street.length <= 50)
+                && (!zipCode || zipCode.length <= 9)
                 && phoneNumber.length <= 13
                 && check.test(phoneNumber)
                 && !isNaN(+percent)
@@ -225,8 +222,8 @@ const CustomerCards = () => {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Patronymic" variant="outlined" value={patronymic}
-                                                     error={patronymic.length > 50}
-                                                     helperText={patronymic.length > 50 ? "Too long" : ""}
+                                                     error={patronymic ? (patronymic.length > 50) : false}
+                                                     helperText={patronymic ? (patronymic.length > 50 ? "Too long" : "") : false}
                                                      onChange={(event) => {setPatronymic(event.target.value)}}
                                     />
                                 </Grid>
@@ -240,22 +237,22 @@ const CustomerCards = () => {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="City" variant="outlined" value={city}
-                                                     error={city.length > 50}
-                                                     helperText={city.length > 50 ? "Too long" : ""}
+                                                     error={city ? (city.length > 50) : false}
+                                                     helperText={city ? (city.length > 50 ? "Too long" : "") : false}
                                                      onChange={(event) => {setCity(event.target.value)}}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
                                     <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Street" variant="outlined" value={street}
-                                                     error={street.length > 50}
-                                                     helperText={street.length > 50 ? "Too long" : ""}
+                                                     error={street ? (street.length > 50) : false}
+                                                     helperText={street ? (street.length > 50 ? "Too long" : "") : false}
                                                      onChange={(event) => {setStreet(event.target.value)}}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
                                     <StyledTextField sx={{width:'93%'}} id="outlined-basic" label="Zip Code" variant="outlined" value={zipCode}
-                                                     error={zipCode.length > 9}
-                                                     helperText={zipCode.length > 9 ? "Too long" : ""}
+                                                     error={zipCode ? (zipCode.length > 9) : false}
+                                                     helperText={zipCode ? (zipCode.length > 9 ? "Too long" : "") : false}
                                                      onChange={(event) => {setZipCode(event.target.value)}}
                                     />
                                 </Grid>
@@ -306,9 +303,9 @@ const CustomerCards = () => {
                         <Button onClick={() => handleUpdate(row)}>
                             <ModeEditIcon color='action'/>
                         </Button>
-                        <Button onClick={() => handleDelete(row.id)}>
+                        {role === "MANAGER" && <Button onClick={() => handleDelete(row.id)}>
                             <DeleteOutlineOutlinedIcon color="error"/>
-                        </Button>
+                        </Button>}
                     </StyledTableCell>
                 </TableRow>
                 <TableRow>
@@ -318,7 +315,7 @@ const CustomerCards = () => {
                                 <Typography variant="span" gutterBottom component="div" style={{fontSize: 18}}>
                                     Address
                                 </Typography>
-                                {row.city}, {row.street}, {row.zipCode}
+                                {row.city} {row.street} {row.zipCode}
                             </Box>
                         </Collapse>
                     </StyledTableCell>
@@ -364,14 +361,13 @@ const CustomerCards = () => {
             />
             <Box sx={{maxWidth: 1050, margin: '0 auto'}}>
                 <Stack direction='row' justifyContent='space-between'>
-                    {role === 'MANAGER' &&
                         <StyledButton variant="outlined"
                                       startIcon={<AddIcon />}
                                       onClick={handleOpenForm}
                                       sx={{maxHeight:'40px', marginTop:'10px'}}
                         >
                             Add
-                        </StyledButton>}
+                        </StyledButton>
                     {role === "CASHIER" &&
                         <SearchContainer sx={{maxHeight:'40px', marginTop:'10px'}}>
                             <SearchIconWrapper>

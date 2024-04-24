@@ -1,6 +1,6 @@
-import home_page_picture from '../images/home_page_picture.png';
+import home_page_picture from '../images/home_page_picture.png'
 import '../App.css';
-import { Container, Image } from 'react-bootstrap';
+import { Container, Image } from 'react-bootstrap'
 import '../styles/NotFound.css'
 
 const HomePage = () => {

@@ -65,7 +65,10 @@ const Employee = () => {
     const handleDelete = async (employeeId) => {
         const response = await axios.delete("http://localhost:8080/api/employee/" + employeeId)
         if (response.data.error) {
-            setErrorMessage("Can't delete employee that present at least one check")
+            if(response.data.code === 500)
+                setErrorMessage("Can't delete employee that present at least at one check")
+            else
+                setErrorMessage(response.data.error)
             setTimeout(() => setErrorMessage(""), 3500)
         } else {
             if (response.data === true)
@@ -227,7 +230,6 @@ const Employee = () => {
                             variant="outlined"
                             value={surname}
                             required
-                            multiline
                             error={surname.length > 100}
                             helperText={surname.length > 100 ? "Too long" : ""}
                             onChange={(event) => {setSurname(event.target.value)}}/>
@@ -237,7 +239,6 @@ const Employee = () => {
                             variant="outlined"
                             value={name}
                             required
-                            multiline
                             error={name.length > 100}
                             helperText={name.length > 100 ? "Too long" : ""}
                             onChange={(event) => {setName(event.target.value)}}/>
@@ -246,7 +247,6 @@ const Employee = () => {
                             label="Patronymic"
                             variant="outlined"
                             value={patronymic}
-                            multiline
                             error={patronymic.length > 100}
                             helperText={patronymic.length > 100 ? "Too long" : ""}
                             onChange={(event) => {setPatronymic(event.target.value)}}/>
@@ -306,7 +306,6 @@ const Employee = () => {
                                         variant="outlined"
                                         value={salary}
                                         required
-                                        multiline
                                         error={salary < 1}
                                         helperText={salary < 1 ? "Less than 1" : ""}
                                         onChange={(event) => {setSalary(event.target.value)}}/>
@@ -319,7 +318,6 @@ const Employee = () => {
                                         variant="outlined"
                                         value={phoneNumber}
                                         required
-                                        multiline
                                         error={!phoneCheck.test(phoneNumber)}
                                         helperText={!phoneCheck.test(phoneNumber) ? "Incorrect" : ""}
                                         onChange={(event) => {setPhoneNumber(event.target.value)}}/>
@@ -332,7 +330,6 @@ const Employee = () => {
                                         variant="outlined"
                                         value={street}
                                         required
-                                        multiline
                                         error={street.length > 50}
                                         helperText={street.length > 50 ? "Too long" : ""}
                                         onChange={(event) => {setStreet(event.target.value)}}/>
@@ -345,7 +342,6 @@ const Employee = () => {
                                         variant="outlined"
                                         value={city}
                                         required
-                                        multiline
                                         error={city.length > 50}
                                         helperText={city.length > 50 ? "Too long" : ""}
                                         onChange={(event) => {setCity(event.target.value)}}/>
@@ -358,7 +354,6 @@ const Employee = () => {
                                         variant="outlined"
                                         value={zipCode}
                                         required
-                                        multiline
                                         error={zipCode.length > 9}
                                         helperText={zipCode.length > 9 ? "Too long" : ""}
                                         onChange={(event) => {setZipCode(event.target.value)}}/>
