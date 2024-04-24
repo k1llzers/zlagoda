@@ -43,8 +43,7 @@ public class CustomerCardService extends BaseService<CreateUpdateCustomerCardDto
             entity.setSurname(dto.getSurname());
         if (dto.getName() != null)
             entity.setName(dto.getName());
-        if (dto.getPatronymic() != null)
-            entity.setPatronymic(dto.getPatronymic());
+        entity.setPatronymic(dto.getPatronymic());
         if (dto.getPhoneNumber() != null)
             entity.setPhoneNumber(dto.getPhoneNumber());
         if (dto.getCity() != null)
