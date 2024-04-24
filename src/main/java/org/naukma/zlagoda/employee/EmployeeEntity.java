@@ -52,16 +52,10 @@ public class EmployeeEntity implements GettableById<Integer>, UserDetails {
     @NotBlank(message = "Phone number can't be blank.")
     @Size(max=13, message = "Phone number size can't be more than 13.")
     private String phoneNumber;
-    @NotNull(message = "City can't be null.")
-    @NotBlank(message = "City can't be blank.")
     @Size(max=50, message = "City size can't be more than 50.")
     private String city;
-    @NotNull(message = "Street can't be null.")
-    @NotBlank(message = "Street can't be blank.")
     @Size(max=50, message = "Street size can't be more than 50.")
     private String street;
-    @NotNull(message = "Zip code can't be null.")
-    @NotBlank(message = "Zip code can't be blank.")
     @Size(max=9, message = "Zip code size can't be more than 9.")
     private String zipCode;
 
