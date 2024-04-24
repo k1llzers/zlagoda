@@ -14,7 +14,7 @@ import Checks from "../pages/Checks"
 import Profile from "../pages/Profile"
 
 const Routes = () => {
-    const {token} = useAuth()
+    const {token, role} = useAuth()
 
     const routesForAuthenticatedOnly = [
         {
@@ -28,14 +28,6 @@ const Routes = () => {
                 {
                     path: "/products",
                     element: <Products/>,
-                },
-                {
-                    path: "/categories",
-                    element: <Categories/>,
-                },
-                {
-                    path: "/employees",
-                    element: <Employees/>,
                 },
                 {
                     path: "/customer-cards",
@@ -59,7 +51,23 @@ const Routes = () => {
                 }
             ]
         }
+    ]
 
+    const routesForManagerOnly = [
+        {
+            path: "/",
+            element: <ProtectedRoute/>,
+            children : [
+                {
+                    path: "/categories",
+                    element: <Categories/>,
+                },
+                {
+                    path: "/employees",
+                    element: <Employees/>,
+                }
+            ]
+        }
     ]
 
     const routesForNotAuthenticatedOnly = [
@@ -76,11 +84,10 @@ const Routes = () => {
         }
     ]
 
-    // нада потім врахувати що через пошукову стрічку касир може зайти на сторінку тільки для менеджера
-
     const router = createBrowserRouter([
         ...(!token ? routesForNotAuthenticatedOnly : []),
         ...routesForAuthenticatedOnly,
+        ...(role === "MANAGER" ? routesForManagerOnly : []),
         ...routes404
     ])
 
