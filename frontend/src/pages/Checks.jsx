@@ -634,8 +634,10 @@ const Checks = () => {
                             onChange = {(event, newValue) => {
                                 if(newValue)
                                     setProduct(newValue.value)
-                                else
+                                else {
                                     setProduct(0)
+                                    setNumber(0)
+                                }
                             }}
                             renderInput={(params) => <StyledTextField {...params} size="small" sx={{margin: '10px 0'}} label="Product"/>}
                             options={productOptions}

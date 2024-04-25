@@ -19,8 +19,7 @@ public class CategoryRepository extends BaseRepository<CategoryEntity, Integer> 
             "INNER JOIN product ON store_product.id_product = product.id_product " +
             "INNER JOIN category ON product.category_number = category.category_number " +
             "WHERE customer_card.card_number = ? " +
-            "GROUP BY customer_card.card_number, customer_card.cust_surname, customer_card.cust_name, " +
-            "category.category_number, category.category_name " +
+            "GROUP BY customer_card.card_number, category.category_number, category.category_name " +
             "HAVING COUNT(*) = (SELECT MAX(sub_table.count_per_category) " +
             "FROM (SELECT COUNT(*) AS count_per_category " +
             "FROM customer_check INNER JOIN sale ON customer_check.check_number = sale.check_number " +
