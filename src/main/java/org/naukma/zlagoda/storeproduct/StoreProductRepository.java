@@ -17,7 +17,7 @@ public class StoreProductRepository extends BaseRepository<StoreProductEntity, I
             "product ON store_product.id_product = product.id_product INNER JOIN " +
             "category ON product.category_number = category.category_number " +
             "WHERE category.category_number = ? " +
-            "GROUP BY category.category_number, category.category_name, " +
+            "GROUP BY category.category_number, " +
             "store_product.upc, product.product_name " +
             "HAVING COUNT(store_product.id_product) = (SELECT MAX(sub_table.purchase_count) " +
             "FROM (SELECT COUNT(store_product.id_product) AS purchase_count FROM customer_check " +

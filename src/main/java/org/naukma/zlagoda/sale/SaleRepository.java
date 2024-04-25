@@ -1,7 +1,6 @@
 package org.naukma.zlagoda.sale;
 
 import org.naukma.zlagoda.abstraction.repository.BaseRepository;
-import org.naukma.zlagoda.check.CheckRepository;
 import org.naukma.zlagoda.exception.NoSuchEntityException;
 import org.naukma.zlagoda.storeproduct.StoreProductRepository;
 import org.springframework.stereotype.Repository;

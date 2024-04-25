@@ -92,10 +92,7 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
     }
 
     public Boolean updateByEntity(StoreProductEntity entity) {
-        if (entity.getProductsNumber() == 0)
-            return repository.delete(entity.getId());
-        else
-            return repository.update(entity);
+        return repository.update(entity);
     }
 
     @Override

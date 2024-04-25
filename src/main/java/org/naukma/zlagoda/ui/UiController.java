@@ -1,4 +1,4 @@
-package org.naukma.zlagoda;
+package org.naukma.zlagoda.ui;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequiredArgsConstructor
 public class UiController {
+    @RequestMapping(value = "/login?logout")
+    public String redirectLogin() {
+        return "forward:/login";
+    }
+
     @RequestMapping(value = "/{path:[^.]*}")
     public String redirectSingle() {
         return "forward:/";

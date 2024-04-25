@@ -116,7 +116,7 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
         if (entity.getCustomerCard() == null)
             statement.setNull(2, Types.INTEGER);
         else
-            statement.setNull(2, entity.getCustomerCard().getId());
+            statement.setInt(2, entity.getCustomerCard().getId());
         statement.setTimestamp(3, Timestamp.valueOf(entity.getPrintDate()));
         statement.setBigDecimal(4, entity.getSumTotal());
         statement.setBigDecimal(5, entity.getVat());
@@ -134,7 +134,7 @@ public class CheckRepository extends BaseRepository<CheckEntity, Integer> {
                         )
                 )
                 .customerCard(customerCardRepository.findById(customerCardId)
-                        .orElse(null)
+                        .orElseGet(() -> null)
                 )
                 .printDate(set.getTimestamp("print_date").toLocalDateTime())
                 .sumTotal(set.getBigDecimal("sum_total"))

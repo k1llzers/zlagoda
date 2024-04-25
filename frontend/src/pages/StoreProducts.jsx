@@ -226,7 +226,7 @@ const StoreProducts = () => {
             <Dialog onClose={onClose} open={open}>
                 <DialogContent>
                     <FormControl fullWidth>
-                        <Autocomplete
+                        {!row && <Autocomplete
                             value={productOptions.find(option => option.value === product)}
                             onChange = {(event, newValue) => {
                                 if(newValue)
@@ -238,7 +238,7 @@ const StoreProducts = () => {
                             renderInput={(params) => <StyledTextField {...params} sx={{width: "100%"}} size="medium" label="Product"/>}
                             options={productOptions}
                             sx={{display:"flex"}}
-                        />
+                        />}
                         <StyledTextField
                             type="number"
                             InputProps={{ inputProps: { min: 0 } }}
