@@ -16,7 +16,8 @@ public class CustomerCardRepository extends BaseRepository<CustomerCardEntity, I
             "FROM store_product WHERE NOT EXISTS(" +
             "SELECT * FROM sale WHERE sale.upc = store_product.upc " +
             "AND sale.check_number IN (SELECT check_number FROM customer_check " +
-            "WHERE customer_check.card_number = customer_card.card_number)))";
+            "WHERE customer_check.card_number = customer_card.card_number)))" +
+            "AND EXISTS(SELECT * FROM store_product)";
 
     public CustomerCardRepository() {
         super("customer_card",
