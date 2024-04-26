@@ -162,7 +162,7 @@ const Products = () => {
                 })
             }
             if (response.data.error) {
-                setErrorMessage(response.data.error)
+                setErrorMessage("Can't crate products with same name")
                 setTimeout(() => setErrorMessage(""), 3500)
             } else {
                 fetchProductsData()
