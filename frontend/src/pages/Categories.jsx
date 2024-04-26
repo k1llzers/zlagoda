@@ -51,7 +51,7 @@ const Categories = () => {
     }
 
     const fetchTopProductData = async (row) => {
-        const response = await axios.get("http://localhost:8080/api/store-product/top-product/" + row.id);
+        const response = await axios.get("http://localhost:8080/api/product/top-product/" + row.id);
         setTopProducts(response.data)
     }
 
@@ -253,7 +253,7 @@ const Categories = () => {
                                         key={product.id}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
-                                        <TableCell align="center">{product.product.name}</TableCell>
+                                        <TableCell align="center">{product.name}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

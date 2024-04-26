@@ -41,6 +41,11 @@ public class ProductService extends BaseService<CreateUpdateProductDto, ProductE
         return mapper.toResponseDtoList(((ProductRepository)repository).findAllProductsNameLike(name));
     }
 
+    public List<ProductResponseDto> getMostPopularProductByCategory(Integer categoryId) {
+        return mapper.toResponseDtoList(((ProductRepository)repository).findMostPopularProductByCategory(categoryId));
+    }
+
+
     @Override
     protected void mergeEntity(ProductEntity entity, CreateUpdateProductDto dto) {
         if(dto.getId() != null)

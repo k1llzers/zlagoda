@@ -49,10 +49,6 @@ public class StoreProductService extends BaseService<CreateUpdateStoreProductDto
         return mapper.toResponseDtoList(((StoreProductRepository)repository).findAllByUpcLike(upc));
     }
 
-    public List<StoreProductResponseDto> getMostPopularProductByCategory(Integer categoryId) {
-        return mapper.toResponseDtoList(((StoreProductRepository)repository).findMostPopularProductByCategory(categoryId));
-    }
-
     public Boolean makePromotional(Integer id) {
         StoreProductEntity product = getById(id);
         if (product.getPromotion() == null) {

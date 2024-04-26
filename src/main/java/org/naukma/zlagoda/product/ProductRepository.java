@@ -13,6 +13,27 @@ import java.util.List;
 
 @Repository
 public class ProductRepository extends BaseRepository<ProductEntity, Integer> {
+    private final static String MOST_POPULAR_PRODUCT_BY_CATEGORY = "SELECT product.id_product, product.product_name, category.category_number, product.characteristics " +
+            "FROM customer_check " +
+            "INNER JOIN sale ON customer_check.check_number = sale.check_number " +
+            "INNER JOIN store_product ON sale.upc = store_product.upc " +
+            "INNER JOIN product ON store_product.id_product = product.id_product " +
+            "INNER JOIN category ON product.category_number = category.category_number " +
+            "WHERE category.category_number = ? " +
+            "GROUP BY category.category_number, category.category_name, " +
+            "product.id_product, product.product_name, product.characteristics " +
+            "HAVING COUNT(*) = (SELECT MAX(sub_table.purchase_count) " +
+            "FROM (SELECT COUNT(*) AS purchase_count " +
+            "FROM customer_check INNER JOIN sale " +
+            "ON customer_check.check_number = sale.check_number " +
+            "INNER JOIN store_product " +
+            "ON sale.upc = store_product.upc " +
+            "INNER JOIN product " +
+            "ON store_product.id_product = product.id_product " +
+            "WHERE product.category_number = category.category_number " +
+            "GROUP BY product.id_product " +
+            ") AS sub_table);";
+
     private final CategoryRepository categoryRepository;
 
     public ProductRepository(CategoryRepository categoryRepository) {
@@ -51,6 +72,21 @@ public class ProductRepository extends BaseRepository<ProductEntity, Integer> {
     public List<ProductEntity> findAllWithoutStoreProduct() {
         return findAllByCustomQuery("SELECT * FROM product LEFT OUTER JOIN store_product " +
                 "ON product.id_product = store_product.id_product WHERE store_product.upc IS NULL");
+    }
+
+    public List<ProductEntity> findMostPopularProductByCategory(Integer categoryId) {
+        List<ProductEntity> entities = new ArrayList<>();
+        try(PreparedStatement statement = connection.prepareStatement(MOST_POPULAR_PRODUCT_BY_CATEGORY)) {
+            statement.setInt(1, categoryId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                entities.add(parseSetToEntity(resultSet));
+            }
+            return entities;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/product")
 @CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
-public class    ProductController {
+public class ProductController {
     private final ProductService service;
 
     @GetMapping("/{id}")
@@ -50,6 +50,12 @@ public class    ProductController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<ProductResponseDto>> getAllProductsNameLike(@PathVariable String name) {
         return ResponseEntity.ok(service.getAllByNameLike(name));
+    }
+
+    @GetMapping("/top-product/{categoryId}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
+    public ResponseEntity<List<ProductResponseDto>> getMostPopularByCategory(@PathVariable Integer categoryId) {
+        return ResponseEntity.ok(service.getMostPopularProductByCategory(categoryId));
     }
 
     @DeleteMapping("/{id}")
