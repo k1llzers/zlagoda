@@ -41,6 +41,6 @@ public class CustomerCardEntity implements GettableById<Integer> {
     private Integer percent;
 
     public String getFullName() {
-        return surname + " " + name + " " + patronymic;
+        return surname + " " + name + " " + (patronymic == null ? "" :patronymic);
     }
 }

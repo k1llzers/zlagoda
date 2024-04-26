@@ -66,7 +66,7 @@ public class EmployeeEntity implements GettableById<Integer>, UserDetails {
     private String zipCode;
 
     public String getFullName() {
-        return surname + " " + name + " " + patronymic;
+        return surname + " " + name + " " + (patronymic == null ? "" :patronymic);
     }
 
     @Override

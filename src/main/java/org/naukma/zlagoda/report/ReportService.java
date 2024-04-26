@@ -131,7 +131,7 @@ public class ReportService {
                     table.addCell(new Cell().add(new Paragraph(customerCard.getId().toString())).setFont(f1).setTextAlignment(TextAlignment.CENTER));
                     table.addCell(new Cell().add(new Paragraph(customerCard.getFullName())).setFont(f1).setMaxWidth(200));
                     table.addCell(new Cell().add(new Paragraph(customerCard.getPhoneNumber())).setFont(f1));
-                    table.addCell(new Cell().add(new Paragraph(customerCard.getCity() + ", " + customerCard.getStreet() + ", " + customerCard.getZipCode())).setFont(f1).setMaxWidth(200));
+                    table.addCell(new Cell().add(new Paragraph((customerCard.getCity() == null ? "" : customerCard.getCity() + ", ") + (customerCard.getStreet() == null ? "" : customerCard.getStreet() + ", ") + (customerCard.getZipCode() == null ? "" : customerCard.getZipCode()))).setFont(f1).setMaxWidth(200));
                     table.addCell(new Cell().add(new Paragraph(customerCard.getPercent().toString() + '%')).setFont(f1));
                 });
         return table;
