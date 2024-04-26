@@ -137,7 +137,7 @@ const Categories = () => {
                 })
             }
             if (response.data.error) {
-                setErrorMessage(response.data.error)
+                setErrorMessage("Can't create categories with same name")
                 setTimeout(() => setErrorMessage(""), 3500)
             } else {
                 fetchCategoryData()
