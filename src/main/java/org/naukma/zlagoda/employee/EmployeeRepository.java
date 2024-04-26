@@ -20,7 +20,8 @@ public class EmployeeRepository extends BaseRepository<EmployeeEntity, Integer> 
             "WHERE NOT EXISTS(SELECT * " +
             "FROM customer_check " +
             "WHERE employee.id_employee = customer_check.id_employee " +
-            "AND customer_card.card_number = customer_check.card_number))";
+            "AND customer_card.card_number = customer_check.card_number)) "+
+            "AND EXISTS(SELECT * FROM customer_card)";
     private final PasswordEncoder encoder;
 
     public EmployeeRepository(PasswordEncoder encoder) {
